@@ -1,0 +1,26 @@
+<mat-sidenav-container>
+
+  <mat-sidenav mode="side" opened>
+
+    <!-- Header -->
+    <div class="header">
+      <img src="/favicon.ico" />
+      Components
+    </div>
+
+    <!-- Links -->
+    <div class="links">
+      <a [routerLink]="'/ngz-grid'"> &lt;ngz-grid /&gt;</a>
+    </div>
+    <div class="links">
+      <a [routerLink]="'/ngz-modal'"> &lt;ngz-modal /&gt;</a>
+    </div>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
+

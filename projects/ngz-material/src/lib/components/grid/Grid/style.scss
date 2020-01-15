@@ -1,0 +1,62 @@
+:host {
+
+  position: relative;
+  display: block;
+
+  table {
+    width: 100%;
+
+    th, td {
+      width: 0%;
+
+      &.cdk-column-dynamic-actions {
+        width: 1px;
+      }
+    }
+
+    &:not(.has-header) {
+      .mat-header-row { display: none; }
+    }
+    &:not(.has-footer) {
+      .mat-footer-row { display: none; }
+    }
+  }
+
+  .filters-row ::ng-deep {
+    .mat-form-field {
+      width: 100%;
+      & > .mat-form-field-wrapper {
+        & > .mat-form-field-flex {
+          padding: 0;
+          & > .mat-form-field-infix {
+            padding: 0.1em 0 0.1em 1.2em;
+            border-top-width: 0.5em;
+            .mat-form-field-label {
+              top: 1.5em;
+              left: 0.2em;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .overlay-container {
+    display: block;
+    background-color: rgba(0,0,0, 0.3);
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    & > .overlay-content {
+      font-size: 20px;
+      color: #FFF;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      position: absolute;
+    }
+  } 
+}

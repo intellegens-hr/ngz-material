@@ -1,0 +1,158 @@
+<table mat-table
+  class="mat-elevation-z8"
+  [ngClass]="[(header ? 'has-header' : ''), (footer ? 'has-footer' : '')]"
+  [dataSource] ="_data | NgzGridFilterBy:_doLocalDataManagement:_filters
+                       | NgzGridOrderBy:_doLocalDataManagement:_orderingField:_orderingAscDirection
+                       | NgzGridPaginate:_doLocalDataManagement:_pageLength:_pageIndex" 
+  matSort matSortDisableClear="true" (matSortChange)="_onMatTableSort($event)">
+
+  <!-- Header definition (and layout) -->
+  <ng-container *matHeaderRowDef="_columnKeys">
+
+    <!-- Injected header rows -->
+    <tr *ngFor="let injected of configuration.injectedAbove"
+      [class]="injected.class">
+      <ng-container *ngTemplateOutlet="injected.template"></ng-container>
+    </tr>
+
+    <!-- Default headers -->
+    <tr mat-header-row></tr>
+
+    <!-- Injected header rows -->
+    <tr *ngFor="let injected of configuration.injectedTop"
+      [class]="injected.class">
+      <ng-container *ngTemplateOutlet="injected.template"></ng-container>
+    </tr>
+
+    <!-- Filtering row -->
+    <tr *ngIf="configuration.filtering.hasFiltering && configuration.filtering.hasFilteringColumns" class="filters-row">
+      <th *ngFor="let key of _columnKeys"
+        [ngClass]="[('mat-column-' + key), (configuration.columns[key].class)]">
+
+        <mat-form-field appearance="fill">
+          <mat-label *ngIf="!configuration.columns[key].virtual && configuration.columns[key].hasFiltering">
+            <mat-icon>search</mat-icon>
+          </mat-label>
+          <input matInput type="text"
+            [disabled]="configuration.columns[key].virtual || !configuration.columns[key].hasFiltering"
+            [value]="_filters[key] || ''"
+            (input)="_onFilterUpdated(key, $event)">
+        </mat-form-field>
+
+      </th>
+    </tr>
+
+  </ng-container>
+
+  <!-- Table columns layout -->
+  <ng-container *ngFor="let key of _columnKeys" [matColumnDef]="key">
+
+    <!-- Column header -->
+    <th mat-header-cell *matHeaderCellDef mat-sort-header
+      [disabled]="!configuration.columns[key].hasOrdering || configuration.columns[key].virtual"
+      [ngClass]="[ (configuration.columns[key].class) ]">
+
+      <!-- If template available -->
+      <ng-container *ngIf="configuration.columns[key].headerCellTemplate">
+        <ng-container
+          *ngTemplateOutlet="
+            configuration.columns[key].headerCellTemplate,
+            context: _getHeaderTemplateContext(key)
+          "
+        ></ng-container>
+      </ng-container>
+
+      <!-- If no template, default to column label -->
+      <ng-container *ngIf="!configuration.columns[key].headerCellTemplate">
+        {{ configuration.columns[key].header !== undefined ? configuration.columns[key].header : key }}
+      </ng-container>
+
+    </th>
+
+    <!-- Column body cell -->
+    <td mat-cell *matCellDef="let row; let index = index"
+      [ngClass]="[ (configuration.columns[key].class) ]">
+
+      <!-- If template available -->
+      <ng-container *ngIf="configuration.columns[key].cellTemplate">
+        <ng-container
+          *ngTemplateOutlet="
+            configuration.columns[key].cellTemplate,
+            context: _getCellTemplateContext(row, key, index)
+          "
+        ></ng-container>
+      </ng-container>
+
+      <!-- If no template, default to raw row value -->
+      <ng-container *ngIf="!configuration.columns[key].cellTemplate && !configuration.columns[key].virtual">
+        {{ row[key] }}
+      </ng-container>    
+
+    </td>
+
+    <!-- Column footer -->
+    <td mat-footer-cell *matFooterCellDef
+      [ngClass]="[ (configuration.columns[key].class) ]">
+
+      <!-- If template available -->
+      <ng-container *ngIf="configuration.columns[key].footerCellTemplate">
+        <ng-container
+          *ngTemplateOutlet="
+            configuration.columns[key].footerCellTemplate,
+            context: _getFooterTemplateContext(key)
+          "
+        ></ng-container>
+      </ng-container>
+
+      <!-- If no template, default to column label -->
+      <ng-container *ngIf="!configuration.columns[key].footerCellTemplate">
+        {{ configuration.columns[key].footer !== undefined ? configuration.columns[key].footer : key  }}
+      </ng-container>
+
+    </td>
+
+  </ng-container>
+
+  <!-- Body row(s) definition (and layout) -->
+  <ng-container *matRowDef="let row; columns: _columnKeys;">
+    <!-- Default body row cells -->
+    <tr mat-row></tr>
+  </ng-container>
+
+  <!-- Footer definition (and layout) -->
+  <ng-container *matFooterRowDef="_columnKeys">
+
+    <!-- Injected footer rows -->
+    <tr *ngFor="let injected of configuration.injectedBottom"
+      [class]="injected.class">
+      <ng-container *ngTemplateOutlet="injected.template"></ng-container>
+    </tr>
+
+    <!-- Default footers -->
+    <tr mat-footer-row></tr>
+
+    <!-- Injected footer rows -->
+    <tr *ngFor="let injected of configuration.injectedBelow"
+      [class]="injected.class">
+      <ng-container *ngTemplateOutlet="injected.template"></ng-container>
+    </tr>
+
+  </ng-container>
+
+</table>
+
+<!-- Pagination -->
+<mat-paginator *ngIf="configuration.pagination.hasPagination !== false"
+  class="mat-elevation-z8"
+  [length]="_totalLength" [pageSize]="configuration.pagination.defaultPageLength"  [pageSizeOptions]="configuration.pagination.pageLengthOptions"
+  (page)="_onMatTablePage($event)"></mat-paginator>
+
+<!-- Error overlay -->
+<div class="overlay-container" *ngIf="error || _internalError">
+  <div class="overlay-content">Error</div>
+</div>
+
+<!-- Loading overlay -->
+<div class="overlay-container" *ngIf="((!error && !_internalError) && (loading || _internalLoading))">
+  <div class="overlay-content">Loading</div>
+</div>

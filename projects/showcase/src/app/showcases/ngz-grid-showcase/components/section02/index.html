@@ -1,0 +1,46 @@
+<h3> <code>[dataSource]</code> attribute </h3>
+
+<p>
+  The <code>[dataSource]</code> attribute can accept data in a number of formats:
+</p>
+<ul>
+  <li> - Raw array of data objects, represented each in its own row </li>
+  <li> - A Promise resolving into an array of data (or failing into an Error) </li>
+  <li> - An Observable resolving into an array of data (or failing into an Error) </li>
+</ul>
+<p>
+  When having been passed a Promise as <code>[dataSource]</code>, the grid will enter and stay in an internal "loading" state until the promise is resolved
+  or fails with an error. If the Promise fails with an error the grid will enter an error state which it will remain in until the <code>[dataSource]</code>
+  has been updated.  
+</p>
+<p>
+  When having been passed an Observable as <code>[dataSource]</code>, the grid will enter and stay in an internal "loading" state until the Observable has been
+  resolved with is resolved with data or fails with an error. Every time new data is resolved, the grid will automatically update displayed values. If the Observable
+  fails with an error the grid will enter an error state which it will remain in until the <code>[dataSource]</code> has been updated.  
+</p>
+
+<div class="example">
+  <code class="js">
+    [dataSource]="
+      <button mat-button mat-raised-button (click)="generateDataSourceRaw()">
+        <code>[...]</code>
+      </button>
+      <button mat-button mat-raised-button (click)="generateDataSourcePromise()">
+        <code>new Promise&lt;[...]&gt;</code>
+      </button>
+      <button mat-button mat-raised-button (click)="generateDataSourcePromise(err)">
+        <code>new Promise(new Error('...'))</code>
+      </button>
+      <button mat-button mat-raised-button (click)="generateDataSourceObservable()">
+        <code>new Observable([...])</code>
+      </button>
+      <button mat-button mat-raised-button (click)="generateDataSourceObservable(err)">
+        <code>new Observable(new Error('...'))</code>
+      </button>
+    "
+  </code>
+  <br />
+  <br />
+  <ngz-grid [dataSource]="dataSource"></ngz-grid>
+</div>
+
