@@ -1,18 +1,20 @@
-<table>
-  <thead>
-    <th>A</th>
-    <th>B</th>
-    <th>C</th>
-    <th>D</th>
-    <th>E</th>
-  </thead>
-  <tbody *ngFor="let i of [1, 2, 3, 4, 5]">
-    <tr>
-      <td>A{{i}}</td>
-      <td>B{{i}}</td>
-      <td>C{{i}}</td>
-      <td>D{{i}}</td>
-      <td>E{{i}}</td>
-    </tr>
-  </tbody>
-</table>
+<table mat-table [dataSource] ="resolvedDataSource">
+
+    <ng-container *ngFor="let item of resolvedDataSourceKeys" [matColumnDef]="item">
+      <th mat-header-cell *matHeaderCellDef> {{ item }} </th>
+      <td mat-cell *matCellDef="let element"> {{ element[item] }} </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="resolvedDataSourceKeys"></tr>
+    <tr mat-row *matRowDef="let row; columns: resolvedDataSourceKeys;"></tr>
+    <tr mat-footer-row *matFooterRowDef="resolvedDataSourceKeys"></tr>
+  </table>
+
+  <div class="container" *ngIf="error">
+    <div class="content">Error</div>
+  </div>
+
+  <div class="container" *ngIf="loading">
+    <div class="content">Loading</div>
+  </div>
