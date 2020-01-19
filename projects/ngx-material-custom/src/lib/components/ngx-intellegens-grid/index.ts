@@ -2,7 +2,7 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, OnChanges, Input } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { isObservable, throwError } from 'rxjs';
 import { isPromise } from '@angular/compiler/src/util';
 
@@ -13,7 +13,7 @@ import { isPromise } from '@angular/compiler/src/util';
   styleUrls: ['./style.scss']
 })
 
-export class NgxIntellegensGridComponent {
+export class NgxIntellegensGridComponent implements OnChanges {
 
   @Input()
   public dataSource: any;
@@ -29,28 +29,40 @@ export class NgxIntellegensGridComponent {
     return (this.resolvedDataSource && this.resolvedDataSource.length ? Object.keys(this.resolvedDataSource[0]) : []);
   }
 
-  public ngOnChanges () {
-     if (isPromise(this.dataSource)) {
-       // TODO: use async/await
-      this.dataSource.then(
-        (dataSource) => {
-          this.resolvedDataSource = dataSource;
-        },
-        (err) => {
-          this.handleError(err);
-        }
-      );
-    } else if (isObservable(this.dataSource)) {
-      this.dataSource.subscribe(
-        (dataSource) => {
-          this.resolvedDataSource = dataSource;
-        },
-        (err) => {
-          this.handleError(err);
-        }
-      );
-    } else {
-      this.resolvedDataSource = this.dataSource;
+  public ngOnChanges (changes: SimpleChanges) {
+    // On [dataSource] change, resolve new data-source
+    if (changes.dataSource) {
+      if (isPromise(this.dataSource)) {
+
+        // Resolve Promise data-source
+        // TODO: use async/await
+        this.dataSource.then(
+          (dataSource) => {
+            this.resolvedDataSource = dataSource;
+          },
+          (err) => {
+            this.handleError(err);
+          }
+        );
+
+      } else if (isObservable(this.dataSource)) {
+
+        // Resolve RxJs Observable data-source
+        this.dataSource.subscribe(
+          (dataSource) => {
+            this.resolvedDataSource = dataSource;
+          },
+          (err) => {
+            this.handleError(err);
+          }
+        );
+
+      } else {
+
+        // Use resolved, direct data-source
+        this.resolvedDataSource = this.dataSource;
+
+      }
     }
   }
 

@@ -11,9 +11,9 @@ import { NgxIntellegensGridShowcaseComponent } from '../showcases/ngx-intellegen
 // Set routes
 const routes: Routes = [
   // Functional directives and components
-  { path: '', component: NgxIntellegensGridShowcaseComponent },
+  { path: 'ngx-intellegens-grid', component: NgxIntellegensGridShowcaseComponent },
   // Default
-  { path: '**', redirectTo: '/' },
+  { path: '**', redirectTo: '/ngx-intellegens-grid' },
 ];
 
 @NgModule({

@@ -1,0 +1,35 @@
+.mat-sidenav-container {
+  height: 100vh;
+  font-family: monospace;
+
+  .mat-sidenav {
+    padding: 10pt;
+    overflow-y: auto;
+
+    .header {
+      display: flex;
+      align-items: center;
+      font-size: 16pt;
+      img {
+        width: 32pt;
+        margin-right: 8pt;
+      }
+    }
+
+    .links {
+      padding-top: 20pt;
+      a {
+        color: black;
+        text-decoration: none;
+        &:hover { text-decoration: underline; }
+        &:active { font-weight: bold; }
+      }
+    }
+  }
+
+  .mat-sidenav-content {
+    padding: 10pt;
+    overflow-y: auto;
+  }
+
+}

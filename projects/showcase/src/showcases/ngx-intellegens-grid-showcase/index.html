@@ -2,5 +2,7 @@
 <ngx-intellegens-grid [error]="testingError" [loading]="testingLoading" [dataSource]="dataSourcePromise"></ngx-intellegens-grid>
 <ngx-intellegens-grid [error]="testingError" [loading]="testingLoading" [dataSource]="dataSourceObservable"></ngx-intellegens-grid>
 
-<button (click)="toggleError();">Toggle Error</button>
-<button (click)="toggleLoading();">Toggle Loading</button>
+<button mat-button mat-raised-button
+  (click)="toggleError();">Toggle Error</button>
+<button mat-button mat-raised-button
+  (click)="toggleLoading();">Toggle Loading</button>

@@ -8,6 +8,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+// Import showcase material components
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+
 // Import library
 import { NgxMaterialCustomModule } from '../../../ngx-material-custom/src/lib/ngx-material-custom.module';
 
@@ -26,6 +30,10 @@ const showcases = [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    // Showcase material modules
+    MatSidenavModule,
+    MatButtonModule,
+    // Intellegens modules
     NgxMaterialCustomModule
   ],
   providers: [],
