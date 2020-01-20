@@ -13,6 +13,8 @@ export class NgxIntellegensGridShowcaseComponent {
 
   public testingError: Error = null;
   public testingLoading = false;
+  public testingDestroy = false;
+
 
   public dataSource = [
     { location: 1, firstName: 'Marko', lastName: 'Horvat', salary: 2000 },
@@ -26,7 +28,7 @@ export class NgxIntellegensGridShowcaseComponent {
     setTimeout(() => {
       const data = JSON.parse(JSON.stringify(this.dataSource));
       resolve(data);
-      //reject(new Error('I am an error'));
+      // reject(new Error('I am an error'));
     }, 1000);
   });
 
@@ -49,6 +51,8 @@ export class NgxIntellegensGridShowcaseComponent {
   });
 
 
+  public selected: any = this.dataSource;
+
   public updateDataSource (dataSource, i) {
     for (let row of dataSource) {
       row.location += i;
@@ -63,4 +67,18 @@ export class NgxIntellegensGridShowcaseComponent {
     this.testingLoading = !this.testingLoading;
   }
 
+  public toggleDestroy () {
+    this.testingDestroy = !this.testingDestroy;
+  }
+
+
+  public dataSourceChange (e) {
+    if (e.target.value === 'dataSourcePromise') {
+      this.selected = this.dataSourcePromise;
+    } else if (e.target.value === 'dataSourceObservable') {
+      this.selected = this.dataSourceObservable;
+    } else {
+      this.selected = this.dataSource;
+    }
+  }
 }

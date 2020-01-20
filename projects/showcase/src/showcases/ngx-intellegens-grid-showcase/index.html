@@ -1,8 +1,42 @@
-<ngx-intellegens-grid [error]="testingError" [loading]="testingLoading" [dataSource]="dataSource"></ngx-intellegens-grid>
-<ngx-intellegens-grid [error]="testingError" [loading]="testingLoading" [dataSource]="dataSourcePromise"></ngx-intellegens-grid>
-<ngx-intellegens-grid [error]="testingError" [loading]="testingLoading" [dataSource]="dataSourceObservable"></ngx-intellegens-grid>
+<pre>
+  <code>
+    &lt;ngx-intellegens-grid /&gt;
+  </code>
+</pre>
+
+<div class="docs">
+  <p>The <code>ngx-intellegens-grid</code> provides a custom table solution based on Angular Material.</p>
+  <h2>Getting Started</h2>
+  <h3>1. Add <code>ngx-intellegens-grid</code> component</h3>
+  <p>Begin by adding the <code> &lt;ngx-intellegens-grid&gt;</code> component to your template.</p>
+  <h3>2. Provide data to the template</h3>
+  <p>The simplest way to provide data to your table is by passing a data array.</p>
+  <code>&lt;ngx-intellegens-grid [dataSource]="myArray"&gt;&lt;/ngx-intellegens-grid&gt; </code>
+  <p>The table also supports more complex data sources such as Observable streams and Promises</p>
+  <h3>3. Define the column template</h3>
+  <code>code example here</code> <!--TODO: add code example-->
+  <h3>4. Define the row template</h3>
+  <code>code example here</code> <!--TODO: add code example-->
+  <h2>Features</h2>
+  <p><code>&lt;ngx-intellegens-grid&gt;</code> supports external and internal error handling as well as external and internal loader</p>
+</div>
+
+
+
+<div *ngIf="!testingDestroy">
+  <ngx-intellegens-grid [error]="testingError" [loading]="testingLoading" [dataSource]="selected"></ngx-intellegens-grid>
+</div>
 
 <button mat-button mat-raised-button
   (click)="toggleError();">Toggle Error</button>
 <button mat-button mat-raised-button
   (click)="toggleLoading();">Toggle Loading</button>
+  <button mat-button mat-raised-button 
+  (click)="toggleDestroy();">Toggle Destroy</button>
+
+
+ <select (change)="dataSourceChange($event);">
+   <option [value]="'dataSource'">Raw</option>
+   <option [value]="'dataSourcePromise'">Promise</option>
+   <option [value]="'dataSourceObservable'">Observable</option>
+ </select>

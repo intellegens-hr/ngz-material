@@ -11,10 +11,10 @@
     <tr mat-footer-row *matFooterRowDef="resolvedDataSourceKeys"></tr>
   </table>
 
-  <div class="container" *ngIf="error">
+  <div class="container" *ngIf="error || internalError">
     <div class="content">Error</div>
   </div>
 
-  <div class="container" *ngIf="loading">
+  <div class="container" *ngIf="loading || internalLoading">
     <div class="content">Loading</div>
   </div>
