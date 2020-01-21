@@ -4,39 +4,88 @@
   </code>
 </pre>
 
+<br>
 <div class="docs">
   <p>The <code>ngx-intellegens-grid</code> provides a custom table solution based on Angular Material.</p>
-  <h2>Getting Started</h2>
+  <p>The table comes with a set of predefined optional features which include filtering, sorting, pagination, internal and external error handling and loading.</p><br>
+  <h2>Working with ngx-intellegens-grid</h2><br>
   <h3>1. Add <code>ngx-intellegens-grid</code> component</h3>
-  <p>Begin by adding the <code> &lt;ngx-intellegens-grid&gt;</code> component to your template.</p>
+  <p>Begin by adding the <code> &lt;ngx-intellegens-grid&gt;</code> component to your template.</p><br>
   <h3>2. Provide data to the template</h3>
-  <p>The simplest way to provide data to your table is by passing a data array.</p>
-  <code>&lt;ngx-intellegens-grid [dataSource]="myArray"&gt;&lt;/ngx-intellegens-grid&gt; </code>
-  <p>The table also supports more complex data sources such as Observable streams and Promises</p>
-  <h3>3. Define the column template</h3>
-  <code>code example here</code> <!--TODO: add code example-->
-  <h3>4. Define the row template</h3>
-  <code>code example here</code> <!--TODO: add code example-->
-  <h2>Features</h2>
-  <p><code>&lt;ngx-intellegens-grid&gt;</code> supports external and internal error handling as well as external and internal loader</p>
+  <p>The simplest way to provide data to your table is by passing it a data array.</p>
+  <code>
+    &lt;ngx-intellegens-grid [dataSource]="myArray"&gt;&lt;/ngx-intellegens-grid&gt; 
+  </code><br>
+  <br><h3>3. Define the column template</h3>
+  <code>code example here</code><br> <!--TODO: add code example-->
+  <br><h3>4. Define the row template</h3>
+  <code>code example here</code><br> <!--TODO: add code example-->
+  <br><h2>Examples</h2><br>
+  <p>Basic ngx-intellegens-grid use case where the table uses an array as a data source.</p>
+  <pre>
+    <code>
+      <div>
+        <ngx-intellegens-grid [dataSource]="dataSource"></ngx-intellegens-grid>
+      </div>
+    </code>
+</pre>
+<p>The table also supports more complex data sources such as Observable streams and Promises</p><br>
+  <pre>
+    <code>
+      <div>
+        <ngx-intellegens-grid [dataSource]="selected"></ngx-intellegens-grid>
+        <select (change)="dataSourceChange($event);">
+          <option [value]="'dataSource'">Raw</option>
+          <option [value]="'dataSourcePromise'">Promise</option>
+          <option [value]="'dataSourceObservable'">Observable</option>
+        </select>
+      </div>
+    </code>
+  </pre>
+  <p>The table also supports custom headers and footers</p>
+  <p>Headers and footers can be modified using template bindings <code>header="Location" footer="Location"</code></p>
+  <pre>
+    <code>
+      <div *ngIf="!testingDestroy">
+        <ngx-intellegens-grid [dataSource]="selected">
+          <ng-container ngxIntellegensGridColumnDef="location" header="Location" footer="Location"></ng-container>      
+          <ng-container ngxIntellegensGridColumnDef="firstName"  footer="First Name"></ng-container> 
+          <ng-container ngxIntellegensGridColumnDef="lastName" header="Last Name" footer="Last Name"></ng-container>
+          <ng-container ngxIntellegensGridColumnDef="salary" header="Salary" footer="Salary"></ng-container>  
+        </ngx-intellegens-grid>
+      </div>
+    </code>
+  </pre>
+
+
+  <h2>Features</h2><br>
+  <h3>Internal and external error handling and loading</h3>
+  <p><code> &lt;ngx-intellegens-grid&gt;</code> uses build-in methods that support internal and external error detection and loading overlay
+     and provides a simple handling solution for both of them. 
+  </p>
+    <code>
+      <div *ngIf="!testingDestroy">
+        <ngx-intellegens-grid [error]="testingError" [loading]="testingLoading" [dataSource]="selected"></ngx-intellegens-grid>
+      </div>
+      
+      <button mat-button mat-raised-button
+        (click)="toggleError();">Toggle Error</button>
+      <button mat-button mat-raised-button
+        (click)="toggleLoading();">Toggle Loading</button>
+        <button mat-button mat-raised-button 
+        (click)="toggleDestroy();">Toggle Destroy</button>
+      
+      
+       <select (change)="dataSourceChange($event);">
+         <option [value]="'dataSource'">Raw</option>
+         <option [value]="'dataSourcePromise'">Promise</option>
+         <option [value]="'dataSourceObservable'">Observable</option>
+       </select>
+    </code><br>
+    <br><h3>Sorting</h3>
+    <code>code example here</code><br><br> <!--TODO: add code example-->
+    <br><h3>Filtering</h3>
+    <code>code example here</code><br><br> <!--TODO: add code example-->
+    <br><h3>Pagination</h3>
+    <code>code example here</code><br> <!--TODO: add code example-->
 </div>
-
-
-
-<div *ngIf="!testingDestroy">
-  <ngx-intellegens-grid [error]="testingError" [loading]="testingLoading" [dataSource]="selected"></ngx-intellegens-grid>
-</div>
-
-<button mat-button mat-raised-button
-  (click)="toggleError();">Toggle Error</button>
-<button mat-button mat-raised-button
-  (click)="toggleLoading();">Toggle Loading</button>
-  <button mat-button mat-raised-button 
-  (click)="toggleDestroy();">Toggle Destroy</button>
-
-
- <select (change)="dataSourceChange($event);">
-   <option [value]="'dataSource'">Raw</option>
-   <option [value]="'dataSourcePromise'">Promise</option>
-   <option [value]="'dataSourceObservable'">Observable</option>
- </select>

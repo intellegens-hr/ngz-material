@@ -2,16 +2,19 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, OnChanges, OnDestroy, SimpleChanges, Input } from '@angular/core';
-import { isObservable, throwError, SubscriptionLike} from 'rxjs';
+import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, ContentChildren, QueryList } from '@angular/core';
+import { isObservable, SubscriptionLike } from 'rxjs';
 import { isPromise } from '@angular/compiler/src/util';
+import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
 
 @Component({
   selector: 'ngx-intellegens-grid',
   templateUrl: './index.html',
   styleUrls: ['./style.scss']
 })
-export class NgxIntellegensGridComponent implements OnChanges, OnDestroy {
+export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges, OnDestroy {
+
+  private config = new TableConfiguration();
 
   @Input()
   public error?: any;
@@ -27,6 +30,20 @@ export class NgxIntellegensGridComponent implements OnChanges, OnDestroy {
   private resolvedDataSource: any = [];
   public get resolvedDataSourceKeys () {
     return (this.resolvedDataSource && this.resolvedDataSource.length ? Object.keys(this.resolvedDataSource[0]) : []);
+  }
+
+  @ContentChildren(NgxIntellegensGridColumnDefDirective)
+  public columnDefs: QueryList<NgxIntellegensGridColumnDefDirective>;
+
+  public ngAfterContentInit (): void {
+   this.columnDefs.forEach(element => {
+      let columnConfig = new TableColumnConfiguration();
+      columnConfig.key = element.key;
+      columnConfig.header = element.header;
+      columnConfig.footer = element.footer;
+      this.config.columnDefinition[columnConfig.key] = columnConfig;
+    });
+   console.log(this.config);
   }
 
   public ngOnChanges (changes: SimpleChanges) {
@@ -95,4 +112,8 @@ export class NgxIntellegensGridComponent implements OnChanges, OnDestroy {
 
 }
 
+class TableConfiguration {
 
+  public columnDefinition: any = {};
+
+}

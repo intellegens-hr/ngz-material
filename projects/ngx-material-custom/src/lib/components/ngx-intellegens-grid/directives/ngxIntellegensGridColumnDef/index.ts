@@ -8,18 +8,10 @@ import { Directive, Input } from '@angular/core';
 @Directive({
   selector: '[ngxIntellegensGridColumnDef]'
 })
-
-
-export class ngxIntellegensGridColumnDef {
+export class NgxIntellegensGridColumnDefDirective {
 
   @Input('ngxIntellegensGridColumnDef')
   public key: string;
-
-  @Input()
-  public sortable: boolean;
-
-  @Input()
-  public sortableAs: any;
 
   @Input()
   public header: string;
@@ -27,4 +19,11 @@ export class ngxIntellegensGridColumnDef {
   @Input()
   public footer: string;
 
+}
+
+
+export class TableColumnConfiguration {
+  public key: string;
+  public header: string;
+  public footer: string;
 }

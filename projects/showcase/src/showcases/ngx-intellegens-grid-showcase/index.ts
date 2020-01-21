@@ -17,10 +17,10 @@ export class NgxIntellegensGridShowcaseComponent {
 
 
   public dataSource = [
-    { location: 1, firstName: 'Marko', lastName: 'Horvat', salary: 2000 },
-    { location: 2, firstName: 'Ivo', lastName: 'Balija', salary: 1500 },
-    { location: 3, firstName: 'Martina', lastName: 'Posavec', salary: 3753 },
-    { location: 4, firstName: 'Marko', lastName: 'Horvat', salary: 1700 },
+    { location: 1, firstName: 'Sophie', lastName: 'Myers', salary: 2000 },
+    { location: 2, firstName: 'Judy', lastName: 'Herbert', salary: 1500 },
+    { location: 3, firstName: 'Mike', lastName: 'Stewart', salary: 3753 },
+    { location: 4, firstName: 'Thomas', lastName: 'Brown', salary: 1700 },
   ];
 
 
