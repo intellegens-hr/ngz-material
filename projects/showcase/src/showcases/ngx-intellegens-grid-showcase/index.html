@@ -42,14 +42,18 @@
       </div>
     </code>
   </pre>
-  <p>The table also supports custom headers and footers</p>
-  <p>Headers and footers can be modified using template bindings <code>header="Location" footer="Location"</code></p>
+  <p>The table also supports custom headers and footers</p><br>
+  <p>Headers and footers can be modified by providing template bindings inside the <code>&lt;ng-container&gt;</code>
+  <br>
+    <code>&lt;ng-container ngxIntellegensGridColumnDef="location" header="Location" footer="Location"&gt;&lt;ng-container&gt;</code>
+  </p><br>
+  <p>If there is no explicit header and/or footer provided the table will automatically fall back to it's default value, which is shown in the example with the header of the "firstName" column.</p>
   <pre>
     <code>
-      <div *ngIf="!testingDestroy">
+      <div *ngIf="!testingReload">
         <ngx-intellegens-grid [dataSource]="selected">
           <ng-container ngxIntellegensGridColumnDef="location" header="Location" footer="Location"></ng-container>      
-          <ng-container ngxIntellegensGridColumnDef="firstName"  footer="First Name"></ng-container> 
+          <ng-container ngxIntellegensGridColumnDef="firstName" footer="First Name"></ng-container> 
           <ng-container ngxIntellegensGridColumnDef="lastName" header="Last Name" footer="Last Name"></ng-container>
           <ng-container ngxIntellegensGridColumnDef="salary" header="Salary" footer="Salary"></ng-container>  
         </ngx-intellegens-grid>
@@ -62,9 +66,12 @@
   <h3>Internal and external error handling and loading</h3>
   <p><code> &lt;ngx-intellegens-grid&gt;</code> uses build-in methods that support internal and external error detection and loading overlay
      and provides a simple handling solution for both of them. 
-  </p>
+  </p><br>
+  <p>To test the external error and loader on the example bellow click the "Toggle Error" and "Toggle Loading" buttons.</p><br>
+  <p>You can also test the internal loading feature by choosing "Observable" as the provided data source and pressing the "Reload Data" button to reload the table data.</p>
+  <p>This will trigger the loading overlay to be displayed over the table while the data loads.</p><br>
     <code>
-      <div *ngIf="!testingDestroy">
+      <div *ngIf="!testingReload">
         <ngx-intellegens-grid [error]="testingError" [loading]="testingLoading" [dataSource]="selected"></ngx-intellegens-grid>
       </div>
       
@@ -73,7 +80,7 @@
       <button mat-button mat-raised-button
         (click)="toggleLoading();">Toggle Loading</button>
         <button mat-button mat-raised-button 
-        (click)="toggleDestroy();">Toggle Destroy</button>
+        (click)="toggleReload();">Reload Data</button>
       
       
        <select (change)="dataSourceChange($event);">
@@ -83,9 +90,9 @@
        </select>
     </code><br>
     <br><h3>Sorting</h3>
-    <code>code example here</code><br><br> <!--TODO: add code example-->
+    <code>code example here</code><br> <!--TODO: add code example-->
     <br><h3>Filtering</h3>
-    <code>code example here</code><br><br> <!--TODO: add code example-->
+    <code>code example here</code><br> <!--TODO: add code example-->
     <br><h3>Pagination</h3>
     <code>code example here</code><br> <!--TODO: add code example-->
 </div>

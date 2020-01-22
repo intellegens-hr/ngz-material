@@ -2,7 +2,7 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, ContentChildren, QueryList } from '@angular/core';
+import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, ContentChildren, QueryList, Pipe, PipeTransform } from '@angular/core';
 import { isObservable, SubscriptionLike } from 'rxjs';
 import { isPromise } from '@angular/compiler/src/util';
 import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
@@ -14,7 +14,7 @@ import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from 
 })
 export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges, OnDestroy {
 
-  private config = new TableConfiguration();
+  public config = new TableConfiguration();
 
   @Input()
   public error?: any;
@@ -116,4 +116,46 @@ class TableConfiguration {
 
   public columnDefinition: any = {};
 
+}
+
+@Pipe({name: 'sortBy'})
+export class SortBy implements PipeTransform {
+  public transform (array: any, field: string, ascOrder: boolean): any[] {
+    if (!Array.isArray(array)) {
+      return;
+    }
+    array.sort((a: any, b: any) => {
+      if (a[field] < b[field]) {
+        return -1;
+      } else if ( a[field] > b[field]) {
+        return 1;
+      } else {
+         return 0;
+       }
+    });
+    if (!ascOrder) {
+      return array.reverse();
+    } else {
+      return array;
+    }
+  }
+}
+
+@Pipe({name: 'filterBy'})
+export class FilterBy  implements PipeTransform {
+   public transform (value: any, args?: any): any {
+    if (!args) {
+     return value;
+    }
+    return value.filter(
+      item => item.firstName.toLowerCase().indexOf(args.toLowerCase()) > -1
+   );
+  }
+}
+
+
+@Pipe({name: 'pagination'})
+export class Pagination  implements PipeTransform {
+   public transform (pageIndex: number) {
+  }
 }

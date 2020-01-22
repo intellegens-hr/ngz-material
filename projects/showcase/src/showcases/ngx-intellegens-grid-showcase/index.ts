@@ -13,7 +13,7 @@ export class NgxIntellegensGridShowcaseComponent {
 
   public testingError: Error = null;
   public testingLoading = false;
-  public testingDestroy = false;
+  public testingReload = false;
 
 
   public dataSource = [
@@ -67,8 +67,8 @@ export class NgxIntellegensGridShowcaseComponent {
     this.testingLoading = !this.testingLoading;
   }
 
-  public toggleDestroy () {
-    this.testingDestroy = !this.testingDestroy;
+  public toggleReload () {
+    this.testingReload = !this.testingReload;
   }
 
 

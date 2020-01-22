@@ -10,10 +10,13 @@ import { MatTableModule } from '@angular/material/table';
 import { NgxIntellegensGridColumnDefDirective } from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridColumnDef';
 
 // Import components
-import { NgxIntellegensGridComponent } from './ngx-intellegens-grid';
+import { NgxIntellegensGridComponent, SortBy, FilterBy, Pagination } from './ngx-intellegens-grid';
 const components = [
   NgxIntellegensGridComponent,
-  NgxIntellegensGridColumnDefDirective
+  NgxIntellegensGridColumnDefDirective,
+  SortBy,
+  FilterBy,
+  Pagination
 ];
 const entryComponents = [
   NgxIntellegensGridComponent

@@ -1,9 +1,10 @@
-<table mat-table [dataSource] ="resolvedDataSource">
+<table mat-table [dataSource] ="resolvedDataSource | sortBy:'lastName':true | filterBy:'Judy'">
 
-    <ng-container *ngFor="let item of resolvedDataSourceKeys" [matColumnDef]="item">
-      <th mat-header-cell *matHeaderCellDef> {{ item }} </th>
-      <td mat-cell *matCellDef="let element"> {{ element[item] }} </td>
-      <td mat-footer-cell *matFooterCellDef> {{ item }} </td>
+
+    <ng-container *ngFor="let key of resolvedDataSourceKeys" [matColumnDef]="key">
+      <th mat-header-cell *matHeaderCellDef> {{ this.config.columnDefinition[key] && this.config.columnDefinition[key].header ? this.config.columnDefinition[key].header : key }} </th>
+      <td mat-cell *matCellDef="let element"> {{ element[key] }} </td>
+      <td mat-footer-cell *matFooterCellDef> {{ this.config.columnDefinition[key] && this.config.columnDefinition[key].footer ? this.config.columnDefinition[key].footer : key  }} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="resolvedDataSourceKeys"></tr>
