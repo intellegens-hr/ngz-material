@@ -1,4 +1,4 @@
-<table mat-table matSort [dataSource] ="resolvedDataSource | sortBy:'lastName':true | filterBy:{'firstName': '.*ud.*', 'lastName': 'Brown'} | pagination:10:2" >
+<table mat-table [dataSource] ="resolvedDataSource | sortBy:'lastName':true | filterBy:{'firstName': 'Judy', 'lastName': 'Brown'} | pagination:10:2" matSort class="mat-elevation-z8">
 
     <ng-container *ngFor="let key of resolvedDataSourceKeys" [matColumnDef]="key">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ this.config.columnDefinition[key] && this.config.columnDefinition[key].header ? this.config.columnDefinition[key].header : key }} </th>

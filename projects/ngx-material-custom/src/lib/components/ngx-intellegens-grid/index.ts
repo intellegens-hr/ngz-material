@@ -7,6 +7,7 @@ import { isObservable, SubscriptionLike } from 'rxjs';
 import { isPromise } from '@angular/compiler/src/util';
 import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
 
+
 @Component({
   selector: 'ngx-intellegens-grid',
   templateUrl: './index.html',
@@ -153,7 +154,6 @@ export class FilterBy  implements PipeTransform {
     }
   }
 }
-
 
 @Pipe({name: 'pagination'})
 export class Pagination  implements PipeTransform {
