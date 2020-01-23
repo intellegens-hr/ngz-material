@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 // Import showcase material components
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSortModule } from '@angular/material';
 
 // Import library
 import { NgxMaterialCustomModule } from '../../../ngx-material-custom/src/lib/ngx-material-custom.module';
@@ -33,6 +34,7 @@ const showcases = [
     // Showcase material modules
     MatSidenavModule,
     MatButtonModule,
+    MatSortModule,
     // Intellegens modules
     NgxMaterialCustomModule
   ],

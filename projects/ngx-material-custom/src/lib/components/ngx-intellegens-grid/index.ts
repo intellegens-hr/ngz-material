@@ -43,7 +43,6 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       columnConfig.footer = element.footer;
       this.config.columnDefinition[columnConfig.key] = columnConfig;
     });
-   console.log(this.config);
   }
 
   public ngOnChanges (changes: SimpleChanges) {
@@ -141,21 +140,34 @@ export class SortBy implements PipeTransform {
   }
 }
 
-@Pipe({name: 'filterBy'})
+@Pipe({name: 'filterBy',  pure: false})
 export class FilterBy  implements PipeTransform {
-   public transform (value: any, args?: any): any {
-    if (!args) {
-     return value;
+   public  transform (items: any, filter: any): any {
+    if (filter && Array.isArray(items)) {
+      let filterKeys = Object.keys(filter);
+      return items.filter(item =>
+        filterKeys.reduce((memo, keyName) =>
+          (memo && new RegExp(filter[keyName]).test(item[keyName])) || filter[keyName] === '', true));
+    } else {
+      return items;
     }
-    return value.filter(
-      item => item.firstName.toLowerCase().indexOf(args.toLowerCase()) > -1
-   );
   }
 }
 
 
 @Pipe({name: 'pagination'})
 export class Pagination  implements PipeTransform {
-   public transform (pageIndex: number) {
+   public transform (items: any, pageSize: number, pageIndex: number) {
+     let slicedArray = [];
+     let startingPoint = pageIndex * pageSize;
+     let endPoint = startingPoint + pageSize;
+     if (startingPoint > items.length) {
+      startingPoint = items.length - items.length % pageSize;
+     }
+     if (startingPoint === items.length) {
+      startingPoint = items.length - pageSize;
+     }
+     slicedArray = items.slice(startingPoint, endPoint);
+     return slicedArray;
   }
 }
