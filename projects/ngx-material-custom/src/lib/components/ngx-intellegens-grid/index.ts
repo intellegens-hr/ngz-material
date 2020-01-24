@@ -2,18 +2,18 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, ContentChildren, QueryList, Pipe, PipeTransform } from '@angular/core';
+import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, ContentChildren, QueryList, Pipe, PipeTransform, HostListener } from '@angular/core';
 import { isObservable, SubscriptionLike } from 'rxjs';
 import { isPromise } from '@angular/compiler/src/util';
 import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
-
 
 @Component({
   selector: 'ngx-intellegens-grid',
   templateUrl: './index.html',
   styleUrls: ['./style.scss']
 })
-export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges, OnDestroy {
+export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges, OnDestroy{
+
 
   public config = new TableConfiguration();
 
@@ -24,6 +24,14 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   @Input()
   public loading?: boolean;
   private internalLoading: boolean;
+
+  public orderField: string;
+  public orderDirection: boolean;
+
+  public pageIndex = 0;
+  public pageSize = 10;
+  public numOfItems: number;
+  public previousPageIndex: number;
 
   @Input()
   public dataSource: any;
@@ -42,6 +50,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       columnConfig.key = element.key;
       columnConfig.header = element.header;
       columnConfig.footer = element.footer;
+      columnConfig.sortable = element.sortable;
       this.config.columnDefinition[columnConfig.key] = columnConfig;
     });
   }
@@ -96,6 +105,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
       }
     }
+    this.numOfItems = this.resolvedDataSource.length;
   }
 
 
@@ -110,6 +120,17 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     this.internalError = err;
   }
 
+    public sortChange (e) {
+      this.orderField = e.active;
+      this.orderDirection = (e.direction === 'asc' ? true : false);
+    }
+
+    public pageChange (e) {
+      this.pageIndex = e.pageIndex;
+      this.pageSize = e.pageSize;
+      this.previousPageIndex = e.previousPageIndex;
+    }
+
 }
 
 class TableConfiguration {
@@ -120,7 +141,7 @@ class TableConfiguration {
 
 @Pipe({name: 'sortBy'})
 export class SortBy implements PipeTransform {
-  public transform (array: any, field: string, ascOrder: boolean): any[] {
+  public transform (array: any, field: any, ascOrder: boolean): any[] {
     if (!Array.isArray(array)) {
       return;
     }
@@ -134,9 +155,9 @@ export class SortBy implements PipeTransform {
        }
     });
     if (!ascOrder) {
-      return array.reverse();
+      return [...array.reverse()];
     } else {
-      return array;
+      return [...array];
     }
   }
 }
