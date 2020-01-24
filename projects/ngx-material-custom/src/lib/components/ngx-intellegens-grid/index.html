@@ -20,7 +20,7 @@
     <tr mat-footer-row *matFooterRowDef="resolvedDataSourceKeys"></tr>
   </table>
 
-  <mat-paginator [length]="numOfItems"  [pageSize]="pageSize"  [pageSizeOptions]="[5, 10, 15, 30]" (page)="pageChange($event)"></mat-paginator>
+  <mat-paginator class="mat-elevation-z8" [length]="numOfItems"  [pageSize]="pageSize"  [pageSizeOptions]="[5, 10, 15, 30]" (page)="pageChange($event)"></mat-paginator>
 
   <div class="container" *ngIf="error || internalError">
     <div class="content">Error</div>

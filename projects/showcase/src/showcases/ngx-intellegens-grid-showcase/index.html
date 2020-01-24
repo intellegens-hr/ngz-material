@@ -54,9 +54,9 @@
       <div *ngIf="!testingReload">
         <ngx-intellegens-grid [dataSource]="selected">
           <ng-container ngxIntellegensGridColumnDef="location" header="Location" footer="Location" [sortable]="true"></ng-container>      
-          <ng-container ngxIntellegensGridColumnDef="firstName" footer="First Name"></ng-container> 
-          <ng-container ngxIntellegensGridColumnDef="lastName" header="Last Name" footer="Last Name"></ng-container>
-          <ng-container ngxIntellegensGridColumnDef="salary" header="Salary" footer="Salary"></ng-container>  
+          <ng-container ngxIntellegensGridColumnDef="firstName" footer="First Name" [sortable]="true"></ng-container> 
+          <ng-container ngxIntellegensGridColumnDef="lastName" header="Last Name" footer="Last Name" [sortable]="true"></ng-container>
+          <ng-container ngxIntellegensGridColumnDef="salary" header="Salary" footer="Salary" [sortable]="true"></ng-container>  
         </ngx-intellegens-grid>
       </div>
     </code>

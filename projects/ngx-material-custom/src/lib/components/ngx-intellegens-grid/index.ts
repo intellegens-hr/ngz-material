@@ -26,7 +26,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   private internalLoading: boolean;
 
   public orderField: string;
-  public orderDirection: boolean;
+  public orderDirection = true;
 
   public pageIndex = 0;
   public pageSize = 10;
