@@ -28,8 +28,33 @@
   }
 
   .mat-sidenav-content {
-    padding: 10pt;
+    padding: 0 10pt 14pt 10pt;
     overflow-y: auto;
+
+    // Some general showcase content styling
+    ::ng-deep {
+
+      h3 {
+        margin-top: 40pt;
+      }
+      code {
+        color: gray;
+        &.js {        
+          color: olivedrab;
+          .comment { color: gray; }
+        }
+        &.html {
+          color: royalblue;
+        }
+      }
+      .example {
+        margin: 0 40pt;
+        padding: 10pt;
+        border: 1px dashed firebrick;
+      }
+
+    }
+
   }
 
 }

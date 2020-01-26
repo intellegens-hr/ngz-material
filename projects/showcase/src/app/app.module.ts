@@ -10,33 +10,22 @@ import { AppComponent } from './app.component';
 
 // Import showcase material components
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatButtonModule } from '@angular/material/button';
-
-// Import library
-import { NgxMaterialCustomModule } from '../../../ngx-material-custom/src/lib/ngx-material-custom.module';
 
 // Import showcases
-import { NgxIntellegensGridShowcaseComponent } from '../showcases/ngx-intellegens-grid-showcase';
-const showcases = [
-  NgxIntellegensGridShowcaseComponent
-];
+import { NgxIntellegensGridShowcaseModule } from '../showcases/ngx-intellegens-grid-showcase.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ...showcases
-  ],
+  declarations: [ AppComponent ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    // Showcase modules
+    NgxIntellegensGridShowcaseModule,
     // Showcase material modules
-    MatSidenavModule,
-    MatButtonModule,
-    // Intellegens modules
-    NgxMaterialCustomModule
+    MatSidenavModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
