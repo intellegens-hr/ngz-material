@@ -1,5 +1,5 @@
 <table mat-table matSort  matSortDisableClear=true class="mat-elevation-z8"
-  [dataSource] ="resolvedDataSource | sortBy:orderField:orderDirection | pagination:pageSize:pageIndex"
+  [dataSource] ="resolvedDataSource | filterBy:filters | sortBy:orderField:orderDirection | pagination:pageSize:pageIndex" 
   (matSortChange)="sortChange($event)">
 
     <ng-container *ngFor="let key of resolvedDataSourceKeys" [matColumnDef]="key">
@@ -26,6 +26,6 @@
     <div class="content">Error</div>
   </div>
 
-  <div class="container" *ngIf="loading || internalLoading">
+  <div class="container" *ngIf="((!error && !internalError) && (loading || internalLoading))">
     <div class="content">Loading</div>
   </div>

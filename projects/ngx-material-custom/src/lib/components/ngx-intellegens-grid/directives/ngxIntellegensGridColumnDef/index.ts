@@ -24,7 +24,6 @@ export class NgxIntellegensGridColumnDefDirective {
 
 }
 
-
 export class TableColumnConfiguration {
   public key: string;
   public header: string;

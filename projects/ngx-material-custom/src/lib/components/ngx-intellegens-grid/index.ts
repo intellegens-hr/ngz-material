@@ -2,18 +2,21 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, ContentChildren, QueryList, Pipe, PipeTransform, HostListener } from '@angular/core';
+import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, ContentChildren, QueryList, Pipe, PipeTransform, HostListener, ContentChild } from '@angular/core';
 import { isObservable, SubscriptionLike } from 'rxjs';
 import { isPromise } from '@angular/compiler/src/util';
 import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
+import { NgxIntellegensGridPaginationDefDirective, TablePaginationConfiguration  } from './directives/ngxIntellegensGridPaginationDef';
 
 @Component({
   selector: 'ngx-intellegens-grid',
   templateUrl: './index.html',
   styleUrls: ['./style.scss']
 })
-export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges, OnDestroy{
-
+export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges, OnDestroy {
+  public get resolvedDataSourceKeys () {
+    return (this.resolvedDataSource && this.resolvedDataSource.length ? Object.keys(this.resolvedDataSource[0]) : []);
+  }
 
   public config = new TableConfiguration();
 
@@ -28,6 +31,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   public orderField: string;
   public orderDirection = true;
 
+  public filters = {firstName: 'Judy'};
+
   public pageIndex = 0;
   public pageSize = 10;
   public numOfItems: number;
@@ -37,12 +42,12 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   public dataSource: any;
   private dataSourceSubscription: SubscriptionLike;
   private resolvedDataSource: any = [];
-  public get resolvedDataSourceKeys () {
-    return (this.resolvedDataSource && this.resolvedDataSource.length ? Object.keys(this.resolvedDataSource[0]) : []);
-  }
 
   @ContentChildren(NgxIntellegensGridColumnDefDirective)
   public columnDefs: QueryList<NgxIntellegensGridColumnDefDirective>;
+
+  @ContentChild(NgxIntellegensGridPaginationDefDirective, {static: false} )
+  public paginationDef: NgxIntellegensGridPaginationDefDirective;
 
   public ngAfterContentInit (): void {
    this.columnDefs.forEach(element => {
@@ -53,6 +58,15 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       columnConfig.sortable = element.sortable;
       this.config.columnDefinition[columnConfig.key] = columnConfig;
     });
+
+   if (this.paginationDef) {
+      let paginationConfig = new TablePaginationConfiguration();
+      paginationConfig.hasPagination = true;
+      paginationConfig.key = this.paginationDef.key;
+      paginationConfig.defaultPageSize = this.paginationDef.defaultPageSize;
+      paginationConfig.pageSizeOptions = this.paginationDef.pageSizeOptions;
+      this.config.pagination[paginationConfig.key] = paginationConfig;
+   }
   }
 
   public ngOnChanges (changes: SimpleChanges) {
@@ -105,7 +119,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
       }
     }
-    this.numOfItems = this.resolvedDataSource.length;
+    let filterBy = new FilterBy();
+    this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
   }
 
 
@@ -136,7 +151,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 class TableConfiguration {
 
   public columnDefinition: any = {};
-
+  public pagination: any = {};
 }
 
 @Pipe({name: 'sortBy'})
