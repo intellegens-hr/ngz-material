@@ -33,6 +33,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
   public filters = {firstName: 'Judy'};
 
+  public hasPagination: boolean;
   public pageIndex = 0;
   public pageSize = 10;
   public numOfItems: number;
@@ -53,7 +54,12 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
     this.config.columnDefinition = TableColumnConfiguration.create(this.columnDefs);
     this.config.pagination = TablePaginationConfiguration.create(this.paginationDef);
-    this.pageSize = this.config.pagination.defaultPageSize;
+    this.hasPagination = this.config.pagination.hasPagination;
+    if (this.hasPagination !== false) {
+      this.pageSize = this.config.pagination.defaultPageSize;
+    } else {
+      this.pageSize = this.numOfItems;
+    }
   }
 
   public ngOnChanges (changes: SimpleChanges) {
