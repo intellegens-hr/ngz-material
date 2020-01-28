@@ -10,12 +10,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
 // Import directive
 import { NgxIntellegensGridColumnDefDirective } from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridColumnDef';
+import { NgxIntellegensGridPaginationDefDirective } from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridPaginationDef';
 
 // Import components
 import { NgxIntellegensGridComponent, SortBy, FilterBy, Pagination } from './ngx-intellegens-grid';
 const components = [
   NgxIntellegensGridComponent,
   NgxIntellegensGridColumnDefDirective,
+  NgxIntellegensGridPaginationDefDirective,
   SortBy,
   FilterBy,
   Pagination

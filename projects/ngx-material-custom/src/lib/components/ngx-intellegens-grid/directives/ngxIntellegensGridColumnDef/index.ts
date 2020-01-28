@@ -25,6 +25,20 @@ export class NgxIntellegensGridColumnDefDirective {
 }
 
 export class TableColumnConfiguration {
+  public static create (def) {
+    const configHash = {};
+    if (def) {
+      def.forEach(element => {
+        const config = new TableColumnConfiguration();
+        config.key = element.key;
+        config.header = element.header;
+        config.footer = element.footer;
+        config.sortable = element.sortable;
+        configHash[element.key] = config;
+      });
+    }
+    return configHash;
+  }
   public key: string;
   public header: string;
   public footer: string;

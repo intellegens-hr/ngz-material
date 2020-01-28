@@ -3,7 +3,7 @@
 
 // Import dependencies
 import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, ContentChildren, QueryList, Pipe, PipeTransform, HostListener, ContentChild } from '@angular/core';
-import { isObservable, SubscriptionLike } from 'rxjs';
+import { isObservable, SubscriptionLike, config } from 'rxjs';
 import { isPromise } from '@angular/compiler/src/util';
 import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
 import { NgxIntellegensGridPaginationDefDirective, TablePaginationConfiguration  } from './directives/ngxIntellegensGridPaginationDef';
@@ -50,23 +50,10 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   public paginationDef: NgxIntellegensGridPaginationDefDirective;
 
   public ngAfterContentInit (): void {
-   this.columnDefs.forEach(element => {
-      let columnConfig = new TableColumnConfiguration();
-      columnConfig.key = element.key;
-      columnConfig.header = element.header;
-      columnConfig.footer = element.footer;
-      columnConfig.sortable = element.sortable;
-      this.config.columnDefinition[columnConfig.key] = columnConfig;
-    });
 
-   if (this.paginationDef) {
-      let paginationConfig = new TablePaginationConfiguration();
-      paginationConfig.hasPagination = true;
-      paginationConfig.key = this.paginationDef.key;
-      paginationConfig.defaultPageSize = this.paginationDef.defaultPageSize;
-      paginationConfig.pageSizeOptions = this.paginationDef.pageSizeOptions;
-      this.config.pagination[paginationConfig.key] = paginationConfig;
-   }
+    this.config.columnDefinition = TableColumnConfiguration.create(this.columnDefs);
+    this.config.pagination = TablePaginationConfiguration.create(this.paginationDef);
+    this.pageSize = this.config.pagination.defaultPageSize;
   }
 
   public ngOnChanges (changes: SimpleChanges) {

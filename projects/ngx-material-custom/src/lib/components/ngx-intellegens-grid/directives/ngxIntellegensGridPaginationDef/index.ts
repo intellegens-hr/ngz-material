@@ -1,4 +1,4 @@
-// <ngxIntellegensGridColumnDef /> directive
+// <ngxIntellegensGridPaginationDef /> directive
 // ----------------------------------------------------------------------------
 
 // Import dependencies
@@ -9,9 +9,6 @@ import { Directive, Input } from '@angular/core';
   selector: '[ngxIntellegensGridPaginationDef]'
 })
 export class NgxIntellegensGridPaginationDefDirective {
-
-  @Input('ngxIntellegensGridPaginationDef')
-  public key: string;
 
   @Input()
   public hasPagination: boolean;
@@ -25,8 +22,23 @@ export class NgxIntellegensGridPaginationDefDirective {
 }
 
 export class TablePaginationConfiguration {
-  public key: string;
+  public static create (def) {
+    const config = new TablePaginationConfiguration();
+    if (def) {
+      if (def.hasPagination !== undefined) {
+        config.hasPagination = def.hasPagination;
+      }
+      if (def.defaultPageSize !== undefined) {
+        config.defaultPageSize = def.defaultPageSize;
+      }
+      if (def.pageSizeOptions !== undefined) {
+        config.pageSizeOptions = def.pageSizeOptions;
+      }
+    }
+    return config;
+  }
+
   public hasPagination = true;
   public defaultPageSize = 10;
-  public pageSizeOptions = [10, 20, 50, 100];
+  public pageSizeOptions = [10, 30, 50, 100];
 }
