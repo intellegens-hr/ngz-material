@@ -2,7 +2,16 @@
   [dataSource] ="resolvedDataSource | filterBy:filters | sortBy:orderField:orderDirection | pagination:pageSize:pageIndex" 
   (matSortChange)="sortChange($event)">
 
-    <ng-container *ngFor="let key of resolvedDataSourceKeys" [matColumnDef]="key">
+  <ng-container *matHeaderRowDef="resolvedDataSourceKeys">
+    <tr mat-header-row></tr>
+    <tr *ngIf="config.filtering.hasFiltering !== false">
+      <th *ngFor="let key of resolvedDataSourceKeys">
+          <input (keyup)="onKeyUp(key, $event)" [disabled]="config.columnDefinition[key] && config.columnDefinition[key].hasFiltering === false" type="text">
+      </th>
+    </tr>
+  </ng-container>
+
+  <ng-container *ngFor="let key of resolvedDataSourceKeys" [matColumnDef]="key">
       <th mat-header-cell *matHeaderCellDef
         mat-sort-header [disabled]="config.columnDefinition[key] && config.columnDefinition[key].sortable ? false : true">
         {{ config.columnDefinition[key] && config.columnDefinition[key].header ? config.columnDefinition[key].header : key }} 
@@ -15,7 +24,6 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="resolvedDataSourceKeys"></tr>
     <tr mat-row *matRowDef="let row; columns: resolvedDataSourceKeys;"></tr>
     <tr mat-footer-row *matFooterRowDef="resolvedDataSourceKeys"></tr>
   </table>

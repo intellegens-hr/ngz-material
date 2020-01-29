@@ -3,11 +3,12 @@
 <pre>
   <code>
     <ngx-intellegens-grid [dataSource]="dataSource">
+      <ng-container ngxIntellegensGridFilteringDef [hasFiltering]="true"></ng-container>
       <ng-container ngxIntellegensGridPaginationDef [defaultPageSize]="5" [pageSizeOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
-      <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [sortable]="true"></ng-container>      
-      <ng-container ngxIntellegensGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [sortable]="true"></ng-container> 
-      <ng-container ngxIntellegensGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [sortable]="true"></ng-container>
-      <ng-container ngxIntellegensGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [sortable]="true"></ng-container>  
+      <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [sortable]="true" [hasFiltering]="false"></ng-container>      
+      <ng-container ngxIntellegensGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [sortable]="true" [hasFiltering]="true"></ng-container> 
+      <ng-container ngxIntellegensGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [sortable]="true" [hasFiltering]="true" ></ng-container>
+      <ng-container ngxIntellegensGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [sortable]="true" [hasFiltering]="true"></ng-container>  
     </ngx-intellegens-grid>
   </code>
 </pre>

@@ -7,6 +7,7 @@ import { isObservable, SubscriptionLike, config } from 'rxjs';
 import { isPromise } from '@angular/compiler/src/util';
 import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
 import { NgxIntellegensGridPaginationDefDirective, TablePaginationConfiguration  } from './directives/ngxIntellegensGridPaginationDef';
+import { NgxIntellegensGridFilteringDefDirective, TableFilterConfiguration  } from './directives/ngxIntellegensGridFilteringDef';
 
 @Component({
   selector: 'ngx-intellegens-grid',
@@ -31,7 +32,9 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   public orderField: string;
   public orderDirection = true;
 
-  public filters = {firstName: 'Judy'};
+  public filters = {};
+
+  public values = '';
 
   public hasPagination: boolean;
   public pageIndex = 0;
@@ -50,9 +53,13 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   @ContentChild(NgxIntellegensGridPaginationDefDirective, {static: false} )
   public paginationDef: NgxIntellegensGridPaginationDefDirective;
 
+  @ContentChild(NgxIntellegensGridFilteringDefDirective, {static: false} )
+  public filteringDef: NgxIntellegensGridFilteringDefDirective;
+
   public ngAfterContentInit (): void {
 
     this.config.columnDefinition = TableColumnConfiguration.create(this.columnDefs);
+    this.config.filtering = TableFilterConfiguration.create(this.filteringDef);
     this.config.pagination = TablePaginationConfiguration.create(this.paginationDef);
     this.hasPagination = this.config.pagination.hasPagination;
     if (this.hasPagination !== false) {
@@ -112,7 +119,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
       }
     }
-    let filterBy = new FilterBy();
+    const filterBy = new FilterBy();
     this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
   }
 
@@ -139,12 +146,20 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       this.previousPageIndex = e.previousPageIndex;
     }
 
+    public onKeyUp (key, event: any) {
+      this.values = event.target.value;
+      this.filters[key] = this.values;
+      if (this.values === '') {
+        delete this.filters[key];
+      }
+    }
 }
 
 class TableConfiguration {
 
   public columnDefinition: any = {};
   public pagination: any = {};
+  public filtering: any = {};
 }
 
 @Pipe({name: 'sortBy'})
@@ -177,7 +192,7 @@ export class FilterBy  implements PipeTransform {
       let filterKeys = Object.keys(filter);
       return items.filter(item =>
         filterKeys.reduce((memo, keyName) =>
-          (memo && new RegExp(filter[keyName]).test(item[keyName])) || filter[keyName] === '', true));
+          (memo && new RegExp(filter[keyName]).test(item[keyName])), true));
     } else {
       return items;
     }

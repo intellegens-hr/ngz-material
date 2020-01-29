@@ -22,6 +22,9 @@ export class NgxIntellegensGridColumnDefDirective {
   @Input()
   public sortable: boolean;
 
+  @Input()
+  public hasFiltering: boolean;
+
 }
 
 export class TableColumnConfiguration {
@@ -34,13 +37,16 @@ export class TableColumnConfiguration {
         config.header = element.header;
         config.footer = element.footer;
         config.sortable = element.sortable;
+        config.hasFiltering = element.hasFiltering;
         configHash[element.key] = config;
       });
     }
     return configHash;
   }
+
   public key: string;
   public header: string;
   public footer: string;
   public sortable: boolean;
+  public hasFiltering = true;
 }
