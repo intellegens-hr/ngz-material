@@ -27,4 +27,5 @@ export class TableFilterConfiguration {
   }
 
   public hasFiltering = true;
+  public hasFilterColumns = true;
 }

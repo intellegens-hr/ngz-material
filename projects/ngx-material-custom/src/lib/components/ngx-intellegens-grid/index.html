@@ -4,7 +4,7 @@
 
   <ng-container *matHeaderRowDef="resolvedDataSourceKeys">
     <tr mat-header-row></tr>
-    <tr *ngIf="config.filtering.hasFiltering !== false">
+    <tr *ngIf="config.filtering.hasFiltering && config.filtering.hasFilterColumns">
       <th *ngFor="let key of resolvedDataSourceKeys">
           <input (keyup)="onKeyUp(key, $event)" [disabled]="config.columnDefinition[key] && config.columnDefinition[key].hasFiltering === false" type="text">
       </th>

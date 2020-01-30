@@ -32,6 +32,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   public orderField: string;
   public orderDirection = true;
 
+  public anyFilter: any;
+
   public filters = {};
 
   public values = '';
@@ -58,8 +60,13 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
   public ngAfterContentInit (): void {
 
-    this.config.columnDefinition = TableColumnConfiguration.create(this.columnDefs);
     this.config.filtering = TableFilterConfiguration.create(this.filteringDef);
+    this.config.columnDefinition = TableColumnConfiguration.create(this.columnDefs);
+    // Check if any row has [hasFiltering] = true to display filter header
+    const testArr = [];
+    this.config.filtering.hasFilterColumns = !Object.values(this.config.columnDefinition)
+      .every((v: TableColumnConfiguration) => v.hasFiltering === false);
+
     this.config.pagination = TablePaginationConfiguration.create(this.paginationDef);
     this.hasPagination = this.config.pagination.hasPagination;
     if (this.hasPagination !== false) {
@@ -189,7 +196,7 @@ export class SortBy implements PipeTransform {
 export class FilterBy  implements PipeTransform {
    public  transform (items: any, filter: any): any {
     if (filter && Array.isArray(items)) {
-      let filterKeys = Object.keys(filter);
+      const filterKeys = Object.keys(filter);
       return items.filter(item =>
         filterKeys.reduce((memo, keyName) =>
           (memo && new RegExp(filter[keyName]).test(item[keyName])), true));
@@ -204,7 +211,7 @@ export class Pagination  implements PipeTransform {
    public transform (items: any, pageSize: number, pageIndex: number) {
      let slicedArray = [];
      let startingPoint = pageIndex * pageSize;
-     let endPoint = startingPoint + pageSize;
+     const endPoint = startingPoint + pageSize;
      if (startingPoint > items.length) {
       startingPoint = items.length - items.length % pageSize;
      }

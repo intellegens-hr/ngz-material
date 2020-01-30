@@ -10,6 +10,7 @@ import { NgxIntellegensGridShowcaseSection02Component } from './components/secti
 import { NgxIntellegensGridShowcaseSection03Component } from './components/section03';
 import { NgxIntellegensGridShowcaseSection04Component } from './components/section04';
 import { NgxIntellegensGridShowcaseSection05Component } from './components/section05';
+import { NgxIntellegensGridShowcaseSection06Component } from './components/section06';
 import { NgxIntellegensGridShowcaseSectionNextComponent } from './components/section99';
 export const components = [
   NgxIntellegensGridShowcaseSection01Component,
@@ -17,6 +18,7 @@ export const components = [
   NgxIntellegensGridShowcaseSection03Component,
   NgxIntellegensGridShowcaseSection04Component,
   NgxIntellegensGridShowcaseSection05Component,
+  NgxIntellegensGridShowcaseSection06Component,
   NgxIntellegensGridShowcaseSectionNextComponent
 ];
 
