@@ -2,7 +2,7 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, ContentChildren, QueryList, Pipe, PipeTransform, HostListener, ContentChild } from '@angular/core';
+import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, Output, EventEmitter, ContentChildren, QueryList, Pipe, PipeTransform, HostListener, ContentChild } from '@angular/core';
 import { isObservable, SubscriptionLike, config } from 'rxjs';
 import { isPromise } from '@angular/compiler/src/util';
 import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
@@ -58,12 +58,24 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   @ContentChild(NgxIntellegensGridFilteringDefDirective, {static: false} )
   public filteringDef: NgxIntellegensGridFilteringDefDirective;
 
+  @Output() public change = new EventEmitter<any>();
+  public gridDataChange ({ orderField = null, orderDirection = null, pageSize = null, pageIndex = null }) {
+    const handleChange = false;
+    const state = {
+      orderField:     orderField !== null ? orderField : this.orderField,
+      orderDirection: orderDirection !== null ? orderDirection : this.orderDirection,
+      pageSize:       pageSize !== null ? pageSize : this.pageSize,
+      pageIndex:      pageIndex !== null ? pageIndex : this.pageIndex
+    };
+    this.change.emit(state);
+    console.log(state);
+  }
+
   public ngAfterContentInit (): void {
 
-    this.config.filtering = TableFilterConfiguration.create(this.filteringDef);
     this.config.columnDefinition = TableColumnConfiguration.create(this.columnDefs);
+    this.config.filtering = TableFilterConfiguration.create(this.filteringDef);
     // Check if any row has [hasFiltering] = true to display filter header
-    const testArr = [];
     this.config.filtering.hasFilterColumns = !Object.values(this.config.columnDefinition)
       .every((v: TableColumnConfiguration) => v.hasFiltering === false);
 
@@ -145,12 +157,14 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     public sortChange (e) {
       this.orderField = e.active;
       this.orderDirection = (e.direction === 'asc' ? true : false);
+      this.gridDataChange({ orderField: this.orderField, orderDirection: this.orderDirection });
     }
 
     public pageChange (e) {
       this.pageIndex = e.pageIndex;
       this.pageSize = e.pageSize;
       this.previousPageIndex = e.previousPageIndex;
+      this.gridDataChange({ pageSize: this.pageSize, pageIndex: this.pageIndex });
     }
 
     public onKeyUp (key, event: any) {
