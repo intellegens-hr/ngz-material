@@ -38,6 +38,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
   public values = '';
 
+  public handleChange: boolean;
+
   public hasPagination: boolean;
   public pageIndex = 0;
   public pageSize = 10;
@@ -60,15 +62,15 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
   @Output() public change = new EventEmitter<any>();
   public gridDataChange ({ orderField = null, orderDirection = null, pageSize = null, pageIndex = null }) {
-    const handleChange = false;
-    const state = {
+    const e = {
       orderField:     orderField !== null ? orderField : this.orderField,
       orderDirection: orderDirection !== null ? orderDirection : this.orderDirection,
       pageSize:       pageSize !== null ? pageSize : this.pageSize,
-      pageIndex:      pageIndex !== null ? pageIndex : this.pageIndex
+      pageIndex:      pageIndex !== null ? pageIndex : this.pageIndex,
+      handleChange:   true
     };
-    this.change.emit(state);
-    console.log(state);
+    this.change.emit(e);
+    this.handleChange = e.handleChange;
   }
 
   public ngAfterContentInit (): void {
@@ -155,16 +157,27 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   }
 
     public sortChange (e) {
-      this.orderField = e.active;
-      this.orderDirection = (e.direction === 'asc' ? true : false);
-      this.gridDataChange({ orderField: this.orderField, orderDirection: this.orderDirection });
+        const orderField = e.active;
+        const orderDirection = (e.direction === 'asc' ? true : false);
+        this.gridDataChange({ orderField, orderDirection });
+        if (this.handleChange === true) {
+          this.orderField = orderField;
+          this.orderDirection = orderDirection;
+          this.gridDataChange({ orderField: this.orderField, orderDirection: this.orderDirection });
+        }
     }
 
     public pageChange (e) {
-      this.pageIndex = e.pageIndex;
-      this.pageSize = e.pageSize;
-      this.previousPageIndex = e.previousPageIndex;
-      this.gridDataChange({ pageSize: this.pageSize, pageIndex: this.pageIndex });
+      const pageIndex = e.pageIndex;
+      const pageSize = e.pageSize;
+      const previousPageIndex = e.previousPageIndex;
+      this.gridDataChange({ pageSize, pageIndex });
+      if (this.handleChange === true) {
+        this.pageIndex = pageIndex;
+        this.pageSize = pageSize;
+        this.previousPageIndex = previousPageIndex;
+        this.gridDataChange({ pageSize: this.pageSize, pageIndex: this.pageIndex });
+      }
     }
 
     public onKeyUp (key, event: any) {

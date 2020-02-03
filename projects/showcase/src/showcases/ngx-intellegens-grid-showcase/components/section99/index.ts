@@ -17,4 +17,9 @@ export class NgxIntellegensGridShowcaseSectionNextComponent {
   // Holds display data
   public dataSource: any = data;
 
+
+  public onEventChange (e) {
+    console.log('hey this happened', e);
+    e.handleChange = true;
+  }
 }
