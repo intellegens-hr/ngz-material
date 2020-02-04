@@ -5,7 +5,7 @@
 export const data = [
   { id: 1,  firstName: 'Sophie',  lastName: 'Myers',    salary: 2000 },
   { id: 2,  firstName: 'Judy',    lastName: 'Herbert',  salary: 1500 },
-  { id: 3,  firstName: 'Mike',    lastName: 'Stewart',  salary: 3753 },
+  { id: 3,  firstName: 'Mike',    lastName: 'Stewart',  salary: 2400 },
   { id: 4,  firstName: 'Judy',    lastName: 'Brown',    salary: 2400 },
   { id: 5,  firstName: 'Bob',     lastName: 'Melon',    salary: 1100 },
   { id: 6,  firstName: 'Sophie',  lastName: 'Myers',    salary: 2000 },

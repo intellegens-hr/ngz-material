@@ -36,15 +36,10 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
   public filters = {};
 
-  public values = '';
-
-  public handleChange: boolean;
-
   public hasPagination: boolean;
   public pageIndex = 0;
   public pageSize = 10;
   public numOfItems: number;
-  public previousPageIndex: number;
 
   @Input()
   public dataSource: any;
@@ -61,16 +56,18 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   public filteringDef: NgxIntellegensGridFilteringDefDirective;
 
   @Output() public change = new EventEmitter<any>();
-  public gridDataChange ({ orderField = null, orderDirection = null, pageSize = null, pageIndex = null }) {
+  public gridDataChange ({ orderField = null, orderDirection = null, pageSize = null, pageIndex = null, filters = {} }) {
     const e = {
       orderField:     orderField !== null ? orderField : this.orderField,
       orderDirection: orderDirection !== null ? orderDirection : this.orderDirection,
       pageSize:       pageSize !== null ? pageSize : this.pageSize,
       pageIndex:      pageIndex !== null ? pageIndex : this.pageIndex,
-      handleChange:   true
+      filters:        filters !== null ? filters : this.filters,
+      handleChange:   true,
+      grid: this
     };
     this.change.emit(e);
-    this.handleChange = e.handleChange;
+    return e.handleChange;
   }
 
   public ngAfterContentInit (): void {
@@ -144,7 +141,6 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
   }
 
-
   public ngOnDestroy () {
     // Unsubscribe from previous dataSource if it exists
     if (this.dataSourceSubscription) {
@@ -156,37 +152,57 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     this.internalError = err;
   }
 
-    public sortChange (e) {
-        const orderField = e.active;
-        const orderDirection = (e.direction === 'asc' ? true : false);
-        this.gridDataChange({ orderField, orderDirection });
-        if (this.handleChange === true) {
-          this.orderField = orderField;
-          this.orderDirection = orderDirection;
-          this.gridDataChange({ orderField: this.orderField, orderDirection: this.orderDirection });
-        }
+  public updateSort (orderField, orderDirection) {
+    this.orderField =  orderField ? orderField : null;
+    this.orderDirection = orderDirection ? orderDirection : null;
+  }
+
+  public updatePagination (pageIndex, pageSize, numOfItems) {
+    this.pageIndex = pageIndex ? pageIndex : null;
+    this.pageSize = pageSize ? pageSize : null;
+    this.numOfItems = numOfItems ? numOfItems : null;
     }
 
-    public pageChange (e) {
-      const pageIndex = e.pageIndex;
-      const pageSize = e.pageSize;
-      const previousPageIndex = e.previousPageIndex;
-      this.gridDataChange({ pageSize, pageIndex });
-      if (this.handleChange === true) {
-        this.pageIndex = pageIndex;
-        this.pageSize = pageSize;
-        this.previousPageIndex = previousPageIndex;
-        this.gridDataChange({ pageSize: this.pageSize, pageIndex: this.pageIndex });
+  public updateFilter (key, values) {
+    this.filters[key] = values;
+  }
+
+  public sortChange (e) {
+      const orderField = e.active;
+      const orderDirection = (e.direction === 'asc' ? true : false);
+      const dataChange = this.gridDataChange({ orderField, orderDirection });
+      if (dataChange === true) {
+        this.orderField = orderField;
+        this.orderDirection = orderDirection;
       }
-    }
+  }
 
-    public onKeyUp (key, event: any) {
-      this.values = event.target.value;
-      this.filters[key] = this.values;
-      if (this.values === '') {
+  public pageChange (e) {
+    const pageIndex = e.pageIndex;
+    const pageSize = e.pageSize;
+    const previousPageIndex = e.previousPageIndex;
+    const dataChange = this.gridDataChange({ pageSize, pageIndex });
+    if (dataChange === true) {
+      this.pageIndex = pageIndex;
+      this.pageSize = pageSize;
+    }
+  }
+
+  public onKeyUp (key, event: any) {
+    const values = event.target.value;
+    const filters = { ...this.filters };
+    filters[key] = values;
+    if (values === '') {
+      delete filters[key];
+    }
+    const dataChange = this.gridDataChange({ filters });
+    if (dataChange === true) {
+      this.filters[key] = values;
+      if (values === '') {
         delete this.filters[key];
       }
     }
+  }
 }
 
 class TableConfiguration {

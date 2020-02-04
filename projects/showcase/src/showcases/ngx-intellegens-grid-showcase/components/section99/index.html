@@ -2,7 +2,7 @@
 
 <pre>
   <code>
-    <ngx-intellegens-grid [dataSource]="dataSource" (change)="onEventChange($event)">
+    <ngx-intellegens-grid [dataSource]="dataSource" >
       <ng-container ngxIntellegensGridFilteringDef [hasFiltering]="true"></ng-container>
       <ng-container ngxIntellegensGridPaginationDef [defaultPageSize]="5" [pageSizeOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
       <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [sortable]="true" [hasFiltering]="false"></ng-container>      

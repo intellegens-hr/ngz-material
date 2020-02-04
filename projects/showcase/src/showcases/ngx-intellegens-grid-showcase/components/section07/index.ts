@@ -27,4 +27,22 @@ export class NgxIntellegensGridShowcaseSection07Component {
   // Togglable error status
   public isError = false;
 
+  public onEventChange (e) {
+    console.log('hey this happened', e);
+    e.handleChange = false;
+
+    if (!e.handleChange) {
+      this.dataSource = new Promise((resolve) => {
+        setTimeout(() => {
+          // Set data
+          const temp = data.slice(e.pageIndex * e.pageSize, (e.pageIndex + 1) * e.pageSize);
+          temp.length = 10000;
+          resolve(temp);
+          // Set state
+          e.grid.updateSort('salary', true);
+        }, 1000);
+      });
+    }
+  }
+
 }
