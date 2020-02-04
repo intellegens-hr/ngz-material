@@ -152,19 +152,19 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     this.internalError = err;
   }
 
-  public updateSort (orderField, orderDirection) {
+  public updateSort ( {orderField = null, orderDirection = true }) {
     this.orderField =  orderField ? orderField : null;
     this.orderDirection = orderDirection ? orderDirection : null;
   }
 
-  public updatePagination (pageIndex, pageSize, numOfItems) {
+  public updatePagination ({ pageIndex = null, pageSize = null, numOfItems = null }) {
     this.pageIndex = pageIndex ? pageIndex : null;
     this.pageSize = pageSize ? pageSize : null;
     this.numOfItems = numOfItems ? numOfItems : null;
     }
 
-  public updateFilter (key, values) {
-    this.filters[key] = values;
+  public updateFilter ( {key = null, values = null} ) {
+    this.filters[key] = values ? values : null;
   }
 
   public sortChange (e) {
