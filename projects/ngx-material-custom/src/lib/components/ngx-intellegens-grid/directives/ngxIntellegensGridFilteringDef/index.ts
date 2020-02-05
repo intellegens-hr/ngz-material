@@ -22,8 +22,8 @@ export class TableFilterConfiguration {
       if (def.hasFiltering !== undefined) {
         config.hasFiltering = def.hasFiltering;
       }
-      return config;
     }
+    return config;
   }
 
   public hasFiltering = true;
