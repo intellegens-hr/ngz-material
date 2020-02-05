@@ -100,7 +100,6 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       }
       // Resolve dataSource
       if (isPromise(this.dataSource)) {
-
         this.internalLoading = true;
         // Resolve Promise data-source
         // TODO: use async/await
@@ -108,6 +107,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
           (dataSource) => {
             this.resolvedDataSource = dataSource;
             this.internalLoading = false;
+            const filterBy = new FilterBy();
+            this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
           },
           (err) => {
             this.handleInternalErrors(err);
@@ -116,29 +117,27 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
         );
 
       } else if (isObservable(this.dataSource)) {
-
         this.internalLoading = true;
         // Resolve RxJs Observable data-source
         this.dataSourceSubscription = this.dataSource.subscribe(
           (dataSource) => {
             this.resolvedDataSource = dataSource;
             this.internalLoading = false;
+            const filterBy = new FilterBy();
+            this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
           },
           (err) => {
             this.handleInternalErrors(err);
             this.internalLoading = false;
           }
         );
-
       } else {
-
         // Use resolved, direct data-source
         this.resolvedDataSource = this.dataSource;
-
+        const filterBy = new FilterBy();
+        this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
       }
     }
-    const filterBy = new FilterBy();
-    this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
   }
 
   public ngOnDestroy () {
@@ -153,18 +152,21 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   }
 
   public updateSort ( {orderField = null, orderDirection = true }) {
-    this.orderField =  orderField ? orderField : null;
-    this.orderDirection = orderDirection ? orderDirection : null;
+    this.orderField =  orderField !== null ? orderField : this.orderField;
+    this.orderDirection = orderDirection !== null ? orderDirection : this.orderDirection;
   }
 
   public updatePagination ({ pageIndex = null, pageSize = null, numOfItems = null }) {
-    this.pageIndex = pageIndex ? pageIndex : null;
-    this.pageSize = pageSize ? pageSize : null;
-    this.numOfItems = numOfItems ? numOfItems : null;
-    }
+    this.pageIndex = pageIndex !== null ? pageIndex : this.pageIndex;
+    this.pageSize = pageSize !== null ? pageSize : this.pageSize;
+    this.numOfItems = numOfItems !== null ? numOfItems : this.numOfItems;
+  }
 
-  public updateFilter ( {key = null, values = null} ) {
-    this.filters[key] = values ? values : null;
+  public updateFilter ({ key = null, value = null } ) {
+    this.filters[key] = value;
+    if (value === '') {
+      delete this.filters[key];
+    }
   }
 
   public sortChange (e) {
