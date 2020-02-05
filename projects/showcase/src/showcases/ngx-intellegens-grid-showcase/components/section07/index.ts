@@ -34,22 +34,22 @@ export class NgxIntellegensGridShowcaseSection07Component {
     if (!e.handleChange) {
 
       // Set data
-      // const temp = data.slice(e.pageIndex * e.pageSize, (e.pageIndex + 1) * e.pageSize);
+      // const temp = data.slice(e.pageIndex * e.pageLength, (e.pageIndex + 1) * e.pageLength);
       // this.dataSource = temp;
       setTimeout(() => {
-        e.grid.updatePagination({ numOfItems: data.length });
+        e.grid.updatePagination({ totalLength: data.length });
       });
 
       this.dataSource = new Promise((resolve) => {
         setTimeout(() => {
           // Set data
-          const temp = data.slice(e.pageIndex * e.pageSize, (e.pageIndex + 1) * e.pageSize);
+          const temp = data.slice(e.pageIndex * e.pageLength, (e.pageIndex + 1) * e.pageLength);
           resolve(temp);
           setTimeout(() => {
-            e.grid.updatePagination({ numOfItems: data.length });
+            e.grid.updatePagination({ totalLength: data.length });
           });
           // Set state
-          // e.grid.updateSort({orderField: 'salary', ascOrderDirection: true});
+          // e.grid.updateOrdering({orderField: 'salary', ascOrderDirection: true});
         }, 1000);
       });
     }

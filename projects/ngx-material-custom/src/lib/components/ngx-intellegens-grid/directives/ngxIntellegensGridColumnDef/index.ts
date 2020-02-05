@@ -55,6 +55,6 @@ export class TableColumnConfiguration {
   public key: string;
   public header: string;
   public footer: string;
-  public sortable: boolean;
+  public sortable = true;
   public hasFiltering = true;
 }

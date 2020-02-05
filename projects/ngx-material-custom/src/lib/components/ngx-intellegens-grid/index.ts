@@ -2,268 +2,471 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges, Input, Output, EventEmitter, ContentChildren, QueryList, Pipe, PipeTransform, HostListener, ContentChild } from '@angular/core';
-import { isObservable, SubscriptionLike, config } from 'rxjs';
-import { isPromise } from '@angular/compiler/src/util';
+import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges,
+         Input, Output, EventEmitter, ContentChildren, QueryList, ContentChild } from '@angular/core';
+import { SubscriptionLike, Observable } from 'rxjs';
 import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
 import { NgxIntellegensGridPaginationDefDirective, TablePaginationConfiguration  } from './directives/ngxIntellegensGridPaginationDef';
 import { NgxIntellegensGridFilteringDefDirective, TableFilterConfiguration  } from './directives/ngxIntellegensGridFilteringDef';
+import { FilterByPipe } from './pipes/filterBy';
 
+/**
+ * Grid configuration
+ */
+class GridConfiguration {
+  /**
+   * Holds columns' configuration
+   */
+  public columnDefinition: any = {};
+  /**
+   * Holds pagination configuration
+   */
+  public pagination: any = {};
+  /**
+   * Holds filtering configuration
+   */
+  public filtering: any = {};
+}
+
+/**
+ * Grid component, based on Angular material's <mat-table />
+ * Supports:
+ * - Pagination
+ * - Sorting
+ * - Filtering
+ * - TODO: ...
+ *
+ * Usage:
+ * <ngx-intellegens-grid [dataSource]="">\
+ *  TODO: Add a full usage syntax example\
+ * </ngx-intellegens-grid>
+ */
 @Component({
   selector: 'ngx-intellegens-grid',
   templateUrl: './index.html',
   styleUrls: ['./style.scss']
 })
 export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges, OnDestroy {
-  public get resolvedDataSourceKeys () {
-    return (this.resolvedDataSource && this.resolvedDataSource.length ? Object.keys(this.resolvedDataSource[0]) : []);
-  }
 
-  public config = new TableConfiguration();
+  //#region HTML component interface (@Inputs/@Outputs/@Content)
 
+  /**
+   * Grid data source; expects an array of items or a Promise resolving to an array of items or an Observable resolving to an array of items
+   */
   @Input()
-  public error?: any;
-  private internalError?: any;
+  public dataSource: any[]|Promise<any[]>|Observable<any[]>;
 
+  /**
+   * Allows for external setting of errors for the Grid
+   */
   @Input()
-  public loading?: boolean;
-  private internalLoading: boolean;
+  public error: Error = null;
 
-  public orderField: string;
-  public ascOrderDirection = true;
-
-  public anyFilter: any;
-
-  public filters = {};
-
-  public hasPagination: boolean;
-  public pageIndex = 0;
-  public pageSize = 10;
-  public numOfItems: number;
-
+  /**
+   * Allows for external setting of loading state for the Grid
+   */
   @Input()
-  public dataSource: any;
-  private dataSourceSubscription: SubscriptionLike;
-  private resolvedDataSource: any = [];
+  public loading = false;
 
+  /**
+   * Event triggering when Grid state changes (update to ordering, pagination or filtering)
+   */
+  // tslint:disable-next-line: no-output-native
+  @Output()
+  public changed = new EventEmitter<any>();
+
+  /**
+   * Content child elements implementing a [ngxIntellegensGridColumnDef]="propertyKey" directive
+   * handling specific column's configuration
+   */
   @ContentChildren(NgxIntellegensGridColumnDefDirective)
   public columnDefs: QueryList<NgxIntellegensGridColumnDefDirective>;
-
+  /**
+   * Content child elements implementing a [ngxIntellegensGridPaginationDef] directive
+   * handling pagination configuration
+   */
   @ContentChild(NgxIntellegensGridPaginationDefDirective, {static: false} )
   public paginationDef: NgxIntellegensGridPaginationDefDirective;
-
+  /**
+   * Content child elements implementing a [ngxIntellegensGridFilteringDef] directive
+   * handling filtering configuration
+   */
   @ContentChild(NgxIntellegensGridFilteringDefDirective, {static: false} )
   public filteringDef: NgxIntellegensGridFilteringDefDirective;
 
-  @Output() public change = new EventEmitter<any>();
-  public gridDataChange ({ orderField = null, ascOrderDirection = null, pageSize = null, pageIndex = null, filters = {} }) {
-    const e = {
-      orderField:        orderField !== null ? orderField : this.orderField,
-      ascOrderDirection: ascOrderDirection !== null ? ascOrderDirection : this.ascOrderDirection,
-      pageSize:          pageSize !== null ? pageSize : this.pageSize,
-      pageIndex:         pageIndex !== null ? pageIndex : this.pageIndex,
-      filters:           filters !== null ? filters : this.filters,
-      handleChange:   true,
-      grid: this
-    };
-    this.change.emit(e);
-    return e.handleChange;
+  //#endregion
+
+  //#region Properties
+
+  /**
+   * Makes configuration available as public
+   */
+  public get configuration () {
+    return this.config;
   }
+  // Holds internal configuration instance
+  protected config = new GridConfiguration();
 
-  public ngAfterContentInit (): void {
+  // Data source: Data resolved from [dataSource]
+  protected data: any[] = [];
+  // Data source: Contains all found property keys in any of data items
+  protected dataKeys: string[] = [];
+  // Data source: If data-source set as Observable, this will keep a reference to the subscription
+  // to this Observable (in case unsubscribe needed later)
+  protected dataSourceSubscription: SubscriptionLike;
 
+  // Holds internal errors
+  protected internalError: Error = null;
+  // Holds internal loading state
+  protected internalLoading = false;
+
+  // Ordering: Field key to order rows by
+  protected orderingField: string;
+  // Ordering: If ordering in ascending direction
+  protected orderingAscDirection = true;
+
+  // Pagination: Current page's index
+  protected pageIndex: number;
+  // Pagination: Each page's size (number of rows displayed per page)
+  protected pageLength: number;
+  // Pagination: Total number of rows in current data
+  protected totalLength: number;
+
+  // Filtering: Hash-table of filtering key-value pairs
+  // where key is the property key of the property being filtered by and value is the filtering value
+  protected filters = {};
+
+  //#endregion
+
+  //#region Component life-cycle
+
+  public ngAfterContentInit () {
+
+    // Initialize columns' configuration
     this.config.columnDefinition = TableColumnConfiguration.create(this.columnDefs);
-    this.config.filtering = TableFilterConfiguration.create(this.filteringDef);
-    // Check if any row has [hasFiltering] = true to display filter header
-    this.config.filtering.hasFilterColumns = !Object.values(this.config.columnDefinition)
-      .every((v: TableColumnConfiguration) => v.hasFiltering === false);
 
+    // Initialize pagination configuration
     this.config.pagination = TablePaginationConfiguration.create(this.paginationDef);
-    this.hasPagination = this.config.pagination.hasPagination;
-    if (this.hasPagination !== false) {
-      this.pageSize = this.config.pagination.defaultPageSize;
+    // Set initial page size
+    if (this.config.pagination.hasPagination !== false) {
+      this.pageLength = this.config.pagination.defaultPageLength;
     } else {
-      this.pageSize = this.numOfItems;
+      this.pageLength = this.totalLength;
     }
+
+    // Initialize filtering configuration
+    this.config.filtering = TableFilterConfiguration.create(this.filteringDef);
+    // Disable filtering if all columns have filtering explicitly disabled
+    this.config.filtering.hasFilterColumns = (!Object.values(this.config.columnDefinition).length)
+                                          || !!Object.values(this.config.columnDefinition)
+                                                .find((columnConf: TableColumnConfiguration) => columnConf.hasFiltering);
+
   }
 
   public ngOnChanges (changes: SimpleChanges) {
-    // On [dataSource] change, resolve new data-source
+    // On [dataSource] change, resolve new data source data
     if (changes.dataSource) {
-      // Clean internalErrors from previous dataSource if they exist
+
+      // Clean internalError from previous data source if they exist
       this.internalError = null;
-      // Set internalLoading to false
+      // Clear internalLoading
       this.internalLoading = false;
-      // Unsubscribe from previous dataSource if it exists
+      // Unsubscribe from previous dataSource if subscription exists
       if (this.dataSourceSubscription) {
         this.dataSourceSubscription.unsubscribe();
       }
-      // Resolve dataSource
-      if (isPromise(this.dataSource)) {
-        this.internalLoading = true;
-        // Resolve Promise data-source
-        // TODO: use async/await
-        this.dataSource.then(
-          (dataSource) => {
-            this.resolvedDataSource = dataSource;
-            this.internalLoading = false;
-            const filterBy = new FilterBy();
-            this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
-          },
-          (err) => {
-            this.handleInternalErrors(err);
-            this.internalLoading = false;
-          }
-        );
 
-      } else if (isObservable(this.dataSource)) {
-        this.internalLoading = true;
-        // Resolve RxJs Observable data-source
-        this.dataSourceSubscription = this.dataSource.subscribe(
-          (dataSource) => {
-            this.resolvedDataSource = dataSource;
-            this.internalLoading = false;
-            const filterBy = new FilterBy();
-            this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
-          },
-          (err) => {
-            this.handleInternalErrors(err);
-            this.internalLoading = false;
-          }
-        );
+      // Ingest dataSource
+      if (this.dataSource instanceof Promise) {
+        // Ingest Promise of data
+        this.ingestPromiseData();
+      } else if (this.dataSource instanceof Observable) {
+        // Ingest Observable data
+        this.ingestObservableData();
       } else {
-        // Use resolved, direct data-source
-        this.resolvedDataSource = this.dataSource;
-        const filterBy = new FilterBy();
-        this.numOfItems = filterBy.transform(this.resolvedDataSource, this.filters).length;
+        // Ingest raw data
+        this.ingestRawData();
       }
+
     }
   }
 
   public ngOnDestroy () {
-    // Unsubscribe from previous dataSource if it exists
+    // Unsubscribe from previous dataSource if subscription exists
     if (this.dataSourceSubscription) {
-     this.dataSourceSubscription.unsubscribe();
+      this.dataSourceSubscription.unsubscribe();
     }
   }
 
-  public handleInternalErrors (err) {
+  //#endregion
+
+  //#region Exposed methods for managing the component
+
+  /**
+   * Updates ordering state
+   * @param orderingField Field key to order rows by
+   * @param orderingAscDirection If ordering in ascending direction
+   */
+  public updateOrdering ({
+    orderingField         = undefined as string,
+    orderingAscDirection  = undefined as boolean
+  }) {
+    // Allow for resolved data to get ingested before updating state
+    setTimeout(() => {
+      // Update ordering state
+      this.orderingField =  orderingField !== undefined ? orderingField : this.orderingField;
+      this.orderingAscDirection = orderingAscDirection !== undefined ? orderingAscDirection : this.orderingAscDirection;
+      // TODO: Reset pagination if ordering changed
+      // TODO: Reflect ordering changes in <mat-table /> internal state
+    });
+  }
+
+  /**
+   * Updates pagination state
+   * @param pageIndex Current page's index
+   * @param pageLength Each page's size (number of rows displayed per page)
+   * @param totalLength Total number of rows in current data
+   */
+  public updatePagination ({
+    pageIndex   = undefined as number,
+    pageLength    = undefined as number,
+    totalLength  = undefined as number
+  }) {
+    // Allow for resolved data to get ingested before updating state
+    setTimeout(() => {
+      // Update pagination state
+      this.pageIndex = pageIndex !== undefined ? pageIndex : this.pageIndex;
+      this.pageLength = pageLength !== undefined ? pageLength : this.pageLength;
+      this.totalLength = totalLength !== undefined ? totalLength : this.totalLength;
+      // TODO: Reflect ordering changes in <mat-table /> internal state
+    });
+  }
+
+  /**
+   * Updates filtering state
+   * @param key Property key of the property being filtered by
+   * @param value Filtering value (if null, filtering by this property will be dropped)
+   */
+  public updateFiltering (key: string, value: any) {
+    // Allow for resolved data to get ingested before updating state
+    setTimeout(() => {
+      // Update filter state
+      if (value === undefined || value === null || value === '') {
+        delete this.filters[key];
+      } else {
+        this.filters[key] = value;
+      }
+      // TODO: Reset pagination if ordering changed
+    });
+  }
+
+  //#endregion
+
+  //#region <mat-table /> and other UI events' handlers
+
+  /**
+   * Handles <mat-table /> (user triggered) sorting change
+   * @param e Sorting event descriptor object
+   */
+  protected onMatTableSort (e) {
+    // Extract updated ordering values
+    const orderingField: string = e.active;
+    const orderingAscDirection = (e.direction === 'asc');
+    // Trigger (changed) event with updated values
+    const dataChange = this.triggerChangedEvent({ orderingField, orderingAscDirection });
+    // If change unhandled, handle state update internally
+    if (!dataChange) {
+      this.orderingField = orderingField;
+      this.orderingAscDirection = orderingAscDirection;
+    }
+  }
+
+  /**
+   * Handles <mat-table /> (user triggered) pagination change
+   * @param e Pagination event descriptor object
+   */
+  protected onMatTablePage (e) {
+    // Extract updated ordering values
+    const pageIndex: number = e.pageIndex;
+    const pageLength: number = e.pageSize;
+    const previousPageIndex: number = e.previousPageIndex;
+    // Trigger (changed) event with updated values
+    const dataChange = this.triggerChangedEvent({ pageLength, pageIndex, previousPageIndex });
+    // If change unhandled, handle state update internally
+    if (!dataChange) {
+      this.pageIndex = pageIndex;
+      this.pageLength = pageLength;
+    }
+  }
+
+  /**
+   * Handles (user triggered) filter value update
+   * @param key Property key of the data property being filtered
+   * @param e Event descriptor object
+   */
+  protected onFilterUpdated (key, e: any) {
+    // Extract updated ordering values
+    const value: string = e.target.value,
+          updatedFilters = { ...this.filters, [key]: value };
+    if (value === undefined || value === null || value === '') {
+      delete updatedFilters[key];
+    }
+    // Trigger (changed) event with updated values
+    const dataChange = this.triggerChangedEvent({ filters: updatedFilters });
+    // If change unhandled, handle state update internally
+    if (!dataChange) {
+      if (value === undefined || value === null || value === '') {
+        delete this.filters[key];
+      } else {
+        this.filters[key] = value;
+      }
+    }
+  }
+
+  //#endregion
+
+  //#region Internal methods
+
+  /**
+   * Takes raw data from [dataSource] and ingests it into the component
+   */
+  protected ingestRawData () {
+
+    // Check if [dataSource] is a Promise
+    if (!(this.dataSource instanceof Array)) { return; }
+
+    // Set data as raw data source value
+    this.data = this.dataSource;
+    // Extract all data keys from data
+    this.dataKeys = (this.data && this.data.length ? Object.keys(this.data[0]) : []);
+    // Reset filters
+    const filterBy = new FilterByPipe();
+    // Reset pagination
+    this.pageIndex = 0;
+    this.totalLength = filterBy.transform(this.data, this.filters).length;
+
+  }
+
+  /**
+   * Takes Promise of data from [dataSource] and (once resolved) ingests it into the component
+   */
+  protected ingestPromiseData () {
+
+    // Check if [dataSource] is a Promise
+    if (!(this.dataSource instanceof Promise)) { return; }
+
+    // Set loading status
+    this.internalLoading = true;
+
+    // Resolve Promise data-source
+    this.dataSource
+      .then(
+        (data) => {
+          // Set resolved data
+          this.data = data;
+          // Reset filters
+          const filterBy = new FilterByPipe();
+          // Reset pagination
+          this.pageIndex = 0;
+          this.totalLength = filterBy.transform(data, this.filters).length;
+        }
+      )
+      .catch ((err) => {
+        // Handle Promise resolution error
+        this.handleInternalError(err);
+      })
+      .finally(() => {
+        // Reset loading status
+        this.internalLoading = false;
+      });
+
+  }
+
+  /**
+   * Takes Observable data from [dataSource] and (once resolved) ingests it into the component
+   */
+  protected ingestObservableData () {
+
+    // Check if [dataSource] is a Promise
+    if (!(this.dataSource instanceof Observable)) { return; }
+
+    // Set loading status
+    this.internalLoading = true;
+
+    // Resolve RxJs Observable data-source
+    this.dataSourceSubscription = this.dataSource.subscribe(
+      (data) => {
+        // Set resolved data
+        this.data = data;
+        // Reset filters
+        const filterBy = new FilterByPipe();
+        // Reset pagination
+        this.pageIndex = 0;
+        this.totalLength = filterBy.transform(data, this.filters).length;
+      },
+      (err) => {
+        // Handle Observable resolution error
+        this.handleInternalError(err);
+      },
+      () => {
+        // Reset loading status
+        this.internalLoading = false;
+      }
+    );
+
+  }
+
+  /**
+   * Handles any error caught during internal operation of the Grid component
+   * @param err Error being handled
+   */
+  protected handleInternalError (err) {
     this.internalError = err;
   }
 
-  public updateSort ( {orderField = null, ascOrderDirection = true }) {
-    this.orderField =  orderField !== null ? orderField : this.orderField;
-    this.ascOrderDirection = ascOrderDirection !== null ? ascOrderDirection : this.ascOrderDirection;
+  /**
+   * Triggers the (changed) event with state information about to be applied
+   * @param orderingField Updated value of the field key to order rows by
+   * @param orderingAscDirection Updated value of if ordering in ascending direction
+   * @param pageLength Updated value of each page's size (number of rows displayed per page)
+   * @param pageIndex Updated value of current page's index
+   * @param previousPageIndex Updated value of previous page's index
+   * @param totalLength Total number of rows in updated data
+   * @param filters Updated value of the hash-table of filtering key-value pairs
+   * @returns If outside code will handle state changes, or if the changes should be applied by the grind component internally
+   */
+  protected triggerChangedEvent ({
+    orderingField         = undefined as string,
+    orderingAscDirection  = undefined as boolean,
+    pageIndex             = undefined as number,
+    previousPageIndex     = undefined as number,
+    pageLength              = undefined as number,
+    totalLength            = undefined as number,
+    filters               = undefined as object
+  }) {
+    // Ready the change event descriptor object
+    const e = {
+      // Grid state (Ordering)
+      orderingField:        orderingField !== undefined ? orderingField : this.orderingField,
+      orderingAscDirection: orderingAscDirection !== undefined ? orderingAscDirection : this.orderingAscDirection,
+      // Grid state (Pagination)
+      pageIndex:            pageIndex !== undefined ? pageIndex : this.pageIndex,
+      previousPageIndex,
+      pageLength:             pageLength !== undefined ? pageLength : this.pageLength,
+      totalLength:           totalLength !== undefined ? totalLength : this.totalLength,
+      // Grid state (Filtration)
+      filters:              filters !== undefined ? filters : this.filters,
+      // Editable property signaling state being handled by an outside party
+      handleChange:         true, // TODO: Reverse default value and rename property
+      // Reference to the Grid component instance allowing outside party to access exposed properties/methods
+      grid:                 this // TODO: Consider exposing some of the properties and methods directly instead of the entire Grid instance
+    };
+    // Emit (changed) event
+    this.changed.emit(e);
+    // Return if state being handled by an outside party
+    return !e.handleChange;
   }
 
-  public updatePagination ({ pageIndex = null, pageSize = null, numOfItems = null }) {
-    this.pageIndex = pageIndex !== null ? pageIndex : this.pageIndex;
-    this.pageSize = pageSize !== null ? pageSize : this.pageSize;
-    this.numOfItems = numOfItems !== null ? numOfItems : this.numOfItems;
-  }
+  //#endregion
 
-  public updateFilter ({ key = null, value = null } ) {
-    this.filters[key] = value;
-    if (value === '') {
-      delete this.filters[key];
-    }
-  }
-
-  public sortChange (e) {
-      const orderField = e.active;
-      const ascOrderDirection = (e.direction === 'asc' ? true : false);
-      const dataChange = this.gridDataChange({ orderField, ascOrderDirection });
-      if (dataChange === true) {
-        this.orderField = orderField;
-        this.ascOrderDirection = ascOrderDirection;
-      }
-  }
-
-  public pageChange (e) {
-    const pageIndex = e.pageIndex;
-    const pageSize = e.pageSize;
-    const previousPageIndex = e.previousPageIndex;
-    const dataChange = this.gridDataChange({ pageSize, pageIndex });
-    if (dataChange === true) {
-      this.pageIndex = pageIndex;
-      this.pageSize = pageSize;
-    }
-  }
-
-  public onKeyUp (key, event: any) {
-    const values = event.target.value;
-    const filters = { ...this.filters };
-    filters[key] = values;
-    if (values === '') {
-      delete filters[key];
-    }
-    const dataChange = this.gridDataChange({ filters });
-    if (dataChange === true) {
-      this.filters[key] = values;
-      if (values === '') {
-        delete this.filters[key];
-      }
-    }
-  }
-}
-
-class TableConfiguration {
-
-  public columnDefinition: any = {};
-  public pagination: any = {};
-  public filtering: any = {};
-}
-
-@Pipe({name: 'sortBy'})
-export class SortBy implements PipeTransform {
-  public transform (array: any, field: any, ascOrder: boolean): any[] {
-    if (!Array.isArray(array)) {
-      return;
-    }
-    array.sort((a: any, b: any) => {
-      if (a[field] < b[field]) {
-        return -1;
-      } else if ( a[field] > b[field]) {
-        return 1;
-      } else {
-         return 0;
-       }
-    });
-    if (!ascOrder) {
-      return [...array.reverse()];
-    } else {
-      return [...array];
-    }
-  }
-}
-
-@Pipe({name: 'filterBy',  pure: false})
-export class FilterBy  implements PipeTransform {
-   public  transform (items: any, filter: any): any {
-    if (filter && Array.isArray(items)) {
-      const filterKeys = Object.keys(filter);
-      return items.filter(item =>
-        filterKeys.reduce((memo, keyName) =>
-          (memo && new RegExp(filter[keyName]).test(item[keyName])), true));
-    } else {
-      return items;
-    }
-  }
-}
-
-@Pipe({name: 'pagination'})
-export class Pagination  implements PipeTransform {
-   public transform (items: any, pageSize: number, pageIndex: number) {
-     let slicedArray = [];
-     let startingPoint = pageIndex * pageSize;
-     const endPoint = startingPoint + pageSize;
-     if (startingPoint > items.length) {
-      startingPoint = items.length - items.length % pageSize;
-     }
-     if (startingPoint === items.length) {
-      startingPoint = items.length - pageSize;
-     }
-     slicedArray = items.slice(startingPoint, endPoint);
-     return slicedArray;
-  }
 }

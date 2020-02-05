@@ -1,39 +1,65 @@
-<table mat-table matSort  matSortDisableClear=true class="mat-elevation-z8"
-  [dataSource] ="resolvedDataSource | filterBy:filters | sortBy:orderField:ascOrderDirection | pagination:pageSize:pageIndex" 
-  (matSortChange)="sortChange($event)">
+<table mat-table
+  class="mat-elevation-z8"
+  [dataSource] ="data | ngxIntellegensGridFilterBy:filters
+                      | ngxIntellegensGridOrderBy:orderingField:orderingAscDirection
+                      | ngxIntellegensGridPaginate:pageLength:pageIndex" 
+  matSort matSortDisableClear="true" (matSortChange)="onMatTableSort($event)">
 
-  <ng-container *matHeaderRowDef="resolvedDataSourceKeys">
+  <!-- Header definition (and layout) -->
+  <ng-container *matHeaderRowDef="dataKeys">
+    <!-- Default headers -->
     <tr mat-header-row></tr>
+    <!-- Filtering row -->
     <tr *ngIf="config.filtering.hasFiltering && config.filtering.hasFilterColumns">
-      <th *ngFor="let key of resolvedDataSourceKeys">
-          <input (keyup)="onKeyUp(key, $event)" [disabled]="config.columnDefinition[key] && config.columnDefinition[key].hasFiltering === false" type="text">
+      <th *ngFor="let key of dataKeys">
+          <input (keyup)="onFilterUpdated(key, $event)" [disabled]="config.columnDefinition[key] && config.columnDefinition[key].hasFiltering === false" type="text">
       </th>
     </tr>
   </ng-container>
 
-  <ng-container *ngFor="let key of resolvedDataSourceKeys" [matColumnDef]="key">
-      <th mat-header-cell *matHeaderCellDef
-        mat-sort-header [disabled]="config.columnDefinition[key] && config.columnDefinition[key].sortable ? false : true">
-        {{ config.columnDefinition[key] && config.columnDefinition[key].header ? config.columnDefinition[key].header : key }} 
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element[key] }}
-      </td>
-      <td mat-footer-cell *matFooterCellDef>
-        {{ config.columnDefinition[key] && config.columnDefinition[key].footer ? config.columnDefinition[key].footer : key  }}
-      </td>
-    </ng-container>
+  <!-- Table columns layout -->
+  <ng-container *ngFor="let key of dataKeys" [matColumnDef]="key">
+    <!-- Column header -->
+    <th mat-header-cell *matHeaderCellDef
+      mat-sort-header [disabled]="config.columnDefinition[key] && !config.columnDefinition[key].sortable">
+      {{ config.columnDefinition[key] && config.columnDefinition[key].header ? config.columnDefinition[key].header : key }} 
+    </th>
+    <!-- Column body cell -->
+    <td mat-cell *matCellDef="let element">
+      {{ element[key] }}
+    </td>
+    <!-- Column footer -->
+    <td mat-footer-cell *matFooterCellDef>
+      {{ config.columnDefinition[key] && config.columnDefinition[key].footer ? config.columnDefinition[key].footer : key  }}
+    </td>
+  </ng-container>
 
-    <tr mat-row *matRowDef="let row; columns: resolvedDataSourceKeys;"></tr>
-    <tr mat-footer-row *matFooterRowDef="resolvedDataSourceKeys"></tr>
-  </table>
+  <!-- Body row(s) definition (and layout) -->
+  <ng-container *matRowDef="let row; columns: dataKeys;">
+    <!-- Default body row cells -->
+    <tr mat-row></tr>
+  </ng-container>
 
-  <mat-paginator *ngIf="config.pagination.hasPagination !== false" class="mat-elevation-z8" [length]="numOfItems"  [pageSize]="config.pagination.defaultPageSize"  [pageSizeOptions]="config.pagination.pageSizeOptions" (page)="pageChange($event)"></mat-paginator>
+  <!-- Footer definition (and layout) -->
+  <ng-container *matFooterRowDef="dataKeys">
+    <!-- Default footers -->
+    <tr mat-footer-row></tr>
+  </ng-container>
 
-  <div class="container" *ngIf="error || internalError">
-    <div class="content">Error</div>
-  </div>
+</table>
 
-  <div class="container" *ngIf="((!error && !internalError) && (loading || internalLoading))">
-    <div class="content">Loading</div>
-  </div>
+<!-- Pagination -->
+<mat-paginator *ngIf="config.pagination.hasPagination !== false"
+  class="mat-elevation-z8"
+  [length]="totalLength" [pageSize]="config.pagination.defaultPageLength"  [pageSizeOptions]="config.pagination.pageLengthOptions"
+  (page)="onMatTablePage($event)"></mat-paginator>
+
+<!-- Error overlay -->
+<div class="container" *ngIf="error || internalError">
+  <div class="content">Error</div>
+</div>
+
+<!-- Loading overlay -->
+<div class="container" *ngIf="((!error && !internalError) && (loading || internalLoading))">
+  <div class="content">Loading</div>
+</div>

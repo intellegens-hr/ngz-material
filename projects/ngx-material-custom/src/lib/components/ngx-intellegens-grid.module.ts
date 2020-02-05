@@ -14,15 +14,18 @@ import { NgxIntellegensGridPaginationDefDirective } from '../components/ngx-inte
 import { NgxIntellegensGridFilteringDefDirective } from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridFilteringDef';
 
 // Import components
-import { NgxIntellegensGridComponent, SortBy, FilterBy, Pagination } from './ngx-intellegens-grid';
+import { NgxIntellegensGridComponent } from './ngx-intellegens-grid';
+import { OrderByPipe } from './ngx-intellegens-grid/pipes/orderBy';
+import { PaginatePipe } from './ngx-intellegens-grid/pipes/pagination';
+import { FilterByPipe } from './ngx-intellegens-grid/pipes/filterBy';
 const components = [
   NgxIntellegensGridComponent,
   NgxIntellegensGridColumnDefDirective,
   NgxIntellegensGridPaginationDefDirective,
   NgxIntellegensGridFilteringDefDirective,
-  SortBy,
-  FilterBy,
-  Pagination
+  OrderByPipe,
+  FilterByPipe,
+  PaginatePipe
 ];
 const entryComponents = [
   NgxIntellegensGridComponent

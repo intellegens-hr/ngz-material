@@ -14,10 +14,10 @@ export class NgxIntellegensGridPaginationDefDirective {
   public hasPagination: boolean;
 
   @Input()
-  public defaultPageSize: number;
+  public defaultPageLength: number;
 
   @Input()
-  public pageSizeOptions: [];
+  public pageLengthOptions: [];
 
 }
 
@@ -28,17 +28,17 @@ export class TablePaginationConfiguration {
       if (def.hasPagination !== undefined) {
         config.hasPagination = def.hasPagination;
       }
-      if (def.defaultPageSize !== undefined) {
-        config.defaultPageSize = def.defaultPageSize;
+      if (def.defaultPageLength !== undefined) {
+        config.defaultPageLength = def.defaultPageLength;
       }
-      if (def.pageSizeOptions !== undefined) {
-        config.pageSizeOptions = def.pageSizeOptions;
+      if (def.pageLengthOptions !== undefined) {
+        config.pageLengthOptions = def.pageLengthOptions;
       }
     }
     return config;
   }
 
   public hasPagination = true;
-  public defaultPageSize = 10;
-  public pageSizeOptions = [10, 30, 50, 100];
+  public defaultPageLength = 10;
+  public pageLengthOptions = [10, 30, 50, 100];
 }

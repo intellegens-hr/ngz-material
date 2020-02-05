@@ -6,8 +6,8 @@
 <p>Custom pagination template bindings that are available include:</p>
   <ul>
     <li><code>[hasPagination]</code> - set to true if you want to display & set custom pagination options</li>
-    <li><code>[defaultPageSize]</code> - number of items per page displayed by default</li>
-    <li><code>[pageSizeOptions]</code> - include other options of items per page</li>
+    <li><code>[defaultPageLength]</code> - number of items per page displayed by default</li>
+    <li><code>[pageLengthOptions]</code> - include other options of items per page</li>
   </ul>
   <p>All pagination template bindings are optional and support a default fallback options</p>
   <p>If you don't want to display pagination explicitly set the <code>[hasPagination]</code> template binding to "false"</p>
@@ -15,7 +15,7 @@
 <div class="example">
   <code>
     <ngx-intellegens-grid [dataSource]="dataSource">
-      <ng-container ngxIntellegensGridPaginationDef [defaultPageSize]="5" [pageSizeOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
+      <ng-container ngxIntellegensGridPaginationDef [defaultPageLength]="5" [pageLengthOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
       <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [sortable]="true"></ng-container>      
       <ng-container ngxIntellegensGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [sortable]="true"></ng-container> 
       <ng-container ngxIntellegensGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [sortable]="true"></ng-container>
