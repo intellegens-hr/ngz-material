@@ -49,7 +49,7 @@ export class NgxIntellegensGridShowcaseSection07Component {
             e.grid.updatePagination({ numOfItems: data.length });
           });
           // Set state
-          // e.grid.updateSort({orderField: 'salary', orderDirection: true});
+          // e.grid.updateSort({orderField: 'salary', ascOrderDirection: true});
         }, 1000);
       });
     }

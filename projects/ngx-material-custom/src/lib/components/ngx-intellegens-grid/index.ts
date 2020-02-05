@@ -30,7 +30,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   private internalLoading: boolean;
 
   public orderField: string;
-  public orderDirection = true;
+  public ascOrderDirection = true;
 
   public anyFilter: any;
 
@@ -56,13 +56,13 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   public filteringDef: NgxIntellegensGridFilteringDefDirective;
 
   @Output() public change = new EventEmitter<any>();
-  public gridDataChange ({ orderField = null, orderDirection = null, pageSize = null, pageIndex = null, filters = {} }) {
+  public gridDataChange ({ orderField = null, ascOrderDirection = null, pageSize = null, pageIndex = null, filters = {} }) {
     const e = {
-      orderField:     orderField !== null ? orderField : this.orderField,
-      orderDirection: orderDirection !== null ? orderDirection : this.orderDirection,
-      pageSize:       pageSize !== null ? pageSize : this.pageSize,
-      pageIndex:      pageIndex !== null ? pageIndex : this.pageIndex,
-      filters:        filters !== null ? filters : this.filters,
+      orderField:        orderField !== null ? orderField : this.orderField,
+      ascOrderDirection: ascOrderDirection !== null ? ascOrderDirection : this.ascOrderDirection,
+      pageSize:          pageSize !== null ? pageSize : this.pageSize,
+      pageIndex:         pageIndex !== null ? pageIndex : this.pageIndex,
+      filters:           filters !== null ? filters : this.filters,
       handleChange:   true,
       grid: this
     };
@@ -151,9 +151,9 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     this.internalError = err;
   }
 
-  public updateSort ( {orderField = null, orderDirection = true }) {
+  public updateSort ( {orderField = null, ascOrderDirection = true }) {
     this.orderField =  orderField !== null ? orderField : this.orderField;
-    this.orderDirection = orderDirection !== null ? orderDirection : this.orderDirection;
+    this.ascOrderDirection = ascOrderDirection !== null ? ascOrderDirection : this.ascOrderDirection;
   }
 
   public updatePagination ({ pageIndex = null, pageSize = null, numOfItems = null }) {
@@ -171,11 +171,11 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
   public sortChange (e) {
       const orderField = e.active;
-      const orderDirection = (e.direction === 'asc' ? true : false);
-      const dataChange = this.gridDataChange({ orderField, orderDirection });
+      const ascOrderDirection = (e.direction === 'asc' ? true : false);
+      const dataChange = this.gridDataChange({ orderField, ascOrderDirection });
       if (dataChange === true) {
         this.orderField = orderField;
-        this.orderDirection = orderDirection;
+        this.ascOrderDirection = ascOrderDirection;
       }
   }
 

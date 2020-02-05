@@ -1,5 +1,5 @@
 <table mat-table matSort  matSortDisableClear=true class="mat-elevation-z8"
-  [dataSource] ="resolvedDataSource | filterBy:filters | sortBy:orderField:orderDirection | pagination:pageSize:pageIndex" 
+  [dataSource] ="resolvedDataSource | filterBy:filters | sortBy:orderField:ascOrderDirection | pagination:pageSize:pageIndex" 
   (matSortChange)="sortChange($event)">
 
   <ng-container *matHeaderRowDef="resolvedDataSourceKeys">
