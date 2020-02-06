@@ -42,7 +42,7 @@ class GridConfiguration {
     return this.getParentGridDataSourceKeys().reduce((columns, key) => {
       if (!columns[key]) { columns[key] = defaultColumnConfiguration; }
       return columns;
-    }, this.nonDefaultColumnConfigurations);
+    }, { ...this.nonDefaultColumnConfigurations });
   }
 
   /**
@@ -470,8 +470,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     orderingAscDirection  = undefined as boolean,
     pageIndex             = undefined as number,
     previousPageIndex     = undefined as number,
-    pageLength              = undefined as number,
-    totalLength            = undefined as number,
+    pageLength            = undefined as number,
+    totalLength           = undefined as number,
     filters               = undefined as object
   }) {
     // Ready the change event descriptor object
