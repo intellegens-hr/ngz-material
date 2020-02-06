@@ -31,6 +31,9 @@ const entryComponents = [
   NgxIntellegensGridComponent
 ];
 
+/**
+ * <ngx-intellegens-grid /> component module
+ */
 @NgModule({
   declarations:     [ ...components ],
   imports:          [ CommonModule, MatTableModule, MatSortModule, MatPaginatorModule ],

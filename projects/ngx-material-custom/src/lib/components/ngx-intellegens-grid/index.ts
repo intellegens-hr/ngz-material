@@ -5,27 +5,57 @@
 import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges,
          Input, Output, EventEmitter, ContentChildren, QueryList, ContentChild } from '@angular/core';
 import { SubscriptionLike, Observable } from 'rxjs';
-import { NgxIntellegensGridColumnDefDirective, TableColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
-import { NgxIntellegensGridPaginationDefDirective, TablePaginationConfiguration  } from './directives/ngxIntellegensGridPaginationDef';
-import { NgxIntellegensGridFilteringDefDirective, TableFilterConfiguration  } from './directives/ngxIntellegensGridFilteringDef';
+import { NgxIntellegensGridColumnDefDirective, GridColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
+import { NgxIntellegensGridPaginationDefDirective, GridPaginationConfiguration  } from './directives/ngxIntellegensGridPaginationDef';
+import { NgxIntellegensGridFilteringDefDirective, GridFilteringConfiguration  } from './directives/ngxIntellegensGridFilteringDef';
 import { FilterByPipe } from './pipes/filterBy';
 
 /**
  * Grid configuration
  */
 class GridConfiguration {
+
+  // Holds a method providing a list of property keys in parent data source's data array
+  private getParentGridDataSourceKeys: () => string[];
+
   /**
-   * Holds columns' configuration
+   * Creates an instance of GridConfiguration
+   * @param getParentGridDataSourceKeys Method providing a list of property keys in parent data source's data array
    */
-  public columnDefinition: any = {};
+  constructor (getParentGridDataSourceKeys: () => string[]) {
+    // Set provider method to be used to get all data source keys
+    this.getParentGridDataSourceKeys = getParentGridDataSourceKeys;
+  }
+
+  // Holds explicitly defined column configurations
+  private nonDefaultColumnConfigurations: any;
+  /**
+   * Gets/Sets columns' configurations
+   */
+  public set columns (defs) {
+    // Set explicitly defined columns' configuration
+    this.nonDefaultColumnConfigurations = defs;
+  }
+  public get columns () {
+    // Augment explicitly defined columns' configuration with default configuration for all remaining columns
+    const defaultColumnConfiguration = new GridColumnConfiguration();
+    return this.getParentGridDataSourceKeys().reduce((columns, key) => {
+      if (!columns[key]) { columns[key] = defaultColumnConfiguration; }
+      return columns;
+    }, this.nonDefaultColumnConfigurations);
+  }
+
   /**
    * Holds pagination configuration
    */
   public pagination: any = {};
+
   /**
    * Holds filtering configuration
    */
   public filtering: any = {};
+
+
 }
 
 /**
@@ -37,14 +67,14 @@ class GridConfiguration {
  * - TODO: ...
  *
  * Usage:
- * <ngx-intellegens-grid [dataSource]="">\
+ * <ngx-intellegens-grid [dataSource]="[...]">\
  *  TODO: Add a full usage syntax example\
  * </ngx-intellegens-grid>
  */
 @Component({
-  selector: 'ngx-intellegens-grid',
-  templateUrl: './index.html',
-  styleUrls: ['./style.scss']
+  selector:     'ngx-intellegens-grid',
+  templateUrl:  './index.html',
+  styleUrls:    ['./style.scss']
 })
 export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges, OnDestroy {
 
@@ -99,13 +129,13 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   //#region Properties
 
   /**
-   * Makes configuration available as public
+   * Configuration: Makes configuration available as public
    */
   public get configuration () {
     return this.config;
   }
-  // Holds internal configuration instance
-  protected config = new GridConfiguration();
+  // Configuration: Holds internal configuration instance
+  protected config = new GridConfiguration(() => this.dataKeys);
 
   // Data source: Data resolved from [dataSource]
   protected data: any[] = [];
@@ -143,10 +173,10 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   public ngAfterContentInit () {
 
     // Initialize columns' configuration
-    this.config.columnDefinition = TableColumnConfiguration.create(this.columnDefs);
+    this.config.columns = GridColumnConfiguration.create(this.columnDefs);
 
     // Initialize pagination configuration
-    this.config.pagination = TablePaginationConfiguration.create(this.paginationDef);
+    this.config.pagination = GridPaginationConfiguration.create(this.paginationDef);
     // Set initial page size
     if (this.config.pagination.hasPagination !== false) {
       this.pageLength = this.config.pagination.defaultPageLength;
@@ -155,11 +185,11 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     }
 
     // Initialize filtering configuration
-    this.config.filtering = TableFilterConfiguration.create(this.filteringDef);
+    this.config.filtering = GridFilteringConfiguration.create(this.filteringDef);
     // Disable filtering if all columns have filtering explicitly disabled
-    this.config.filtering.hasFilterColumns = (!Object.values(this.config.columnDefinition).length)
-                                          || !!Object.values(this.config.columnDefinition)
-                                                .find((columnConf: TableColumnConfiguration) => columnConf.hasFiltering);
+    this.config.filtering.hasFilteringColumns = (!Object.values(this.config.columns).length)
+                                              || !!Object.values(this.config.columns)
+                                                    .find((columnConf: GridColumnConfiguration) => columnConf.hasFiltering);
 
   }
 
@@ -403,12 +433,12 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
         // Reset pagination
         this.pageIndex = 0;
         this.totalLength = filterBy.transform(data, this.filters).length;
+        // Reset loading status
+        this.internalLoading = false;
       },
       (err) => {
         // Handle Observable resolution error
         this.handleInternalError(err);
-      },
-      () => {
         // Reset loading status
         this.internalLoading = false;
       }
@@ -456,15 +486,15 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       totalLength:           totalLength !== undefined ? totalLength : this.totalLength,
       // Grid state (Filtration)
       filters:              filters !== undefined ? filters : this.filters,
-      // Editable property signaling state being handled by an outside party
-      handleChange:         true, // TODO: Reverse default value and rename property
+      // Editable property signaling state is being managed by an outside party and doesn't need to be updated internally
+      preventDefault:       false,
       // Reference to the Grid component instance allowing outside party to access exposed properties/methods
-      grid:                 this // TODO: Consider exposing some of the properties and methods directly instead of the entire Grid instance
+      grid:                 this
     };
     // Emit (changed) event
     this.changed.emit(e);
     // Return if state being handled by an outside party
-    return !e.handleChange;
+    return e.preventDefault;
   }
 
   //#endregion

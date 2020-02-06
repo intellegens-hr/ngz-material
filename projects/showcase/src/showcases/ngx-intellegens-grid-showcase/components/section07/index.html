@@ -4,10 +4,10 @@
     <ngx-intellegens-grid [dataSource]="dataSource" (changed)="onEventChange($event)">
       <ng-container ngxIntellegensGridFilteringDef [hasFiltering]="true"></ng-container>
       <ng-container ngxIntellegensGridPaginationDef [defaultPageLength]="5" [pageLengthOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
-      <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [sortable]="true" [hasFiltering]="false"></ng-container>      
-      <ng-container ngxIntellegensGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [sortable]="true" [hasFiltering]="true"></ng-container> 
-      <ng-container ngxIntellegensGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [sortable]="true" [hasFiltering]="true" ></ng-container>
-      <ng-container ngxIntellegensGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [sortable]="true" ></ng-container>  
+      <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true" [hasFiltering]="false"></ng-container>      
+      <ng-container ngxIntellegensGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [hasOrdering]="true" [hasFiltering]="true"></ng-container> 
+      <ng-container ngxIntellegensGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true" [hasFiltering]="true" ></ng-container>
+      <ng-container ngxIntellegensGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true" ></ng-container>  
     </ngx-intellegens-grid>
   </code>
 </pre>

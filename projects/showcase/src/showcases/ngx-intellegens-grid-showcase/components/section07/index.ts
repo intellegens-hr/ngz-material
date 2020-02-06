@@ -28,26 +28,22 @@ export class NgxIntellegensGridShowcaseSection07Component {
   public isError = false;
 
   public onEventChange (e) {
-    console.log('hey this happened', e);
-    e.handleChange = false;
+    e.preventDefault = true;
 
-    if (!e.handleChange) {
+    if (e.preventDefault) {
 
-      // Set data
+      // Set data (sync)
       // const temp = data.slice(e.pageIndex * e.pageLength, (e.pageIndex + 1) * e.pageLength);
       // this.dataSource = temp;
-      setTimeout(() => {
-        e.grid.updatePagination({ totalLength: data.length });
-      });
+      // e.grid.updatePagination({ totalLength: data.length });
 
+      // Set data (async)
       this.dataSource = new Promise((resolve) => {
         setTimeout(() => {
           // Set data
           const temp = data.slice(e.pageIndex * e.pageLength, (e.pageIndex + 1) * e.pageLength);
+          e.grid.updatePagination({ totalLength: data.length });
           resolve(temp);
-          setTimeout(() => {
-            e.grid.updatePagination({ totalLength: data.length });
-          });
           // Set state
           // e.grid.updateOrdering({orderField: 'salary', ascOrderDirection: true});
         }, 1000);

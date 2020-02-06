@@ -11,7 +11,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  *
  * [...] | ngxIntellegensGridPaginate:pageLength:pageIndex
  */
-@Pipe({name: 'ngxIntellegensGridPaginate'})
+@Pipe({ name: 'ngxIntellegensGridPaginate' })
 export class PaginatePipe  implements PipeTransform {
 
   /**

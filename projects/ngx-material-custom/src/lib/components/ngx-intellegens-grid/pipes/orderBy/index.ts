@@ -11,7 +11,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  *
  * [...] | ngxIntellegensGridOrderBy:orderingField:orderingAscDirection
  */
-@Pipe({name: 'ngxIntellegensGridOrderBy'})
+@Pipe({ name: 'ngxIntellegensGridOrderBy' })
 export class OrderByPipe implements PipeTransform {
 
   /**

@@ -10,10 +10,10 @@
 <div class="example">
   <code>
     <ngx-intellegens-grid [dataSource]="dataSource">
-      <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [sortable]="true"></ng-container>      
-      <ng-container ngxIntellegensGridColumnDef="firstName"  [footer]="'First Name'" [sortable]="true"></ng-container> 
-      <ng-container ngxIntellegensGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [sortable]="true"></ng-container>
-      <ng-container ngxIntellegensGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [sortable]="true"></ng-container>  
+      <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true"></ng-container>      
+      <ng-container ngxIntellegensGridColumnDef="firstName"  [footer]="'First Name'" [hasOrdering]="true"></ng-container> 
+      <ng-container ngxIntellegensGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true"></ng-container>
+      <ng-container ngxIntellegensGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true"></ng-container>  
     </ngx-intellegens-grid>
   </code>
 </div>

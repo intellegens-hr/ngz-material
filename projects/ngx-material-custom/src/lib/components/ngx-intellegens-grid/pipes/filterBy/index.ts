@@ -11,7 +11,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  *
  * [...] | ngxIntellegensGridFilterBy:filter
  */
-@Pipe({ name: 'ngxIntellegensGridFilterBy',  pure: false })
+@Pipe({ name: 'ngxIntellegensGridFilterBy', pure: false })
 export class FilterByPipe  implements PipeTransform {
 
   /**
