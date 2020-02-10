@@ -28,7 +28,7 @@ export class NgxIntellegensGridShowcaseSection07Component {
   public isError = false;
 
   public onEventChange (e) {
-    e.preventDefault = true;
+    e.preventDefault = false;
 
     if (e.preventDefault) {
 

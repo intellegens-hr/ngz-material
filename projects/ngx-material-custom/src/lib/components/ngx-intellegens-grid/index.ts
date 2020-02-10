@@ -3,12 +3,13 @@
 
 // Import dependencies
 import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges,
-         Input, Output, EventEmitter, ContentChildren, QueryList, ContentChild } from '@angular/core';
+         Input, Output, EventEmitter, ContentChildren, QueryList, ContentChild, ViewChild } from '@angular/core';
 import { SubscriptionLike, Observable } from 'rxjs';
 import { NgxIntellegensGridColumnDefDirective, GridColumnConfiguration  } from './directives/ngxIntellegensGridColumnDef';
 import { NgxIntellegensGridPaginationDefDirective, GridPaginationConfiguration  } from './directives/ngxIntellegensGridPaginationDef';
 import { NgxIntellegensGridFilteringDefDirective, GridFilteringConfiguration  } from './directives/ngxIntellegensGridFilteringDef';
 import { FilterByPipe } from './pipes/filterBy';
+import { MatPaginator } from '@angular/material/paginator';
 
 /**
  * Grid configuration
@@ -104,6 +105,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   // tslint:disable-next-line: no-output-native
   @Output()
   public changed = new EventEmitter<any>();
+
+  @ViewChild(MatPaginator, null) protected paginator: MatPaginator;
 
   /**
    * Content child elements implementing a [ngxIntellegensGridColumnDef]="propertyKey" directive
@@ -246,7 +249,6 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       // Update ordering state
       this.orderingField =  orderingField !== undefined ? orderingField : this.orderingField;
       this.orderingAscDirection = orderingAscDirection !== undefined ? orderingAscDirection : this.orderingAscDirection;
-      // TODO: Reset pagination if ordering changed
       // TODO: Reflect ordering changes in <mat-table /> internal state
     });
   }
@@ -268,7 +270,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       this.pageIndex = pageIndex !== undefined ? pageIndex : this.pageIndex;
       this.pageLength = pageLength !== undefined ? pageLength : this.pageLength;
       this.totalLength = totalLength !== undefined ? totalLength : this.totalLength;
-      // TODO: Reflect ordering changes in <mat-table /> internal state
+      // TODO: Reflect pagination changes in <mat-table /> internal state
     });
   }
 
@@ -286,7 +288,6 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       } else {
         this.filters[key] = value;
       }
-      // TODO: Reset pagination if ordering changed
     });
   }
 
@@ -308,6 +309,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     if (!dataChange) {
       this.orderingField = orderingField;
       this.orderingAscDirection = orderingAscDirection;
+      // Resetting pagination because of sorting
+      this.paginator.firstPage();
     }
   }
 
@@ -341,8 +344,9 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     if (value === undefined || value === null || value === '') {
       delete updatedFilters[key];
     }
+    const totalLength = (new FilterByPipe()).transform(this.data, updatedFilters).length;
     // Trigger (changed) event with updated values
-    const dataChange = this.triggerChangedEvent({ filters: updatedFilters });
+    const dataChange = this.triggerChangedEvent({ filters: updatedFilters, totalLength });
     // If change unhandled, handle state update internally
     if (!dataChange) {
       if (value === undefined || value === null || value === '') {
@@ -350,6 +354,9 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       } else {
         this.filters[key] = value;
       }
+      this.totalLength = totalLength;
+      // Resetting pagination because of filtering
+      this.paginator.firstPage();
     }
   }
 
@@ -369,11 +376,9 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     this.data = this.dataSource;
     // Extract all data keys from data
     this.dataKeys = (this.data && this.data.length ? Object.keys(this.data[0]) : []);
-    // Reset filters
-    const filterBy = new FilterByPipe();
     // Reset pagination
     this.pageIndex = 0;
-    this.totalLength = filterBy.transform(this.data, this.filters).length;
+    this.totalLength = (new FilterByPipe()).transform(this.data, this.filters).length;
 
   }
 
@@ -394,11 +399,9 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
         (data) => {
           // Set resolved data
           this.data = data;
-          // Reset filters
-          const filterBy = new FilterByPipe();
           // Reset pagination
           this.pageIndex = 0;
-          this.totalLength = filterBy.transform(data, this.filters).length;
+          this.totalLength = (new FilterByPipe()).transform(data, this.filters).length;
         }
       )
       .catch ((err) => {
@@ -428,11 +431,9 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       (data) => {
         // Set resolved data
         this.data = data;
-        // Reset filters
-        const filterBy = new FilterByPipe();
         // Reset pagination
         this.pageIndex = 0;
-        this.totalLength = filterBy.transform(data, this.filters).length;
+        this.totalLength = (new FilterByPipe()).transform(data, this.filters).length;
         // Reset loading status
         this.internalLoading = false;
       },
