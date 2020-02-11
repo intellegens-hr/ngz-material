@@ -10,6 +10,7 @@ import { NgxIntellegensGridPaginationDefDirective, GridPaginationConfiguration  
 import { NgxIntellegensGridFilteringDefDirective, GridFilteringConfiguration  } from './directives/ngxIntellegensGridFilteringDef';
 import { FilterByPipe } from './pipes/filterBy';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 /**
  * Grid configuration
@@ -106,8 +107,6 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   @Output()
   public changed = new EventEmitter<any>();
 
-  @ViewChild(MatPaginator, null) protected paginator: MatPaginator;
-
   /**
    * Content child elements implementing a [ngxIntellegensGridColumnDef]="propertyKey" directive
    * handling specific column's configuration
@@ -126,6 +125,10 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    */
   @ContentChild(NgxIntellegensGridFilteringDefDirective, {static: false} )
   public filteringDef: NgxIntellegensGridFilteringDefDirective;
+
+  @ViewChild(MatPaginator, { static: false }) protected paginator: MatPaginator;
+
+  @ViewChild(MatSort, { static: false }) protected sort: MatSort;
 
   //#endregion
 
@@ -250,27 +253,36 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       this.orderingField =  orderingField !== undefined ? orderingField : this.orderingField;
       this.orderingAscDirection = orderingAscDirection !== undefined ? orderingAscDirection : this.orderingAscDirection;
       // TODO: Reflect ordering changes in <mat-table /> internal state
+      // if (this.orderingField !== undefined) {
+      //   this.sort.active = this.orderingField;
+      // }
+      // this.sort.disableClear = true;
+      // if (this.orderingAscDirection !== undefined && this.orderingAscDirection === true) {
+      //   this.sort.direction = 'asc';
+      // } else if (this.orderingAscDirection !== undefined && this.orderingAscDirection === false) {
+      //   this.sort.direction = 'desc';
+      // }
     });
   }
 
   /**
    * Updates pagination state
    * @param pageIndex Current page's index
-   * @param pageLength Each page's size (number of rows displayed per page)
    * @param totalLength Total number of rows in current data
    */
   public updatePagination ({
     pageIndex   = undefined as number,
-    pageLength    = undefined as number,
     totalLength  = undefined as number
   }) {
     // Allow for resolved data to get ingested before updating state
     setTimeout(() => {
       // Update pagination state
       this.pageIndex = pageIndex !== undefined ? pageIndex : this.pageIndex;
-      this.pageLength = pageLength !== undefined ? pageLength : this.pageLength;
       this.totalLength = totalLength !== undefined ? totalLength : this.totalLength;
-      // TODO: Reflect pagination changes in <mat-table /> internal state
+      // Reflect pagination changes in <mat-table /> internal state
+      if (pageIndex !== undefined) {
+        this.paginator.pageIndex = this.pageIndex;
+      }
     });
   }
 
@@ -459,7 +471,6 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * Triggers the (changed) event with state information about to be applied
    * @param orderingField Updated value of the field key to order rows by
    * @param orderingAscDirection Updated value of if ordering in ascending direction
-   * @param pageLength Updated value of each page's size (number of rows displayed per page)
    * @param pageIndex Updated value of current page's index
    * @param previousPageIndex Updated value of previous page's index
    * @param totalLength Total number of rows in updated data
@@ -483,8 +494,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       // Grid state (Pagination)
       pageIndex:            pageIndex !== undefined ? pageIndex : this.pageIndex,
       previousPageIndex,
-      pageLength:             pageLength !== undefined ? pageLength : this.pageLength,
-      totalLength:           totalLength !== undefined ? totalLength : this.totalLength,
+      pageLength:           pageLength !== undefined ? pageLength : this.pageLength,
+      totalLength:          totalLength !== undefined ? totalLength : this.totalLength,
       // Grid state (Filtration)
       filters:              filters !== undefined ? filters : this.filters,
       // Editable property signaling state is being managed by an outside party and doesn't need to be updated internally

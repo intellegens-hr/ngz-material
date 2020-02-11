@@ -24,15 +24,31 @@
     <!-- Column header -->
     <th mat-header-cell *matHeaderCellDef
       mat-sort-header [disabled]="!config.columns[key].hasOrdering">
-      {{ config.columns[key].header ? config.columns[key].header : key }} 
+      <ng-container *ngIf="config.columns[key].HeaderCellTemplate">
+        <ng-container *ngTemplateOutlet="config.columns[key].HeaderCellTemplate, context:{ row: element, key: key, value: key }"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="!config.columns[key].HeaderCellTemplate">
+        {{ config.columns[key].header ? config.columns[key].header : key }}
+      </ng-container>
     </th>
     <!-- Column body cell -->
     <td mat-cell *matCellDef="let element">
-      {{ element[key] }}
+      <!-- Column body template -->
+      <ng-container *ngIf="config.columns[key].cellTemplate">
+        <ng-container *ngTemplateOutlet="config.columns[key].cellTemplate, context:{ row: element, key: key, value: element[key] }"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="!config.columns[key].cellTemplate">
+        {{ element[key] }}
+      </ng-container>      
     </td>
     <!-- Column footer -->
     <td mat-footer-cell *matFooterCellDef>
-      {{ config.columns[key].footer ? config.columns[key].footer : key  }}
+      <ng-container *ngIf="config.columns[key].FooterCellTemplate">
+        <ng-container *ngTemplateOutlet="config.columns[key].FooterCellTemplate, context:{ row: element, key: key, value: key }"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="!config.columns[key].FooterCellTemplate">
+        {{ config.columns[key].footer ? config.columns[key].footer : key  }}
+      </ng-container>
     </td>
   </ng-container>
 

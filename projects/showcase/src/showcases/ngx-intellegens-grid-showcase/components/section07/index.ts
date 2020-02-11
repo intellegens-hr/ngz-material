@@ -42,10 +42,9 @@ export class NgxIntellegensGridShowcaseSection07Component {
         setTimeout(() => {
           // Set data
           const temp = data.slice(e.pageIndex * e.pageLength, (e.pageIndex + 1) * e.pageLength);
-          e.grid.updatePagination({ totalLength: data.length });
+          e.grid.updatePagination({ totalLength: data.length});
+          e.grid.updateOrdering({ orderingField: 'salary', orderingAscDirection: true });
           resolve(temp);
-          // Set state
-          // e.grid.updateOrdering({orderField: 'salary', ascOrderDirection: true});
         }, 1000);
       });
     }

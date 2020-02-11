@@ -2,7 +2,22 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
+
+@Directive({
+  selector: '[ngxIntellegensGridColumnCellTemplate]'
+})
+export class NgxIntellegensGridColumnCellTemplateDirective { }
+
+@Directive({
+  selector: '[ngxIntellegensGridColumnHeaderCellTemplate]'
+})
+export class NgxIntellegensGridColumnHeaderCellTemplateDirective { }
+
+@Directive({
+  selector: '[ngxIntellegensGridColumnFooterCellTemplate]'
+})
+export class NgxIntellegensGridColumnFooterCellTemplateDirective { }
 
 /**
  * When child of <ngx-intellegens-grid /> provides configuration for how a column is displayed and how it behaves
@@ -44,6 +59,16 @@ export class NgxIntellegensGridColumnDefDirective {
    */
   @Input()
   public hasFiltering: boolean;
+
+  @ContentChild(NgxIntellegensGridColumnCellTemplateDirective, { read: TemplateRef, static: false})
+  public cellTemplate: TemplateRef<any>;
+
+  @ContentChild(NgxIntellegensGridColumnHeaderCellTemplateDirective, { read: TemplateRef, static: false})
+  public HeaderCellTemplate: TemplateRef<any>;
+
+  @ContentChild(NgxIntellegensGridColumnFooterCellTemplateDirective, { read: TemplateRef, static: false})
+  public FooterCellTemplate: TemplateRef<any>;
+
 }
 
 /**
@@ -74,6 +99,9 @@ export class GridColumnConfiguration {
         if (element.footer !== undefined) { config.footer = element.footer; }
         if (element.hasOrdering !== undefined) { config.hasOrdering = element.hasOrdering; }
         if (element.hasFiltering !== undefined) { config.hasFiltering = element.hasFiltering; }
+        if (element.cellTemplate !== undefined) { config.cellTemplate = element.cellTemplate; }
+        if (element.HeaderCellTemplate !== undefined) { config.HeaderCellTemplate = element.HeaderCellTemplate; }
+        if (element.FooterCellTemplate !== undefined) { config.FooterCellTemplate = element.FooterCellTemplate; }
 
         // Set column configuration
         configHash[element.key] = config;
@@ -105,5 +133,11 @@ export class GridColumnConfiguration {
    * If column should provide filtering by it's value
    */
   public hasFiltering = true;
+
+  public cellTemplate: TemplateRef<any> = null;
+
+  public HeaderCellTemplate: TemplateRef<any> = null;
+
+  public FooterCellTemplate: TemplateRef<any> = null;
 
 }

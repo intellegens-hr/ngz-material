@@ -9,7 +9,12 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 // Import directive
-import { NgxIntellegensGridColumnDefDirective } from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridColumnDef';
+import {
+  NgxIntellegensGridColumnDefDirective,
+  NgxIntellegensGridColumnCellTemplateDirective,
+  NgxIntellegensGridColumnHeaderCellTemplateDirective,
+  NgxIntellegensGridColumnFooterCellTemplateDirective
+} from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridColumnDef';
 import { NgxIntellegensGridPaginationDefDirective } from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridPaginationDef';
 import { NgxIntellegensGridFilteringDefDirective } from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridFilteringDef';
 
@@ -21,7 +26,10 @@ import { FilterByPipe } from './ngx-intellegens-grid/pipes/filterBy';
 const components = [
   NgxIntellegensGridComponent,
   NgxIntellegensGridColumnDefDirective,
+  NgxIntellegensGridColumnCellTemplateDirective,
   NgxIntellegensGridPaginationDefDirective,
+  NgxIntellegensGridColumnHeaderCellTemplateDirective,
+  NgxIntellegensGridColumnFooterCellTemplateDirective,
   NgxIntellegensGridFilteringDefDirective,
   OrderByPipe,
   FilterByPipe,

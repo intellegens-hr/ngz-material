@@ -7,7 +7,17 @@
       <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true" [hasFiltering]="false"></ng-container>      
       <ng-container ngxIntellegensGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [hasOrdering]="true" [hasFiltering]="true"></ng-container> 
       <ng-container ngxIntellegensGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true" [hasFiltering]="true" ></ng-container>
-      <ng-container ngxIntellegensGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true" ></ng-container>  
+      <ng-container ngxIntellegensGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true" >
+        <ng-container *ngxIntellegensGridColumnHeaderCellTemplate="let row = row; let key = key; let value = value">
+         {{value.toUpperCase()}}
+        </ng-container>
+        <ng-container *ngxIntellegensGridColumnCellTemplate="let row = row; let key = key; let value = value">
+          {{ row['firstName'] }} has salary of ${{ value }}
+        </ng-container>
+        <ng-container *ngxIntellegensGridColumnFooterCellTemplate="let row = row; let key = key; let value = value">
+        {{value.toUpperCase()}}
+        </ng-container>
+      </ng-container>  
     </ngx-intellegens-grid>
   </code>
 </pre>
