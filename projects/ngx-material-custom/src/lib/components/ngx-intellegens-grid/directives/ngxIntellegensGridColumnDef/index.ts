@@ -4,18 +4,45 @@
 // Import dependencies
 import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
 
+/**
+ * When child of [ngxIntellegensGridColumnDef] provides template for column's row cell
+ *
+ * Usage:
+ *
+ * <ng-container *ngxIntellegensGridColumnHeaderCellTemplate="let config = config; let key = key; let value = value">
+ *  {{ value.toUpperCase() }}
+ * </ng-container>
+ */
 @Directive({
   selector: '[ngxIntellegensGridColumnCellTemplate]'
 })
 export class NgxIntellegensGridColumnCellTemplateDirective { }
 
+/**
+ * When child of [ngxIntellegensGridColumnDef] provides template for column's header cell
+ *
+ * Usage:
+ *
+ * <ng-container *ngxIntellegensGridColumnHeaderCellTemplate="let config = config; let key = key; let value = value">
+ *  {{ value.toUpperCase() }}
+ * </ng-container>
+ */
 @Directive({
-  selector: '[ngxIntellegensGridColumnheaderCellTemplate]'
+  selector: '[ngxIntellegensGridColumnHeaderCellTemplate]'
 })
 export class NgxIntellegensGridColumnHeaderCellTemplateDirective { }
 
+/**
+ * When child of [ngxIntellegensGridColumnDef] provides template for column's footer cell
+ *
+ * Usage:
+ *
+ * <ng-container *ngxIntellegensGridColumnFooterCellTemplate="let row = row; let key = key; let value = value">
+ *  ${{ value }}
+ * </ng-container>
+ */
 @Directive({
-  selector: '[ngxIntellegensGridColumnfooterCellTemplate]'
+  selector: '[ngxIntellegensGridColumnFooterCellTemplate]'
 })
 export class NgxIntellegensGridColumnFooterCellTemplateDirective { }
 
@@ -60,12 +87,24 @@ export class NgxIntellegensGridColumnDefDirective {
   @Input()
   public hasFiltering: boolean;
 
+  /**
+   * Content child elements implementing a *ngxIntellegensGridColumnCellTemplate directive
+   * providing row cell template for the column
+   */
   @ContentChild(NgxIntellegensGridColumnCellTemplateDirective, { read: TemplateRef, static: false})
   public cellTemplate: TemplateRef<any>;
 
+  /**
+   * Content child elements implementing a *ngxIntellegensGridColumnHeaderCellTemplate directive
+   * providing header cell template for the column
+   */
   @ContentChild(NgxIntellegensGridColumnHeaderCellTemplateDirective, { read: TemplateRef, static: false})
   public headerCellTemplate: TemplateRef<any>;
 
+  /**
+   * Content child elements implementing a *ngxIntellegensGridColumnFooterCellTemplate directive
+   * providing footer cell template for the column
+   */
   @ContentChild(NgxIntellegensGridColumnFooterCellTemplateDirective, { read: TemplateRef, static: false})
   public footerCellTemplate: TemplateRef<any>;
 
@@ -99,6 +138,8 @@ export class GridColumnConfiguration {
         if (element.footer !== undefined) { config.footer = element.footer; }
         if (element.hasOrdering !== undefined) { config.hasOrdering = element.hasOrdering; }
         if (element.hasFiltering !== undefined) { config.hasFiltering = element.hasFiltering; }
+
+        // Pull templates from instance of [NgxIntellegensGridColumnDefDirective] directive
         if (element.cellTemplate !== undefined) { config.cellTemplate = element.cellTemplate; }
         if (element.headerCellTemplate !== undefined) { config.headerCellTemplate = element.headerCellTemplate; }
         if (element.footerCellTemplate !== undefined) { config.footerCellTemplate = element.footerCellTemplate; }
@@ -134,10 +175,17 @@ export class GridColumnConfiguration {
    */
   public hasFiltering = true;
 
+  /**
+   * Row cell template for the column
+   */
   public cellTemplate: TemplateRef<any> = null;
-
+  /**
+   * Header cell template for the column
+   */
   public headerCellTemplate: TemplateRef<any> = null;
-
+  /**
+   * Footer cell template for the column
+   */
   public footerCellTemplate: TemplateRef<any> = null;
 
 }

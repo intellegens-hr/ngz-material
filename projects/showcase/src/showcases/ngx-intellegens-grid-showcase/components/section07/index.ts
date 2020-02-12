@@ -3,7 +3,6 @@
 
 // Import dependencies
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 
 // Import example data
 import { data } from '../../data';

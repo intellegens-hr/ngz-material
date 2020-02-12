@@ -21,35 +21,59 @@
 
   <!-- Table columns layout -->
   <ng-container *ngFor="let key of dataKeys" [matColumnDef]="key">
+
     <!-- Column header -->
     <th mat-header-cell *matHeaderCellDef
       mat-sort-header [disabled]="!config.columns[key].hasOrdering">
+      <!-- If template available -->
       <ng-container *ngIf="config.columns[key].headerCellTemplate">
-        <ng-container *ngTemplateOutlet="config.columns[key].headerCellTemplate, context:{ key: key, config: config.columns[key]}"></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            config.columns[key].headerCellTemplate,
+            context:{ config: config.columns[key], key: key, value: (config.columns[key].header || key) }
+          "
+        ></ng-container>
       </ng-container>
+      <!-- If no template, default to column label -->
       <ng-container *ngIf="!config.columns[key].headerCellTemplate">
         {{ config.columns[key].header ? config.columns[key].header : key }}
       </ng-container>
     </th>
+
     <!-- Column body cell -->
     <td mat-cell *matCellDef="let element">
-      <!-- Column body template -->
+      <!-- If template available -->
       <ng-container *ngIf="config.columns[key].cellTemplate">
-        <ng-container *ngTemplateOutlet="config.columns[key].cellTemplate, context:{ row: element, key: key, value: element[key] }"></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            config.columns[key].cellTemplate,
+            context:{ row: element, key: key, value: element[key] }
+          "
+        ></ng-container>
       </ng-container>
+      <!-- If no template, default to raw row value -->
       <ng-container *ngIf="!config.columns[key].cellTemplate">
         {{ element[key] }}
       </ng-container>      
     </td>
+
     <!-- Column footer -->
     <td mat-footer-cell *matFooterCellDef>
+      <!-- If template available -->
       <ng-container *ngIf="config.columns[key].footerCellTemplate">
-        <ng-container *ngTemplateOutlet="config.columns[key].footerCellTemplate, context:{ key: key, config: config.columns[key] }"></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            config.columns[key].footerCellTemplate,
+            context:{ config: config.columns[key], key: key, value: (config.columns[key].footer || key) }
+          "
+        ></ng-container>
       </ng-container>
+      <!-- If no template, default to column label -->
       <ng-container *ngIf="!config.columns[key].footerCellTemplate">
         {{ config.columns[key].footer ? config.columns[key].footer : key  }}
       </ng-container>
     </td>
+
   </ng-container>
 
   <!-- Body row(s) definition (and layout) -->

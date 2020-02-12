@@ -8,13 +8,13 @@
       <ng-container ngxIntellegensGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [hasOrdering]="true" [hasFiltering]="true"></ng-container> 
       <ng-container ngxIntellegensGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true" [hasFiltering]="true" ></ng-container>
       <ng-container ngxIntellegensGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true" >
-        <ng-container *ngxIntellegensGridColumnheaderCellTemplate="let config = config">
+        <ng-container *ngxIntellegensGridColumnHeaderCellTemplate="let config = config">
          {{config.header.toUpperCase()}}
         </ng-container>
         <ng-container *ngxIntellegensGridColumnCellTemplate="let row = row; let key = key; let value = value">
           {{ row['firstName'] }} has salary of ${{ value }}
         </ng-container>
-        <ng-container *ngxIntellegensGridColumnfooterCellTemplate="let config = config">
+        <ng-container *ngxIntellegensGridColumnFooterCellTemplate="let config = config">
         {{config.footer.toUpperCase()}}
         </ng-container>
       </ng-container>
