@@ -10,12 +10,12 @@ import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
 export class NgxIntellegensGridColumnCellTemplateDirective { }
 
 @Directive({
-  selector: '[ngxIntellegensGridColumnHeaderCellTemplate]'
+  selector: '[ngxIntellegensGridColumnheaderCellTemplate]'
 })
 export class NgxIntellegensGridColumnHeaderCellTemplateDirective { }
 
 @Directive({
-  selector: '[ngxIntellegensGridColumnFooterCellTemplate]'
+  selector: '[ngxIntellegensGridColumnfooterCellTemplate]'
 })
 export class NgxIntellegensGridColumnFooterCellTemplateDirective { }
 
@@ -64,10 +64,10 @@ export class NgxIntellegensGridColumnDefDirective {
   public cellTemplate: TemplateRef<any>;
 
   @ContentChild(NgxIntellegensGridColumnHeaderCellTemplateDirective, { read: TemplateRef, static: false})
-  public HeaderCellTemplate: TemplateRef<any>;
+  public headerCellTemplate: TemplateRef<any>;
 
   @ContentChild(NgxIntellegensGridColumnFooterCellTemplateDirective, { read: TemplateRef, static: false})
-  public FooterCellTemplate: TemplateRef<any>;
+  public footerCellTemplate: TemplateRef<any>;
 
 }
 
@@ -100,8 +100,8 @@ export class GridColumnConfiguration {
         if (element.hasOrdering !== undefined) { config.hasOrdering = element.hasOrdering; }
         if (element.hasFiltering !== undefined) { config.hasFiltering = element.hasFiltering; }
         if (element.cellTemplate !== undefined) { config.cellTemplate = element.cellTemplate; }
-        if (element.HeaderCellTemplate !== undefined) { config.HeaderCellTemplate = element.HeaderCellTemplate; }
-        if (element.FooterCellTemplate !== undefined) { config.FooterCellTemplate = element.FooterCellTemplate; }
+        if (element.headerCellTemplate !== undefined) { config.headerCellTemplate = element.headerCellTemplate; }
+        if (element.footerCellTemplate !== undefined) { config.footerCellTemplate = element.footerCellTemplate; }
 
         // Set column configuration
         configHash[element.key] = config;
@@ -136,8 +136,8 @@ export class GridColumnConfiguration {
 
   public cellTemplate: TemplateRef<any> = null;
 
-  public HeaderCellTemplate: TemplateRef<any> = null;
+  public headerCellTemplate: TemplateRef<any> = null;
 
-  public FooterCellTemplate: TemplateRef<any> = null;
+  public footerCellTemplate: TemplateRef<any> = null;
 
 }
