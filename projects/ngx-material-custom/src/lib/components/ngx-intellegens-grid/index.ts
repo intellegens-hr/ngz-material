@@ -129,7 +129,6 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   @ViewChild(MatPaginator, { static: false }) protected paginator: MatPaginator;
 
   @ViewChild(MatSort, { static: false }) protected sort: MatSort;
-
   //#endregion
 
   //#region Properties
@@ -154,6 +153,12 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   protected data: any[] = [];
   // Data source: Contains all found property keys in any of data items
   protected dataKeys: string[] = [];
+
+  protected get columnKeys () {
+    const virtualKeys = Object.keys(this.config.columns);
+    return virtualKeys;
+  }
+
   // Data source: If data-source set as Observable, this will keep a reference to the subscription
   // to this Observable (in case unsubscribe needed later)
   protected dataSourceSubscription: SubscriptionLike;
@@ -407,6 +412,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
         (data) => {
           // Set resolved data
           this.data = data;
+          // Extract all data keys from data
+          this.dataKeys = (this.data && this.data.length ? Object.keys(this.data[0]) : []);
           // Reset pagination
           this.pageIndex = 0;
           this.totalLength = (new FilterByPipe()).transform(data, this.filters).length;
@@ -439,6 +446,8 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       (data) => {
         // Set resolved data
         this.data = data;
+        // Extract all data keys from data
+        this.dataKeys = (this.data && this.data.length ? Object.keys(this.data[0]) : []);
         // Reset pagination
         this.pageIndex = 0;
         this.totalLength = (new FilterByPipe()).transform(data, this.filters).length;

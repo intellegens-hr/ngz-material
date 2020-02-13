@@ -18,7 +18,11 @@
         {{config.footer.toUpperCase()}}
         </ng-container>
       </ng-container>
-      <ng-container ngxIntellegensGridColumnDef [header]="'Actions'" [footer]="'Actions'" [hasOrdering]="false" [hasFiltering]="false"></ng-container>      
+     <ng-container ngxIntellegensGridColumnDef [virtual]="true" [header]="'Yearly salary'" [footer]="'Yearly salary'" [hasOrdering]="false" [hasFiltering]="false">
+      <ng-container *ngxIntellegensGridColumnCellTemplate="let row = row; let key = key; let value = value">
+        {{ row['salary'] * 12}}
+      </ng-container>      
+     </ng-container>      
     </ngx-intellegens-grid>
   </code>
 </pre>

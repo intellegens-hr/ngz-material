@@ -4,6 +4,7 @@
 // Import dependencies
 import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
 
+
 /**
  * When child of [ngxIntellegensGridColumnDef] provides template for column's row cell
  *
@@ -16,7 +17,7 @@ import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
 @Directive({
   selector: '[ngxIntellegensGridColumnCellTemplate]'
 })
-export class NgxIntellegensGridColumnCellTemplateDirective { }
+export class NgxIntellegensGridColumnCellTemplateDirective {}
 
 /**
  * When child of [ngxIntellegensGridColumnDef] provides template for column's header cell
@@ -86,6 +87,11 @@ export class NgxIntellegensGridColumnDefDirective {
    */
   @Input()
   public hasFiltering: boolean;
+  /**
+   * If column is virtual
+   */
+  @Input()
+  public virtual: boolean;
 
   /**
    * Content child elements implementing a *ngxIntellegensGridColumnCellTemplate directive
@@ -131,8 +137,13 @@ export class GridColumnConfiguration {
 
         // Instantiate default column configuration
         const config = new GridColumnConfiguration();
-        config.key = element.key;
-
+        if (!element.key) {
+          config.key = 'test';
+          config.virtual = true;
+        } else {
+          config.key = element.key;
+          config.virtual = element.virtual;
+        }
         // Pull configuration from instance of [NgxIntellegensGridColumnDefDirective] directive
         if (element.header !== undefined) { config.header = element.header; }
         if (element.footer !== undefined) { config.footer = element.footer; }
@@ -145,7 +156,7 @@ export class GridColumnConfiguration {
         if (element.footerCellTemplate !== undefined) { config.footerCellTemplate = element.footerCellTemplate; }
 
         // Set column configuration
-        configHash[element.key] = config;
+        configHash[config.key] = config;
 
       });
     }
@@ -174,6 +185,8 @@ export class GridColumnConfiguration {
    * If column should provide filtering by it's value
    */
   public hasFiltering = true;
+
+  public virtual: boolean;
 
   /**
    * Row cell template for the column
