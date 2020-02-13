@@ -59,6 +59,11 @@ export class NgxIntellegensGridColumnDefDirective {
    */
   @Input()
   public hasFiltering: boolean;
+  /**
+   * If column is virtual
+   */
+  @Input()
+  public isVirtualColumn: boolean;
 
   @ContentChild(NgxIntellegensGridColumnCellTemplateDirective, { read: TemplateRef, static: false})
   public cellTemplate: TemplateRef<any>;
@@ -92,6 +97,9 @@ export class GridColumnConfiguration {
 
         // Instantiate default column configuration
         const config = new GridColumnConfiguration();
+        if (element.isVirtualColumn === true) {
+          element.key = 'test';
+        }
         config.key = element.key;
 
         // Pull configuration from instance of [NgxIntellegensGridColumnDefDirective] directive
@@ -133,6 +141,8 @@ export class GridColumnConfiguration {
    * If column should provide filtering by it's value
    */
   public hasFiltering = true;
+
+  public isVirtualColumn = false;
 
   public cellTemplate: TemplateRef<any> = null;
 

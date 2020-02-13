@@ -34,6 +34,7 @@ class GridConfiguration {
   /**
    * Gets/Sets columns' configurations
    */
+  // TODO: set columnKeys to check if it has virtual keys
   public set columns (defs) {
     // Set explicitly defined columns' configuration
     this.nonDefaultColumnConfigurations = defs;
