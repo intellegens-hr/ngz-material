@@ -183,14 +183,11 @@ export class GridColumnConfiguration {
    */
   public hasFiltering = true;
 
-<<<<<<< HEAD
   public isVirtualColumn = false;
 
-=======
   /**
    * Row cell template for the column
    */
->>>>>>> 45641c6cd65b7d20056c1ee8782d5d36113370ae
   public cellTemplate: TemplateRef<any> = null;
   /**
    * Header cell template for the column
