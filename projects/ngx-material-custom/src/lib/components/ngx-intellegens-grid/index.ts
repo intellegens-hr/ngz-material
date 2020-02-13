@@ -10,7 +10,7 @@ import { NgxIntellegensGridPaginationDefDirective, GridPaginationConfiguration  
 import { NgxIntellegensGridFilteringDefDirective, GridFilteringConfiguration  } from './directives/ngxIntellegensGridFilteringDef';
 import { FilterByPipe } from './pipes/filterBy';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortable, MatSortHeader } from '@angular/material/sort';
 
 /**
  * Grid configuration
@@ -143,6 +143,13 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   // Configuration: Holds internal configuration instance
   protected config = new GridConfiguration(() => this.dataKeys);
 
+  /**
+   * Gets current state of the grid
+   */
+  public get state () {
+    return this.composeState({});
+  }
+
   // Data source: Data resolved from [dataSource]
   protected data: any[] = [];
   // Data source: Contains all found property keys in any of data items
@@ -239,68 +246,54 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   //#region Exposed methods for managing the component
 
   /**
-   * Updates ordering state
+   * Updates ordering state and triggers (changed) event
    * @param orderingField Field key to order rows by
    * @param orderingAscDirection If ordering in ascending direction
+   * @returns Promise promise of changes having been applied
    */
   public updateOrdering ({
     orderingField         = undefined as string,
     orderingAscDirection  = undefined as boolean
   }) {
-    // Allow for resolved data to get ingested before updating state
-    setTimeout(() => {
-      // Update ordering state
-      this.orderingField =  orderingField !== undefined ? orderingField : this.orderingField;
-      this.orderingAscDirection = orderingAscDirection !== undefined ? orderingAscDirection : this.orderingAscDirection;
-      // TODO: Reflect ordering changes in <mat-table /> internal state
-      // if (this.orderingField !== undefined) {
-      //   this.sort.active = this.orderingField;
-      // }
-      // this.sort.disableClear = true;
-      // if (this.orderingAscDirection !== undefined && this.orderingAscDirection === true) {
-      //   this.sort.direction = 'asc';
-      // } else if (this.orderingAscDirection !== undefined && this.orderingAscDirection === false) {
-      //   this.sort.direction = 'desc';
-      // }
-    });
+    // Update state
+    return this.doUpdateOrdering({ orderingField, orderingAscDirection })
+      .then(() => {
+        // Trigger (changed) event
+        this.triggerChangedEvent({});
+      });
   }
 
   /**
-   * Updates pagination state
+   * Updates pagination state and triggers (changed) event
    * @param pageIndex Current page's index
    * @param totalLength Total number of rows in current data
+   * @returns Promise promise of changes having been applied
    */
   public updatePagination ({
     pageIndex   = undefined as number,
-    totalLength  = undefined as number
+    totalLength = undefined as number
   }) {
-    // Allow for resolved data to get ingested before updating state
-    setTimeout(() => {
-      // Update pagination state
-      this.pageIndex = pageIndex !== undefined ? pageIndex : this.pageIndex;
-      this.totalLength = totalLength !== undefined ? totalLength : this.totalLength;
-      // Reflect pagination changes in <mat-table /> internal state
-      if (pageIndex !== undefined) {
-        this.paginator.pageIndex = this.pageIndex;
-      }
-    });
+    // Update state
+    return this.doUpdatePagination({ pageIndex, totalLength })
+      .then(() => {
+        // Trigger (changed) event
+        this.triggerChangedEvent({});
+      });
   }
 
   /**
-   * Updates filtering state
+   * Updates filtering state and triggers (changed) event
    * @param key Property key of the property being filtered by
    * @param value Filtering value (if null, filtering by this property will be dropped)
+   * @returns Promise promise of changes having been applied
    */
   public updateFiltering (key: string, value: any) {
-    // Allow for resolved data to get ingested before updating state
-    setTimeout(() => {
-      // Update filter state
-      if (value === undefined || value === null || value === '') {
-        delete this.filters[key];
-      } else {
-        this.filters[key] = value;
-      }
-    });
+    // Update state
+    return this.doUpdateFiltering(key, value)
+      .then(() => {
+        // Trigger (changed) event
+        this.triggerChangedEvent({});
+      });
   }
 
   //#endregion
@@ -308,17 +301,18 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   //#region <mat-table /> and other UI events' handlers
 
   /**
-   * Handles <mat-table /> (user triggered) sorting change
+   * Handles <mat-table /> (UI triggered) sorting change
    * @param e Sorting event descriptor object
    */
   protected onMatTableSort (e) {
     // Extract updated ordering values
     const orderingField: string = e.active;
-    const orderingAscDirection = (e.direction === 'asc');
+    const orderingAscDirection = !(e.direction === 'asc');
     // Trigger (changed) event with updated values
-    const dataChange = this.triggerChangedEvent({ orderingField, orderingAscDirection });
-    // If change unhandled, handle state update internally
-    if (!dataChange) {
+    const preventedDefault = this.triggerChangedEvent({ orderingField, orderingAscDirection });
+    // If change unhandled, handle state update internally (else, assume change will be handled externally)
+    if (!preventedDefault) {
+      // Apply updated state
       this.orderingField = orderingField;
       this.orderingAscDirection = orderingAscDirection;
       // Resetting pagination because of sorting
@@ -327,7 +321,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   }
 
   /**
-   * Handles <mat-table /> (user triggered) pagination change
+   * Handles <mat-table /> (UI triggered) pagination change
    * @param e Pagination event descriptor object
    */
   protected onMatTablePage (e) {
@@ -336,16 +330,17 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     const pageLength: number = e.pageSize;
     const previousPageIndex: number = e.previousPageIndex;
     // Trigger (changed) event with updated values
-    const dataChange = this.triggerChangedEvent({ pageLength, pageIndex, previousPageIndex });
-    // If change unhandled, handle state update internally
-    if (!dataChange) {
+    const preventedDefault = this.triggerChangedEvent({ pageLength, pageIndex, previousPageIndex });
+    // If change unhandled, handle state update internally (else, assume change will be handled externally)
+    if (!preventedDefault) {
+      // Apply updated state
       this.pageIndex = pageIndex;
       this.pageLength = pageLength;
     }
   }
 
   /**
-   * Handles (user triggered) filter value update
+   * Handles (UI triggered) filter value update
    * @param key Property key of the data property being filtered
    * @param e Event descriptor object
    */
@@ -358,9 +353,10 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     }
     const totalLength = (new FilterByPipe()).transform(this.data, updatedFilters).length;
     // Trigger (changed) event with updated values
-    const dataChange = this.triggerChangedEvent({ filters: updatedFilters, totalLength });
-    // If change unhandled, handle state update internally
-    if (!dataChange) {
+    const preventedDefault = this.triggerChangedEvent({ filters: updatedFilters, totalLength });
+    // If change unhandled, handle state update internally (else, assume change will be handled externally)
+    if (!preventedDefault) {
+      // Apply updated state
       if (value === undefined || value === null || value === '') {
         delete this.filters[key];
       } else {
@@ -475,7 +471,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * @param previousPageIndex Updated value of previous page's index
    * @param totalLength Total number of rows in updated data
    * @param filters Updated value of the hash-table of filtering key-value pairs
-   * @returns If outside code will handle state changes, or if the changes should be applied by the grind component internally
+   * @returns If internal processing of changes should be prevented and external handling should be assumed
    */
   protected triggerChangedEvent ({
     orderingField         = undefined as string,
@@ -486,8 +482,109 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     totalLength           = undefined as number,
     filters               = undefined as object
   }) {
+
+    // Compose incoming state
+    const state = this.composeState({
+      orderingField,
+      orderingAscDirection,
+      pageIndex,
+      previousPageIndex,
+      pageLength,
+      totalLength,
+      filters
+    });
+
     // Ready the change event descriptor object
     const e = {
+
+      // Incoming state (separate copy, to protect from manipulation)
+      state: {
+        ...state,
+        filters: {...filters}
+      },
+
+      // Methods to control the grid
+      controller: {
+
+        /**
+         * Updates ordering state
+         * @param orderingField Field key to order rows by
+         * @param orderingAscDirection If ordering in ascending direction
+         * @returns Promise promise of changes having been applied
+         */
+        updateOrdering: ({
+          // tslint:disable-next-line: no-shadowed-variable
+          orderingField         = state.orderingField as string,
+          // tslint:disable-next-line: no-shadowed-variable
+          orderingAscDirection  = state.orderingAscDirection as boolean
+        }) => {
+          // Trigger ordering update (avoiding (re)triggering (changed) event)
+          return this.doUpdateOrdering({ orderingField, orderingAscDirection });
+        },
+
+        /**
+         * Updates pagination state
+         * @param pageIndex Current page's index
+         * @param totalLength Total number of rows in current data
+         * @returns Promise promise of changes having been applied
+         */
+        updatePagination: ({
+          // tslint:disable-next-line: no-shadowed-variable
+          pageIndex   = state.pageIndex as number,
+          // tslint:disable-next-line: no-shadowed-variable
+          totalLength = state.totalLength as number
+        }) => {
+          // Trigger ordering update (avoiding (re)triggering (changed) event)
+          this.doUpdatePagination({ pageIndex, totalLength });
+        },
+
+        /**
+         * Updates filtering state
+         * @param key Property key of the property being filtered by
+         * @param value Filtering value (if null, filtering by this property will be dropped)
+         * @returns Promise promise of changes having been applied
+         */
+        updateFiltering:  (key, value) => {
+          // Trigger ordering update (avoiding (re)triggering (changed) event)
+          this.doUpdateFiltering(key, value);
+        },
+
+      },
+
+      // Editable property signaling state is being managed by an outside party and doesn't need to be updated internally
+      preventDefault:       false
+
+    };
+
+    // Emit (changed) event
+    this.changed.emit(e);
+
+    // Return if state being handled by an outside party
+    return e.preventDefault;
+
+  }
+
+  /**
+   * Composes current state into a single object
+   * @param orderingField Updated value of the field key to order rows by
+   * @param orderingAscDirection Updated value of if ordering in ascending direction
+   * @param pageIndex Updated value of current page's index
+   * @param previousPageIndex Updated value of previous page's index
+   * @param totalLength Total number of rows in updated data
+   * @param filters Updated value of the hash-table of filtering key-value pairs
+   * @returns Single object representing current state
+   */
+  protected composeState ({
+    orderingField         = undefined as string,
+    orderingAscDirection  = undefined as boolean,
+    pageIndex             = undefined as number,
+    previousPageIndex     = undefined as number,
+    pageLength            = undefined as number,
+    totalLength           = undefined as number,
+    filters               = undefined as object
+  }) {
+    // Compose and return state object
+    return {
       // Grid state (Ordering)
       orderingField:        orderingField !== undefined ? orderingField : this.orderingField,
       orderingAscDirection: orderingAscDirection !== undefined ? orderingAscDirection : this.orderingAscDirection,
@@ -497,16 +594,100 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
       pageLength:           pageLength !== undefined ? pageLength : this.pageLength,
       totalLength:          totalLength !== undefined ? totalLength : this.totalLength,
       // Grid state (Filtration)
-      filters:              filters !== undefined ? filters : this.filters,
-      // Editable property signaling state is being managed by an outside party and doesn't need to be updated internally
-      preventDefault:       false,
-      // Reference to the Grid component instance allowing outside party to access exposed properties/methods
-      grid:                 this
+      filters:              filters !== undefined ? {...filters} : {...this.filters}
     };
-    // Emit (changed) event
-    this.changed.emit(e);
-    // Return if state being handled by an outside party
-    return e.preventDefault;
+  }
+
+  /**
+   * Updates ordering state
+   * @param orderingField Field key to order rows by
+   * @param orderingAscDirection If ordering in ascending direction
+   * @returns Promise promise of changes having been applied
+   */
+  protected doUpdateOrdering ({
+    orderingField         = undefined as string,
+    orderingAscDirection  = undefined as boolean
+  }) {
+    return new Promise((resolve) => {
+      // Allow for resolved data to get ingested before updating state
+      setTimeout(() => {
+
+        // Update ordering state
+        this.orderingField =  orderingField !== undefined ? orderingField : this.orderingField;
+        this.orderingAscDirection = orderingAscDirection !== undefined ? orderingAscDirection : this.orderingAscDirection;
+
+        // Reflect ordering changes in <mat-table /> internal state
+        // Ugly hack (fixing Material table issue: https://github.com/angular/components/issues/10242#issuecomment-470726829)
+        const id = this.orderingField,
+              start = (this.orderingAscDirection ? 'desc' : 'asc');
+        if ((this.sort.active !== id) || ((this.sort as any)._direction !== start)) {
+          this.sort.sort({ id, start } as MatSortable);
+          const viewState = (this.sort.sortables.get(this.orderingField) as MatSortHeader)._getArrowViewState();
+          if (viewState !== 'active') {
+            (this.sort.sortables.get(this.orderingField) as MatSortHeader)._setAnimationTransitionState({ toState: 'active' });
+          }
+        }
+
+        // Resolve promise
+        resolve();
+
+      });
+    });
+  }
+
+  /**
+   * Updates pagination state
+   * @param pageIndex Current page's index
+   * @param totalLength Total number of rows in current data
+   * @returns Promise promise of changes having been applied
+   */
+  public doUpdatePagination ({
+    pageIndex   = undefined as number,
+    totalLength = undefined as number
+  }) {
+    return new Promise((resolve) => {
+      // Allow for resolved data to get ingested before updating state
+      setTimeout(() => {
+
+        // Update pagination state
+        this.pageIndex = pageIndex !== undefined ? pageIndex : this.pageIndex;
+        this.totalLength = totalLength !== undefined ? totalLength : this.totalLength;
+
+        // Reflect pagination changes in <mat-table /> internal state
+        if (pageIndex !== undefined) {
+          this.paginator.pageIndex = this.pageIndex;
+        }
+
+        // Resolve promise
+        resolve();
+
+      });
+    });
+  }
+
+  /**
+   * Updates filtering state
+   * @param key Property key of the property being filtered by
+   * @param value Filtering value (if null, filtering by this property will be dropped)
+   * @returns Promise promise of changes having been applied
+   */
+  public doUpdateFiltering (key: string, value: any) {
+    return new Promise((resolve) => {
+      // Allow for resolved data to get ingested before updating state
+      setTimeout(() => {
+
+        // Update filter state
+        if (value === undefined || value === null || value === '') {
+          delete this.filters[key];
+        } else {
+          this.filters[key] = value;
+        }
+
+        // Resolve promise
+        resolve();
+
+      });
+    });
   }
 
   //#endregion

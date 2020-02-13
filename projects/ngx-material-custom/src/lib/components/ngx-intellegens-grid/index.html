@@ -14,7 +14,9 @@
       <th *ngFor="let key of dataKeys">
           <input type="text" [disabled]="config.columns[key].hasFiltering === false"
                  class="filter-input"
-                 (keyup)="onFilterUpdated(key, $event)">
+                 [value]="filters[key] || ''"
+                 (keyup)="onFilterUpdated(key, $event)"
+                 (change)="onFilterUpdated(key, $event)">
       </th>
     </tr>
   </ng-container>

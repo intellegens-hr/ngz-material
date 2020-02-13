@@ -30,12 +30,12 @@ export class OrderByPipe implements PipeTransform {
     return [
       ...array.sort((a: any, b: any) => {
         if (a[orderingField] < b[orderingField]) {
-          return (orderingAscDirection ? +1 : -1);
-        } else if ( a[orderingField] > b[orderingField]) {
           return (orderingAscDirection ? -1 : +1);
+        } else if ( a[orderingField] > b[orderingField]) {
+          return (orderingAscDirection ? +1 : -1);
         } else {
-            return 0;
-          }
+          return 0;
+        }
       })
     ];
 
