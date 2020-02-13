@@ -154,9 +154,11 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   // Data source: Contains all found property keys in any of data items
   protected dataKeys: string[] = [];
 
+  /**
+   * Configuration/Data source: Contains all found property keys in any of data items appended with keys of any configured virtual columns
+   */
   protected get columnKeys () {
-    const virtualKeys = Object.keys(this.config.columns);
-    return virtualKeys;
+    return Object.keys(this.config.columns);
   }
 
   // Data source: If data-source set as Observable, this will keep a reference to the subscription

@@ -12,7 +12,7 @@
     <!-- Filtering row -->
     <tr *ngIf="config.filtering.hasFiltering && config.filtering.hasFilteringColumns">
       <th *ngFor="let key of columnKeys">
-          <input type="text" [disabled]="config.columns[key].hasFiltering === false"
+          <input type="text" [disabled]="config.columns[key].virtual || !config.columns[key].hasFiltering"
                  class="filter-input"
                  [value]="filters[key] || ''"
                  (keyup)="onFilterUpdated(key, $event)"
@@ -26,7 +26,7 @@
 
     <!-- Column header -->
     <th mat-header-cell *matHeaderCellDef
-      mat-sort-header [disabled]="!config.columns[key].hasOrdering">
+      mat-sort-header [disabled]="!config.columns[key].hasOrdering || config.columns[key].virtual">
       <!-- If template available -->
       <ng-container *ngIf="config.columns[key].headerCellTemplate">
         <ng-container
@@ -54,7 +54,7 @@
         ></ng-container>
       </ng-container>
       <!-- If no template, default to raw row value -->
-      <ng-container *ngIf="!config.columns[key].cellTemplate">
+      <ng-container *ngIf="!config.columns[key].cellTemplate && !config.columns[key].virtual">
         {{ element[key] }}
       </ng-container>      
     </td>

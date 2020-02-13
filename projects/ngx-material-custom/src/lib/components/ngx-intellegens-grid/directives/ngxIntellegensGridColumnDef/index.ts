@@ -88,7 +88,7 @@ export class NgxIntellegensGridColumnDefDirective {
   @Input()
   public hasFiltering: boolean;
   /**
-   * If column is virtual
+   * If column is virtual (not corresponding to a data source key)
    */
   @Input()
   public virtual: boolean;
@@ -138,12 +138,13 @@ export class GridColumnConfiguration {
         // Instantiate default column configuration
         const config = new GridColumnConfiguration();
         if (!element.key) {
-          config.key = 'test';
+          config.key = 'test'; // TODO: Make synthetic key be an incrementing integer:  [0, 1, 2, 3, ...]
           config.virtual = true;
         } else {
           config.key = element.key;
           config.virtual = element.virtual;
         }
+
         // Pull configuration from instance of [NgxIntellegensGridColumnDefDirective] directive
         if (element.header !== undefined) { config.header = element.header; }
         if (element.footer !== undefined) { config.footer = element.footer; }
@@ -185,7 +186,9 @@ export class GridColumnConfiguration {
    * If column should provide filtering by it's value
    */
   public hasFiltering = true;
-
+  /**
+   * If column is virtual (not corresponding to a data source key)
+   */
   public virtual: boolean;
 
   /**
