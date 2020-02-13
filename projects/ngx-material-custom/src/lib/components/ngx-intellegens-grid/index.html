@@ -6,12 +6,12 @@
   matSort matSortDisableClear="true" (matSortChange)="onMatTableSort($event)">
 
   <!-- Header definition (and layout) -->
-  <ng-container *matHeaderRowDef="dataKeys">
+  <ng-container *matHeaderRowDef="columnKeys">
     <!-- Default headers -->
     <tr mat-header-row></tr>
     <!-- Filtering row -->
     <tr *ngIf="config.filtering.hasFiltering && config.filtering.hasFilteringColumns">
-      <th *ngFor="let key of dataKeys">
+      <th *ngFor="let key of columnKeys">
           <input type="text" [disabled]="config.columns[key].hasFiltering === false"
                  class="filter-input"
                  (keyup)="onFilterUpdated(key, $event)">
@@ -20,7 +20,7 @@
   </ng-container>
 
   <!-- Table columns layout -->
-  <ng-container *ngFor="let key of dataKeys" [matColumnDef]="key">
+  <ng-container *ngFor="let key of columnKeys" [matColumnDef]="key">
 
     <!-- Column header -->
     <th mat-header-cell *matHeaderCellDef
@@ -77,13 +77,13 @@
   </ng-container>
 
   <!-- Body row(s) definition (and layout) -->
-  <ng-container *matRowDef="let row; columns: dataKeys;">
+  <ng-container *matRowDef="let row; columns: columnKeys;">
     <!-- Default body row cells -->
     <tr mat-row></tr>
   </ng-container>
 
   <!-- Footer definition (and layout) -->
-  <ng-container *matFooterRowDef="dataKeys">
+  <ng-container *matFooterRowDef="columnKeys">
     <!-- Default footers -->
     <tr mat-footer-row></tr>
   </ng-container>

@@ -4,6 +4,7 @@
 // Import dependencies
 import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
 
+
 /**
  * When child of [ngxIntellegensGridColumnDef] provides template for column's row cell
  *
@@ -16,7 +17,7 @@ import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
 @Directive({
   selector: '[ngxIntellegensGridColumnCellTemplate]'
 })
-export class NgxIntellegensGridColumnCellTemplateDirective { }
+export class NgxIntellegensGridColumnCellTemplateDirective {}
 
 /**
  * When child of [ngxIntellegensGridColumnDef] provides template for column's header cell
@@ -90,7 +91,7 @@ export class NgxIntellegensGridColumnDefDirective {
    * If column is virtual
    */
   @Input()
-  public isVirtualColumn: boolean;
+  public virtual: boolean;
 
   /**
    * Content child elements implementing a *ngxIntellegensGridColumnCellTemplate directive
@@ -136,11 +137,13 @@ export class GridColumnConfiguration {
 
         // Instantiate default column configuration
         const config = new GridColumnConfiguration();
-        if (element.isVirtualColumn === true) {
-          element.key = 'test';
+        if (!element.key) {
+          config.key = 'test';
+          config.virtual = true;
+        } else {
+          config.key = element.key;
+          config.virtual = element.virtual;
         }
-        config.key = element.key;
-
         // Pull configuration from instance of [NgxIntellegensGridColumnDefDirective] directive
         if (element.header !== undefined) { config.header = element.header; }
         if (element.footer !== undefined) { config.footer = element.footer; }
@@ -153,7 +156,7 @@ export class GridColumnConfiguration {
         if (element.footerCellTemplate !== undefined) { config.footerCellTemplate = element.footerCellTemplate; }
 
         // Set column configuration
-        configHash[element.key] = config;
+        configHash[config.key] = config;
 
       });
     }
@@ -183,7 +186,7 @@ export class GridColumnConfiguration {
    */
   public hasFiltering = true;
 
-  public isVirtualColumn = false;
+  public virtual: boolean;
 
   /**
    * Row cell template for the column
