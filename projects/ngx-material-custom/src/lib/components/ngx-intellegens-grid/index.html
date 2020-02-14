@@ -32,7 +32,7 @@
         <ng-container
           *ngTemplateOutlet="
             config.columns[key].headerCellTemplate,
-            context:{ config: config.columns[key], key: key, value: (config.columns[key].header || key) }
+            context: headerCellTemplateContext(key)
           "
         ></ng-container>
       </ng-container>
@@ -43,19 +43,19 @@
     </th>
 
     <!-- Column body cell -->
-    <td mat-cell *matCellDef="let element">
+    <td mat-cell *matCellDef="let row">
       <!-- If template available -->
       <ng-container *ngIf="config.columns[key].cellTemplate">
         <ng-container
           *ngTemplateOutlet="
             config.columns[key].cellTemplate,
-            context:{ row: element, key: key, value: element[key] }
+            context: bodyCellTemplateContext(row, key)
           "
         ></ng-container>
       </ng-container>
       <!-- If no template, default to raw row value -->
       <ng-container *ngIf="!config.columns[key].cellTemplate && !config.columns[key].virtual">
-        {{ element[key] }}
+        {{ row[key] }}
       </ng-container>      
     </td>
 
@@ -66,7 +66,7 @@
         <ng-container
           *ngTemplateOutlet="
             config.columns[key].footerCellTemplate,
-            context:{ config: config.columns[key], key: key, value: (config.columns[key].footer || key) }
+            context: footerCellTemplateContext(key)
           "
         ></ng-container>
       </ng-container>
