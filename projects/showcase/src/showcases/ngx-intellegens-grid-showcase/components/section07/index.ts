@@ -19,7 +19,7 @@ export class NgxIntellegensGridShowcaseSection07Component {
   protected grid: NgxIntellegensGridComponent;
 
   // Holds display data
-  public dataSource: any = data;
+  public dataSource: any = data.slice(0, 5);
 
   // Holds example resolution error
   public err = new Error('Failed resolving data!');
@@ -31,20 +31,19 @@ export class NgxIntellegensGridShowcaseSection07Component {
   public isError = false;
 
   public onEventChange (e) {
-    e.preventDefault = false;
+    e.preventDefault = true;
 
     if (e.preventDefault) {
-
-      // Set data (sync)
-      // const temp = data.slice(e.pageIndex * e.pageLength, (e.pageIndex + 1) * e.pageLength);
-      // this.dataSource = temp;
-      // e.controller.updatePagination({ totalLength: data.length });
-
       // Set data (async)
       this.dataSource = new Promise((resolve) => {
         setTimeout(() => {
           // Set data
           const temp = data
+            .filter(
+              (a) => !Object.keys(e.state.filters).find(
+                (key) => !(new RegExp(e.state.filters[key]).test(a[key]))
+              )
+            )
             .sort((a: any, b: any) => {
               if (a[e.state.orderingField] < b[e.state.orderingField]) {
                 return (e.state.orderingAscDirection ? -1 : +1);
@@ -77,6 +76,10 @@ export class NgxIntellegensGridShowcaseSection07Component {
 
   public filter (id, value) {
     this.grid.updateFiltering(id, value);
+  }
+
+  public log () {
+    console.log(this.grid);
   }
 
 }

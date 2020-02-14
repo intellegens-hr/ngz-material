@@ -27,7 +27,8 @@ export class PaginatePipe  implements PipeTransform {
     if (!Array.isArray(array)) { return array; }
 
     // Calculate page start index
-    const firstIndex = ((pageIndex * pageLength) < array.length ? (pageIndex * pageLength) : Math.floor(array.length / pageLength));
+    // tslint:disable-next-line: max-line-length
+    const firstIndex = ((pageIndex * pageLength) < array.length ? (pageIndex * pageLength) : (Math.ceil(array.length / pageLength) - 1));
 
     // Slice out a page
     return array.slice(firstIndex, firstIndex + pageLength);
