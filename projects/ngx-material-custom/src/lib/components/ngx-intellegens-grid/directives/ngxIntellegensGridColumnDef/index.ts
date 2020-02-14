@@ -130,6 +130,8 @@ export class GridColumnConfiguration {
 
     // Ready a hash-table of column configurations
     const configHash = {};
+    // Number increments and adds to "VirtualKey" to create virtual key for multiple virtual rows
+    let virtualKeyId = 1;
 
     // Pull configuration from instances of [NgxIntellegensGridColumnDefDirective] directive
     if (defs && defs.length) {
@@ -138,7 +140,8 @@ export class GridColumnConfiguration {
         // Instantiate default column configuration
         const config = new GridColumnConfiguration();
         if (!element.key) {
-          config.key = 'test'; // TODO: Make synthetic key be an incrementing integer:  [0, 1, 2, 3, ...]
+          config.key = 'VirtualKey' + virtualKeyId;
+          virtualKeyId++;
           config.virtual = true;
         } else {
           config.key = element.key;
