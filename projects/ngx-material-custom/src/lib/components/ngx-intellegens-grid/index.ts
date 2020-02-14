@@ -701,17 +701,37 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     });
   }
 
-  // Returns header cell template context object
-  protected headerCellTemplateContext (key) {
-    return { config: this.config.columns[key] , key, value: (this.config.columns[key].header || key) };
-  }
-  // Returns body cell template context object
+
+  /**
+   * Returns body cell template context object
+   * @param row Property row of the property being filtered by
+   * @param key Property key of the property being filtered by
+   * @returns Body cell template object
+   */
   protected bodyCellTemplateContext (row, key) {
-    return { row, key, value: row[key]};
+    return {
+      row,
+      key,
+      caption: row[key]
+    };
   }
-  // Returns footer cell template context object
-  protected footerCellTemplateContext (key) {
-   return { config: this.config.columns[key] , key, value: (this.config.columns[key].footer || key) };
+  /**
+   * Returns header and footer cell template context object
+   * @param key Property key of the property being filtered by
+   * @returns Footer cell template object
+   */
+
+  protected headerAndFooterTemplateContext (key) {
+    return {
+     config: this.config.columns[key],
+     key,
+     caption: (this.config.columns[key].footer || key),
+     // values: this.data,
+     page: {
+       first: this.pageIndex * this.pageLength,
+       last: (this.pageIndex * this.pageLength) + this.pageLength - 1
+      }
+    };
   }
 
   //#endregion
