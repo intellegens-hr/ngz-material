@@ -19,7 +19,7 @@ export class NgxIntellegensGridShowcaseSection07Component {
   private grid: NgxIntellegensGridComponent;
 
   // Holds display data
-  public dataSource: any = data.slice(0, 5);
+  public dataSource: any = data;
 
   // Holds example resolution error
   public err = new Error('Failed resolving data!');
@@ -31,7 +31,7 @@ export class NgxIntellegensGridShowcaseSection07Component {
   public isError = false;
 
   public onEventChange (e) {
-    e.preventDefault = true;
+    e.preventDefault = false;
 
     if (e.preventDefault) {
       // Set data (async)
