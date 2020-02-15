@@ -117,18 +117,18 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * Content child elements implementing a [ngxIntellegensGridPaginationDef] directive
    * handling pagination configuration
    */
-  @ContentChild(NgxIntellegensGridPaginationDefDirective, {static: false} )
+  @ContentChild(NgxIntellegensGridPaginationDefDirective)
   public paginationDef: NgxIntellegensGridPaginationDefDirective;
   /**
    * Content child elements implementing a [ngxIntellegensGridFilteringDef] directive
    * handling filtering configuration
    */
-  @ContentChild(NgxIntellegensGridFilteringDefDirective, {static: false} )
+  @ContentChild(NgxIntellegensGridFilteringDefDirective)
   public filteringDef: NgxIntellegensGridFilteringDefDirective;
 
-  @ViewChild(MatPaginator, { static: false }) protected paginator: MatPaginator;
+  @ViewChild(MatPaginator) private paginator: MatPaginator;
 
-  @ViewChild(MatSort, { static: false }) protected sort: MatSort;
+  @ViewChild(MatSort) private sort: MatSort;
   //#endregion
 
   //#region Properties
@@ -140,7 +140,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     return this.config;
   }
   // Configuration: Holds internal configuration instance
-  protected config = new GridConfiguration(() => this.dataKeys);
+  private config = new GridConfiguration(() => this.dataKeys);
 
   /**
    * Gets current state of the grid
@@ -150,41 +150,50 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   }
 
   // Data source: Data resolved from [dataSource]
-  protected data: any[] = [];
+  private data: any[] = [];
+  public get _data () { return this.data; }
   // Data source: Contains all found property keys in any of data items
-  protected dataKeys: string[] = [];
+  private dataKeys: string[] = [];
 
   /**
    * Configuration/Data source: Contains all found property keys in any of data items appended with keys of any configured virtual columns
    */
-  protected get columnKeys () {
+  public get _columnKeys () {
     return Object.keys(this.config.columns);
   }
 
   // Data source: If data-source set as Observable, this will keep a reference to the subscription
   // to this Observable (in case unsubscribe needed later)
-  protected dataSourceSubscription: SubscriptionLike;
+  private dataSourceSubscription: SubscriptionLike;
 
   // Holds internal errors
-  protected internalError: Error = null;
+  private internalError: Error = null;
+  public get _internalError () { return this.internalError; }
   // Holds internal loading state
-  protected internalLoading = false;
+  private internalLoading = false;
+  public get _internalLoading () { return this.internalLoading; }
 
   // Ordering: Field key to order rows by
-  protected orderingField: string;
+  private orderingField: string;
+  public get _orderingField () { return this.orderingField; }
   // Ordering: If ordering in ascending direction
-  protected orderingAscDirection = true;
+  private orderingAscDirection = true;
+  public get _orderingAscDirection () { return this.orderingAscDirection; }
 
   // Pagination: Current page's index
-  protected pageIndex: number;
+  private pageIndex: number;
+  public get _pageIndex () { return this.pageIndex; }
   // Pagination: Each page's size (number of rows displayed per page)
-  protected pageLength: number;
+  private pageLength: number;
+  public get _pageLength () { return this.pageLength; }
   // Pagination: Total number of rows in current data
-  protected totalLength: number;
+  private totalLength: number;
+  public get _totalLength () { return this.totalLength; }
 
   // Filtering: Hash-table of filtering key-value pairs
   // where key is the property key of the property being filtered by and value is the filtering value
-  protected filters = {};
+  private filters = {};
+  public get _filters () { return this.filters; }
 
   //#endregion
 
@@ -305,13 +314,13 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
   //#endregion
 
-  //#region <mat-table /> and other UI events' handlers
+  //#region <mat-table /> and other UI events' handlers and other UI helper methods
 
   /**
    * Handles <mat-table /> (UI triggered) sorting change
    * @param e Sorting event descriptor object
    */
-  protected onMatTableSort (e) {
+  public _onMatTableSort (e) {
     // Extract updated ordering values
     const orderingField: string = e.active;
     const orderingAscDirection = !(e.direction === 'asc');
@@ -331,7 +340,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * Handles <mat-table /> (UI triggered) pagination change
    * @param e Pagination event descriptor object
    */
-  protected onMatTablePage (e) {
+  public _onMatTablePage (e) {
     // Extract updated ordering values
     const pageIndex: number = e.pageIndex;
     const pageLength: number = e.pageSize;
@@ -351,7 +360,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * @param key Property key of the data property being filtered
    * @param e Event descriptor object
    */
-  protected onFilterUpdated (key, e: any) {
+  public _onFilterUpdated (key, e: any) {
     // Extract updated ordering values
     const value: string = e.target.value,
           updatedFilters = { ...this.filters, [key]: value };
@@ -375,6 +384,25 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
     }
   }
 
+  /**
+   * Returns header/footer template context object
+   * @param key Column key to provide context for
+   * @returns Template context for the column header
+   */
+  public _getHeaderAndFooterTemplateContext (key) {
+    return { config: this.config.columns[key] , key, value: (this.config.columns[key].header || key) };
+  }
+
+  /**
+   * Returns cell template context object
+   * @param row Data row of the cell to provide context for
+   * @param key Column key to provide context for
+   * @returns Template context for the column cell
+   */
+  public _getCellTemplateContext (row, key) {
+    return { row, key, value: row[key]};
+  }
+
   //#endregion
 
   //#region Internal methods
@@ -382,7 +410,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   /**
    * Takes raw data from [dataSource] and ingests it into the component
    */
-  protected ingestRawData () {
+  private ingestRawData () {
 
     // Check if [dataSource] is a Promise
     if (!(this.dataSource instanceof Array)) { return; }
@@ -400,7 +428,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   /**
    * Takes Promise of data from [dataSource] and (once resolved) ingests it into the component
    */
-  protected ingestPromiseData () {
+  private ingestPromiseData () {
 
     // Check if [dataSource] is a Promise
     if (!(this.dataSource instanceof Promise)) { return; }
@@ -435,7 +463,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
   /**
    * Takes Observable data from [dataSource] and (once resolved) ingests it into the component
    */
-  protected ingestObservableData () {
+  private ingestObservableData () {
 
     // Check if [dataSource] is a Promise
     if (!(this.dataSource instanceof Observable)) { return; }
@@ -470,7 +498,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * Handles any error caught during internal operation of the Grid component
    * @param err Error being handled
    */
-  protected handleInternalError (err) {
+  private handleInternalError (err) {
     this.internalError = err;
   }
 
@@ -484,7 +512,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * @param filters Updated value of the hash-table of filtering key-value pairs
    * @returns If internal processing of changes should be prevented and external handling should be assumed
    */
-  protected triggerChangedEvent ({
+  private triggerChangedEvent ({
     orderingField         = undefined as string,
     orderingAscDirection  = undefined as boolean,
     pageIndex             = undefined as number,
@@ -585,7 +613,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * @param filters Updated value of the hash-table of filtering key-value pairs
    * @returns Single object representing current state
    */
-  protected composeState ({
+  private composeState ({
     orderingField         = undefined as string,
     orderingAscDirection  = undefined as boolean,
     pageIndex             = undefined as number,
@@ -615,7 +643,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * @param orderingAscDirection If ordering in ascending direction
    * @returns Promise promise of changes having been applied
    */
-  protected doUpdateOrdering ({
+  private doUpdateOrdering ({
     orderingField         = undefined as string,
     orderingAscDirection  = undefined as boolean
   }) {
@@ -652,7 +680,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * @param totalLength Total number of rows in current data
    * @returns Promise promise of changes having been applied
    */
-  public doUpdatePagination ({
+  private doUpdatePagination ({
     pageIndex   = undefined as number,
     totalLength = undefined as number
   }) {
@@ -682,7 +710,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * @param value Filtering value (if null, filtering by this property will be dropped)
    * @returns Promise promise of changes having been applied
    */
-  public doUpdateFiltering (key: string, value: any) {
+  private doUpdateFiltering (key: string, value: any) {
     return new Promise((resolve) => {
       // Allow for resolved data to get ingested before updating state
       setTimeout(() => {
@@ -699,19 +727,6 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
 
       });
     });
-  }
-
-  // Returns header cell template context object
-  protected headerCellTemplateContext (key) {
-    return { config: this.config.columns[key] , key, value: (this.config.columns[key].header || key) };
-  }
-  // Returns body cell template context object
-  protected bodyCellTemplateContext (row, key) {
-    return { row, key, value: row[key]};
-  }
-  // Returns footer cell template context object
-  protected footerCellTemplateContext (key) {
-   return { config: this.config.columns[key] , key, value: (this.config.columns[key].footer || key) };
   }
 
   //#endregion

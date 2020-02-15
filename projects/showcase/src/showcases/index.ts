@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
 // Import library
-import { NgxMaterialCustomModule } from '../../../ngx-material-custom/src/lib/ngx-material-custom.module';
+import { NgxMaterialCustomModule } from '../../../ngx-material-custom/src/lib';
 
 // Import components
 // tslint:disable-next-line: max-line-length

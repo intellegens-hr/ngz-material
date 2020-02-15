@@ -3,7 +3,7 @@
 
 // Import dependencies
 import { Component, ViewChild } from '@angular/core';
-import { NgxIntellegensGridComponent } from '../../../../../../ngx-material-custom/src/lib/components/ngx-intellegens-grid';
+import { NgxIntellegensGridComponent } from '../../../../../../ngx-material-custom/src/lib';
 
 // Import example data
 import { data } from '../../data';
@@ -15,8 +15,8 @@ import { data } from '../../data';
 })
 export class NgxIntellegensGridShowcaseSection07Component {
 
-  @ViewChild(NgxIntellegensGridComponent, { read: NgxIntellegensGridComponent, static: false })
-  protected grid: NgxIntellegensGridComponent;
+  @ViewChild(NgxIntellegensGridComponent, { read: NgxIntellegensGridComponent })
+  private grid: NgxIntellegensGridComponent;
 
   // Holds display data
   public dataSource: any = data.slice(0, 5);

@@ -97,21 +97,21 @@ export class NgxIntellegensGridColumnDefDirective {
    * Content child elements implementing a *ngxIntellegensGridColumnCellTemplate directive
    * providing row cell template for the column
    */
-  @ContentChild(NgxIntellegensGridColumnCellTemplateDirective, { read: TemplateRef, static: false})
+  @ContentChild(NgxIntellegensGridColumnCellTemplateDirective, { read: TemplateRef })
   public cellTemplate: TemplateRef<any>;
 
   /**
    * Content child elements implementing a *ngxIntellegensGridColumnHeaderCellTemplate directive
    * providing header cell template for the column
    */
-  @ContentChild(NgxIntellegensGridColumnHeaderCellTemplateDirective, { read: TemplateRef, static: false})
+  @ContentChild(NgxIntellegensGridColumnHeaderCellTemplateDirective, { read: TemplateRef })
   public headerCellTemplate: TemplateRef<any>;
 
   /**
    * Content child elements implementing a *ngxIntellegensGridColumnFooterCellTemplate directive
    * providing footer cell template for the column
    */
-  @ContentChild(NgxIntellegensGridColumnFooterCellTemplateDirective, { read: TemplateRef, static: false})
+  @ContentChild(NgxIntellegensGridColumnFooterCellTemplateDirective, { read: TemplateRef })
   public footerCellTemplate: TemplateRef<any>;
 
 }
@@ -140,7 +140,7 @@ export class GridColumnConfiguration {
         // Instantiate default column configuration
         const config = new GridColumnConfiguration();
         if (!element.key) {
-          config.key = 'VirtualKey' + virtualKeyId;
+          config.key = 'VirtualKey' + virtualKeyId; // TODO: Make synthetic keys numbers-only: 0, 1, 2, ...
           virtualKeyId++;
           config.virtual = true;
         } else {

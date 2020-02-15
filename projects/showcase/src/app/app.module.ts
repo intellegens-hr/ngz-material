@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 // Import showcases
-import { NgxIntellegensGridShowcaseModule } from '../showcases/ngx-intellegens-grid-showcase.module';
+import { NgxIntellegensGridShowcaseModule } from '../showcases';
 
 @NgModule({
   declarations: [ AppComponent ],
