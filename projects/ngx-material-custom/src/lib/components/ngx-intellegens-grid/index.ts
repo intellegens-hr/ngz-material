@@ -394,7 +394,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
      config: this.config.columns[key],
      key,
      caption: (this.config.columns[key].footer || key),
-     // values: this.data,
+     values: this.data.map(row => row[key]),
      page: {
        first: this.pageIndex * this.pageLength,
        last: (this.pageIndex * this.pageLength) + this.pageLength - 1
