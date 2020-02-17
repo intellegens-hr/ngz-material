@@ -374,6 +374,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
    * @returns Template context for the column header
    */
   public _getHeaderAndFooterTemplateContext (key) {
+    const lastIndex = (this._pageIndex * this._pageLength) + this._pageLength - 1;
     return {
      config: this._config.columns[key],
      key,
@@ -381,7 +382,7 @@ export class NgxIntellegensGridComponent implements AfterContentInit, OnChanges,
      values: this._data.map(row => row[key]),
      page: {
        first: this._pageIndex * this._pageLength,
-       last: (this._pageIndex * this._pageLength) + this._pageLength - 1
+       last: lastIndex <= this._totalLength ? lastIndex : this._totalLength - 1
       }
     };
   }

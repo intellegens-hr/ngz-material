@@ -15,7 +15,7 @@
           {{ row['firstName'] }} has salary of ${{row[key]}}
         </ng-container>
         <ng-container *ngxIntellegensGridColumnFooterCellTemplate="let config = config; let values = values; let page = page">
-           Average monthly salary for all data is: {{page.first}} {{page.last}} / Average monthly salary for displayed data is: {{avgMonthlySalaryLimited(values, page.first, page.last)}}
+           Average monthly salary for all data is: ${{avgMonthlySalary(values)}} <br> Average monthly salary for displayed data is: ${{avgMonthlySalaryLimited(values, page.first, page.last)}}
         </ng-container>
       </ng-container>
      <ng-container ngxIntellegensGridColumnDef [virtual]="true" [header]="'Yearly salary'" [footer]="'Yearly salary'" [hasOrdering]="false" [hasFiltering]="false">
