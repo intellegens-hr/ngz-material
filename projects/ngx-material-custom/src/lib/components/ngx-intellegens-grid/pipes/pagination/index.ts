@@ -26,6 +26,9 @@ export class PaginatePipe  implements PipeTransform {
     // Check if ordering an array
     if (!Array.isArray(array)) { return array; }
 
+    // Check if page length defined
+    if (pageLength === undefined) { return array; }
+
     // Calculate page start index
     // tslint:disable-next-line: max-line-length
     const firstIndex = ((pageIndex * pageLength) < array.length ? (pageIndex * pageLength) : (Math.ceil(array.length / pageLength) - 1));

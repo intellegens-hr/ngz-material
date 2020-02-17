@@ -20,6 +20,7 @@ export class NgxIntellegensGridShowcaseSection07Component {
 
   // Holds display data
   public dataSource: any = data;
+  public dataLength: number;
 
   // Holds example resolution error
   public err = new Error('Failed resolving data!');
@@ -31,14 +32,14 @@ export class NgxIntellegensGridShowcaseSection07Component {
   public isError = false;
 
   public onEventChange (e) {
-    e.preventDefault = false;
+    e.preventDefault = true;
 
     if (e.preventDefault) {
       // Set data (async)
       this.dataSource = new Promise((resolve) => {
         setTimeout(() => {
-          // Set data
-          const temp = data
+          // Sort and filter
+          const filtered = data
             .filter(
               (a) => !Object.keys(e.state.filters).find(
                 (key) => !(new RegExp(e.state.filters[key]).test(a[key]))
@@ -52,10 +53,13 @@ export class NgxIntellegensGridShowcaseSection07Component {
               } else {
                 return 0;
               }
-            })
-            .slice(e.state.pageIndex * e.state.pageLength, (e.state.pageIndex + 1) * e.state.pageLength);
-          e.controller.updatePagination({ totalLength: data.length});
-          resolve(temp);
+            });
+          // Paginate
+          const paginated = filtered.slice(e.state.pageIndex * e.state.pageLength, (e.state.pageIndex + 1) * e.state.pageLength);
+          // Set data length
+          this.dataLength = filtered.length;
+          // Set data
+          resolve(paginated);
         }, 1000);
       });
     }

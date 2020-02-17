@@ -22,9 +22,9 @@ export {
   NgxIntellegensGridColumnFooterCellTemplateDirective
 };
 import { NgxIntellegensGridPaginationDefDirective } from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridPaginationDef';
-export { NgxIntellegensGridPaginationDefDirective }
+export { NgxIntellegensGridPaginationDefDirective };
 import { NgxIntellegensGridFilteringDefDirective } from '../components/ngx-intellegens-grid/directives/ngxIntellegensGridFilteringDef';
-export { NgxIntellegensGridFilteringDefDirective }
+export { NgxIntellegensGridFilteringDefDirective };
 
 // Import and (re)export components and pipes
 import { NgxIntellegensGridComponent } from './ngx-intellegens-grid';

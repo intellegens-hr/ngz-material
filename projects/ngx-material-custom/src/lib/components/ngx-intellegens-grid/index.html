@@ -15,8 +15,7 @@
           <input type="text" [disabled]="configuration.columns[key].virtual || !configuration.columns[key].hasFiltering"
                  class="filter-input"
                  [value]="_filters[key] || ''"
-                 (keyup)="_onFilterUpdated(key, $event)"
-                 (change)="_onFilterUpdated(key, $event)">
+                 (input)="_onFilterUpdated(key, $event)">
       </th>
     </tr>
   </ng-container>

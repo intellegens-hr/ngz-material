@@ -10,5 +10,9 @@
   "todohighlight.isEnable": true,
   "todohighlight.isCaseSensitive": true,
 
-  "cSpell.words": [ "endregion", "intellegens" ]
+  "cSpell.words": [
+    "intellegens",
+    "endregion",
+    "paginator"
+  ]
 }
