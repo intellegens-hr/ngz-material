@@ -1,7 +1,7 @@
 <h3>Filter, sort, pagination change event</h3>
 <pre>
   <code>
-    <ngx-intellegens-grid #grid [dataSource]="dataSource" (changed)="onEventChange($event)">
+    <ngx-intellegens-grid #grid [dataSource]="dataSource" [dataLength]="dataLength" (changed)="onEventChange($event)">
       <ng-container ngxIntellegensGridFilteringDef [hasFiltering]="true"></ng-container>
       <ng-container ngxIntellegensGridPaginationDef [defaultPageLength]="5" [pageLengthOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
       <ng-container ngxIntellegensGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true" [hasFiltering]="false"></ng-container>      
