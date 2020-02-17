@@ -61,6 +61,24 @@ export class NgxIntellegensGridShowcaseSection07Component {
     }
   }
 
+  public avgMonthlySalary (ar) {
+    let sum = 0;
+    let avgSum = 0;
+    for (let i = 0; i < ar.length; i++) {
+      sum += ar[i];
+    }
+    return avgSum = Math.floor(sum / ar.length);
+  }
+
+  public avgMonthlySalaryLimited (ar, start, finish) {
+    let sum = 0;
+    let avgSum = 0;
+    for (let i = start; i <= finish; i++) {
+      sum += ar[i];
+    }
+    return avgSum = Math.floor(sum / ((finish + 1) - start));
+  }
+
   public sort (id, asc) {
     this.grid.updateOrdering({
       orderingField: id,
