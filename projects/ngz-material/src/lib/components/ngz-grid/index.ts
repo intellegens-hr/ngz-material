@@ -74,9 +74,9 @@ class GridConfiguration {
  * </ngz-grid>
  */
 @Component({
-  selector:     'ngz-grid',
-  templateUrl:  './index.html',
-  styleUrls:    ['./style.scss']
+  selector:    'ngz-grid',
+  templateUrl: './index.html',
+  styleUrls:   ['./style.scss']
 })
 export class NgzGridComponent implements AfterContentInit, OnChanges, OnDestroy {
 

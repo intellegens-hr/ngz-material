@@ -1,0 +1,20 @@
+<h2> NEXT SECTION (Work in progress) </h2>
+
+<button (click)="_show()"> Show </button>
+<button (click)="_hide()"> Hide </button>
+<button (click)="_visible = !_visible"> Toggle visible ({{ _visible ? 'False' : 'True' }})</button>
+
+<ngz-modal #modal [visible]="_visible">
+  <ng-container *NgzModalContent>
+
+    <div>
+      Content
+    </div>
+
+    <hr />
+    <button (click)="_show()"> Show </button>
+    <button (click)="_hide()"> Hide </button>
+    <button (click)="_visible = !_visible"> Toggle visible ({{ _visible ? 'False' : 'True' }})</button>
+
+  </ng-container>
+</ngz-modal>
