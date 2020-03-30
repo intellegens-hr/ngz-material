@@ -5,9 +5,9 @@
 import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges,
          Input, Output, EventEmitter, ContentChildren, QueryList, ContentChild, ViewChild } from '@angular/core';
 import { SubscriptionLike, Observable } from 'rxjs';
-import { NgzGridColumnDefDirective, GridColumnConfiguration  } from './directives/NgzGridColumnDef';
-import { NgzGridPaginationDefDirective, GridPaginationConfiguration  } from './directives/NgzGridPaginationDef';
-import { NgzGridFilteringDefDirective, GridFilteringConfiguration  } from './directives/NgzGridFilteringDef';
+import { NgzGridColumnDefDirective, GridColumnConfiguration  } from './directives/ngzGridColumnDef';
+import { NgzGridPaginationDefDirective, GridPaginationConfiguration  } from './directives/ngzGridPaginationDef';
+import { NgzGridFilteringDefDirective, GridFilteringConfiguration  } from './directives/ngzGridFilteringDef';
 import { FilterByPipe } from './pipes/filterBy';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable, MatSortHeader } from '@angular/material/sort';
@@ -115,19 +115,19 @@ export class NgzGridComponent implements AfterContentInit, OnChanges, OnDestroy 
   public changed = new EventEmitter<any>();
 
   /**
-   * Content child elements implementing a [NgzGridColumnDef]="propertyKey" directive
+   * Content child elements implementing a [ngzGridColumnDef]="propertyKey" directive
    * handling specific column's configuration
    */
   @ContentChildren(NgzGridColumnDefDirective)
   public columnDefs: QueryList<NgzGridColumnDefDirective>;
   /**
-   * Content child elements implementing a [NgzGridPaginationDef] directive
+   * Content child elements implementing a [ngzGridPaginationDef] directive
    * handling pagination configuration
    */
   @ContentChild(NgzGridPaginationDefDirective)
   public paginationDef: NgzGridPaginationDefDirective;
   /**
-   * Content child elements implementing a [NgzGridFilteringDef] directive
+   * Content child elements implementing a [ngzGridFilteringDef] directive
    * handling filtering configuration
    */
   @ContentChild(NgzGridFilteringDefDirective)

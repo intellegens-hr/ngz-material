@@ -1,4 +1,4 @@
-// [NgzGridPaginationDef] directive
+// [ngzGridPaginationDef] directive
 // ----------------------------------------------------------------------------
 
 // Import dependencies
@@ -9,12 +9,12 @@ import { Directive, Input } from '@angular/core';
  *
  * Usage:
  *
- * <ng-container NgzGridFilteringDef
+ * <ng-container ngzGridFilteringDef
  *               [hasFiltering]="true"></ng-container>
  *
  */
 @Directive({
-  selector: '[NgzGridFilteringDef]'
+  selector: '[ngzGridFilteringDef]'
 })
 export class NgzGridFilteringDefDirective {
   /**
@@ -33,7 +33,7 @@ export class GridFilteringConfiguration {
     // Ready a pagination  configurations
     const config = new GridFilteringConfiguration();
 
-    // Pull configuration from instance of [NgzGridFilteringDef] directive
+    // Pull configuration from instance of [ngzGridFilteringDef] directive
     if (def) {
       if (def.hasFiltering !== undefined) { config.hasFiltering = def.hasFiltering; }
     }

@@ -14,16 +14,16 @@ import {
   NgzGridColumnCellTemplateDirective,
   NgzGridColumnHeaderCellTemplateDirective,
   NgzGridColumnFooterCellTemplateDirective
-} from '../components/ngz-grid/directives/NgzGridColumnDef';
+} from '../components/ngz-grid/directives/ngzGridColumnDef';
 export {
   NgzGridColumnDefDirective,
   NgzGridColumnCellTemplateDirective,
   NgzGridColumnHeaderCellTemplateDirective,
   NgzGridColumnFooterCellTemplateDirective
 };
-import { NgzGridPaginationDefDirective } from '../components/ngz-grid/directives/NgzGridPaginationDef';
+import { NgzGridPaginationDefDirective } from '../components/ngz-grid/directives/ngzGridPaginationDef';
 export { NgzGridPaginationDefDirective };
-import { NgzGridFilteringDefDirective } from '../components/ngz-grid/directives/NgzGridFilteringDef';
+import { NgzGridFilteringDefDirective } from '../components/ngz-grid/directives/ngzGridFilteringDef';
 export { NgzGridFilteringDefDirective };
 
 // Import and (re)export components and pipes
