@@ -1,4 +1,4 @@
-// [NgzGridPaginationDef] directive
+// [ngzGridPaginationDef] directive
 // ----------------------------------------------------------------------------
 
 // Import dependencies
@@ -9,14 +9,14 @@ import { Directive, Input } from '@angular/core';
  *
  * Usage:
  *
- * <ng-container NgzGridPaginationDef
+ * <ng-container ngzGridPaginationDef
  *               [hasPagination]="true"
  *               [defaultPageLength]="10"
  *               [pageLengthOptions]="[10, 20, 50, 100]"></ng-container>
  *
  */
 @Directive({
-  selector: '[NgzGridPaginationDef]'
+  selector: '[ngzGridPaginationDef]'
 })
 export class NgzGridPaginationDefDirective {
   /**
@@ -43,7 +43,7 @@ export class GridPaginationConfiguration {
 
   /**
    * Creates a pagination configurations instance
-   * @param def (Optional) Instance of [NgzGridPaginationDef] directive to pull configuration from
+   * @param def (Optional) Instance of [ngzGridPaginationDef] directive to pull configuration from
    * @returns Pagination configurations instance
    */
   public static create (def) {
@@ -51,7 +51,7 @@ export class GridPaginationConfiguration {
     // Ready a pagination  configurations
     const config = new GridPaginationConfiguration();
 
-    // Pull configuration from instance of [NgzGridPaginationDef] directive
+    // Pull configuration from instance of [ngzGridPaginationDef] directive
     if (def) {
       if (def.hasPagination !== undefined) { config.hasPagination = def.hasPagination; }
       if (def.defaultPageLength !== undefined) { config.defaultPageLength = def.defaultPageLength; }

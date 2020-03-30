@@ -1,4 +1,4 @@
-// [NgzGridColumnDef] directive
+// [ngzGridColumnDef] directive
 // ----------------------------------------------------------------------------
 
 // Import dependencies
@@ -6,44 +6,44 @@ import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
 
 
 /**
- * When child of [NgzGridColumnDef] provides template for column's row cell
+ * When child of [ngzGridColumnDef] provides template for column's row cell
  *
  * Usage:
  *
- * <ng-container *NgzGridColumnHeaderCellTemplate="let config = config; let key = key; let value = value">
+ * <ng-container *ngzGridColumnHeaderCellTemplate="let config = config; let key = key; let value = value">
  *  {{ value.toUpperCase() }}
  * </ng-container>
  */
 @Directive({
-  selector: '[NgzGridColumnCellTemplate]'
+  selector: '[ngzGridColumnCellTemplate]'
 })
 export class NgzGridColumnCellTemplateDirective {}
 
 /**
- * When child of [NgzGridColumnDef] provides template for column's header cell
+ * When child of [ngzGridColumnDef] provides template for column's header cell
  *
  * Usage:
  *
- * <ng-container *NgzGridColumnHeaderCellTemplate="let config = config; let key = key; let value = value">
+ * <ng-container *ngzGridColumnHeaderCellTemplate="let config = config; let key = key; let value = value">
  *  {{ value.toUpperCase() }}
  * </ng-container>
  */
 @Directive({
-  selector: '[NgzGridColumnHeaderCellTemplate]'
+  selector: '[ngzGridColumnHeaderCellTemplate]'
 })
 export class NgzGridColumnHeaderCellTemplateDirective { }
 
 /**
- * When child of [NgzGridColumnDef] provides template for column's footer cell
+ * When child of [ngzGridColumnDef] provides template for column's footer cell
  *
  * Usage:
  *
- * <ng-container *NgzGridColumnFooterCellTemplate="let row = row; let key = key; let value = value">
+ * <ng-container *ngzGridColumnFooterCellTemplate="let row = row; let key = key; let value = value">
  *  ${{ value }}
  * </ng-container>
  */
 @Directive({
-  selector: '[NgzGridColumnFooterCellTemplate]'
+  selector: '[ngzGridColumnFooterCellTemplate]'
 })
 export class NgzGridColumnFooterCellTemplateDirective { }
 
@@ -52,20 +52,20 @@ export class NgzGridColumnFooterCellTemplateDirective { }
  *
  * Usage:
  *
- * <ng-container [NgzGridColumnDef]="'columnKey'"
+ * <ng-container [ngzGridColumnDef]="'columnKey'"
  *               [header]="'Header Caption" [footer]="Footer caption"
  *               [hasOrdering]="true"
  *               [hasFiltering]="true"></ng-container>
  *
  */
 @Directive({
-  selector: '[NgzGridColumnDef]'
+  selector: '[ngzGridColumnDef]'
 })
 export class NgzGridColumnDefDirective {
   /**
    * Property key for the column being configured
    */
-  @Input('NgzGridColumnDef')
+  @Input('ngzGridColumnDef')
   public key: string;
   /**
    * Caption to display in column header
@@ -94,21 +94,21 @@ export class NgzGridColumnDefDirective {
   public virtual: boolean;
 
   /**
-   * Content child elements implementing a *NgzGridColumnCellTemplate directive
+   * Content child elements implementing a *ngzGridColumnCellTemplate directive
    * providing row cell template for the column
    */
   @ContentChild(NgzGridColumnCellTemplateDirective, { read: TemplateRef })
   public cellTemplate: TemplateRef<any>;
 
   /**
-   * Content child elements implementing a *NgzGridColumnHeaderCellTemplate directive
+   * Content child elements implementing a *ngzGridColumnHeaderCellTemplate directive
    * providing header cell template for the column
    */
   @ContentChild(NgzGridColumnHeaderCellTemplateDirective, { read: TemplateRef })
   public headerCellTemplate: TemplateRef<any>;
 
   /**
-   * Content child elements implementing a *NgzGridColumnFooterCellTemplate directive
+   * Content child elements implementing a *ngzGridColumnFooterCellTemplate directive
    * providing footer cell template for the column
    */
   @ContentChild(NgzGridColumnFooterCellTemplateDirective, { read: TemplateRef })

@@ -4,16 +4,16 @@
 <p>Headers and footers can be modified by providing template bindings inside the 
   <code >&lt;ng-container&gt;</code>
 </p>
-  <code class="html">&lt;ng-container NgzGridColumnDef="location" header="Location" footer="Location"&gt;&lt;ng-container&gt;</code>
+  <code class="html">&lt;ng-container ngzGridColumnDef="location" header="Location" footer="Location"&gt;&lt;ng-container&gt;</code>
 
 <p>If there is no explicit header and/or footer provided the table will automatically fall back to it's default value, which is shown in the example with the header of the "firstName" column.</p>
 <div class="example">
   <code>
     <ngz-grid [dataSource]="dataSource">
-      <ng-container NgzGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true"></ng-container>      
-      <ng-container NgzGridColumnDef="firstName"  [footer]="'First Name'" [hasOrdering]="true"></ng-container> 
-      <ng-container NgzGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true"></ng-container>
-      <ng-container NgzGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true"></ng-container>  
+      <ng-container ngzGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true"></ng-container>      
+      <ng-container ngzGridColumnDef="firstName"  [footer]="'First Name'" [hasOrdering]="true"></ng-container> 
+      <ng-container ngzGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true"></ng-container>
+      <ng-container ngzGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true"></ng-container>  
     </ngz-grid>
   </code>
 </div>
