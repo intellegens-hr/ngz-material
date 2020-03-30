@@ -1,4 +1,4 @@
-// <ngx-intellegens-grid-showcase /> component module
+// <ngz-grid-showcase /> component module
 // ----------------------------------------------------------------------------
 
 // Import dependencies
@@ -9,14 +9,14 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
 // Import library
-import { NgxMaterialCustomModule } from '../../../ngx-material-custom/src/lib';
+import { NgxMaterialCustomModule } from '../../../ngz-material/src/lib';
 
 // Import components
 // tslint:disable-next-line: max-line-length
-import { NgxIntellegensGridShowcaseComponent, components as NgxIntellegensGridShowcaseChildComponents } from './ngx-intellegens-grid-showcase';
+import { NgzGridShowcaseComponent, components as NgzGridShowcaseChildComponents } from './ngz-grid-showcase';
 const components = [
-  NgxIntellegensGridShowcaseComponent,
-  ...NgxIntellegensGridShowcaseChildComponents
+  NgzGridShowcaseComponent,
+  ...NgzGridShowcaseChildComponents
 ];
 const entryComponents = [];
 
@@ -26,4 +26,4 @@ const entryComponents = [];
   exports:          [ ...components ],
   entryComponents:  [ ...entryComponents ]
 })
-export class NgxIntellegensGridShowcaseModule { }
+export class NgzGridShowcaseModule { }
