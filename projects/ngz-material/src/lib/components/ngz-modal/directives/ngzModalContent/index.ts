@@ -1,4 +1,4 @@
-// [NgzModalContent] directive
+// [ngzModalContent] directive
 // ----------------------------------------------------------------------------
 
 // Import dependencies
@@ -15,6 +15,6 @@ import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
  * </ng-container>
  */
 @Directive({
-  selector: '[NgzModalContent]'
+  selector: '[ngzModalContent]'
 })
 export class NgzModalContentDirective {}
