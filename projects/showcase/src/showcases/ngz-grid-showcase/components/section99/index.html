@@ -1,0 +1,14 @@
+<h2> NEXT SECTION (Work in progress) </h2>
+
+<pre>
+  <code>
+    <ngz-grid [dataSource]="dataSource" >
+      <ng-container NgzGridFilteringDef [hasFiltering]="true"></ng-container>
+      <ng-container NgzGridPaginationDef [defaultPageLength]="5" [pageLengthOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
+      <ng-container NgzGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true" [hasFiltering]="false"></ng-container>      
+      <ng-container NgzGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [hasOrdering]="true" [hasFiltering]="true"></ng-container> 
+      <ng-container NgzGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true" [hasFiltering]="true" ></ng-container>
+      <ng-container NgzGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true" ></ng-container>  
+    </ngz-grid>
+  </code>
+</pre>

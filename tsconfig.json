@@ -19,11 +19,11 @@
       "dom"
     ],
     "paths": {
-      "ngx-material-custom": [
-        "dist/ngx-material-custom"
+      "ngz-material": [
+        "dist/ngz-material"
       ],
-      "ngx-material-custom/*": [
-        "dist/ngx-material-custom/*"
+      "ngz-material/*": [
+        "dist/ngz-material/*"
       ]
     }
   },

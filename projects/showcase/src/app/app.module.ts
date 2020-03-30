@@ -8,27 +8,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-// Import library
-import { NgxMaterialCustomModule } from '../../../ngx-material-custom/src/lib/ngx-material-custom.module';
+// Import showcase material components
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 // Import showcases
-import { NgxIntellegensGridShowcaseComponent } from '../showcases/ngx-intellegens-grid-showcase';
-const showcases = [
-  NgxIntellegensGridShowcaseComponent
-];
+import { NgzGridShowcaseModule } from '../showcases';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ...showcases
-  ],
+  declarations: [ AppComponent ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    NgxMaterialCustomModule
+    // Showcase modules
+    NgzGridShowcaseModule,
+    // Showcase material modules
+    MatSidenavModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -6,14 +6,14 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // Import route components
-import { NgxIntellegensGridShowcaseComponent } from '../showcases/ngx-intellegens-grid-showcase';
+import { NgzGridShowcaseComponent } from '../showcases/ngz-grid-showcase';
 
 // Set routes
 const routes: Routes = [
   // Functional directives and components
-  { path: '', component: NgxIntellegensGridShowcaseComponent },
+  { path: 'ngz-grid', component: NgzGridShowcaseComponent },
   // Default
-  { path: '**', redirectTo: '/' },
+  { path: '**', redirectTo: '/ngz-grid' },
 ];
 
 @NgModule({
