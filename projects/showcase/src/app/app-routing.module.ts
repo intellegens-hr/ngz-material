@@ -6,8 +6,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // Import route components
-import { NgzGridShowcaseComponent } from '../showcases/ngz-grid-showcase';
-import { NgzModalShowcaseComponent } from '../showcases/ngz-modal-showcase';
+import { NgzGridShowcaseComponent } from './showcases/ngz-grid-showcase';
+import { NgzModalShowcaseComponent } from './showcases/ngz-modal-showcase';
 
 // Set routes
 const routes: Routes = [

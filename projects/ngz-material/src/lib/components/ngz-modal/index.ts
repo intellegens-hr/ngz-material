@@ -2,9 +2,9 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, OnChanges, SimpleChanges, Input, ContentChild, TemplateRef } from '@angular/core';
+import { Component, AfterViewInit, OnChanges, SimpleChanges, OnDestroy,
+         Input, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NgzModalContentDirective } from './directives/ngzModalContent';
 
 /**
  * Modal component, based on Angular material's <mat-modal />
@@ -18,10 +18,10 @@ import { NgzModalContentDirective } from './directives/ngzModalContent';
  */
 @Component({
   selector:    'ngz-modal',
-  templateUrl: './index.html',
-  styleUrls:   ['./style.scss']
+  templateUrl: 'index.html',
+  styleUrls:   ['style.scss']
 })
-export class NgzModalComponent implements OnChanges {
+export class NgzModalComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   //#region HTML component interface (@Inputs/@Outputs/@Content)
 
@@ -30,12 +30,14 @@ export class NgzModalComponent implements OnChanges {
    */
   @Input()
   public visible = false;
+  @Output()
+  public visibleChange = new EventEmitter();
 
   /**
    * Content to be displayed inside the modal
    */
-  @ContentChild(NgzModalContentDirective, { read: TemplateRef })
-  public content: TemplateRef<any> = null;
+  @ViewChild('content', { read: TemplateRef })
+  public _content: TemplateRef<any> = null;
 
   ////#endregion
 
@@ -46,19 +48,50 @@ export class NgzModalComponent implements OnChanges {
    */
   private _dialogRef: any = null;
 
+  /**
+   * Holds changes queued for processing before modal was initialized
+   */
+  private _queuedChanges = [];
+
   ////#endregion
 
   //#region Component life-cycle
 
   constructor (private _dialog: MatDialog) {}
 
-  public ngOnChanges (changes: SimpleChanges) {
-    if (changes.visible) {
-      // Close previous dialog, if shown
-      this._closePreviousModalDialog();
-      // Open in new dialog
-      this._openModalDialog();
+  public ngAfterViewInit () {
+    // Process queued changes
+    for (const changes of this._queuedChanges) {
+      this.ngOnChanges(changes);
     }
+  }
+
+  public ngOnChanges (changes: SimpleChanges) {
+    // Check if already initialized
+    if (this._content) {
+
+      // Process changes
+      if (changes.visible) {
+        if (changes.visible.currentValue) {
+          // Open dialog
+          this.show();
+        } else {
+          // Close dialog
+          this.hide();
+        }
+      }
+
+    } else {
+
+      // Queue changes for later processing
+      this._queuedChanges.push(changes);
+
+    }
+  }
+
+  public ngOnDestroy () {
+      // Close previous dialog, if shown
+      this.hide();
   }
 
   ////#endregion
@@ -69,42 +102,32 @@ export class NgzModalComponent implements OnChanges {
    * Shows modal
    */
   public show () {
-    this.visible = true;
-    this._openModalDialog();
+    if (!this._dialogRef && this._content) {
+      // Open dialog
+      this._dialogRef = this._dialog.open(this._content);
+      // Trigger change
+      this.visibleChange.emit(true);
+      // Subscribe to dialog close
+      this._dialogRef.afterClosed().subscribe(() => {
+        // Trigger change
+        this.visibleChange.emit(false);
+      });
+    }
   }
 
   /**
    * Hides modal
    */
   public hide () {
-    this.visible = false;
-    this._closePreviousModalDialog();
+    if (this._dialogRef) {
+      // Close dialog
+      this._dialogRef.close();
+      this._dialogRef = null;
+      // Trigger change
+      this.visibleChange.emit(false);
+    }
   }
 
   ////#endregion
-
-  //#region Internal methods
-
-  /**
-   * Closes previously opened modal dialog (if found)
-   */
-  private _closePreviousModalDialog () {
-    if (this._dialogRef) {
-      this._dialogRef.close();
-      this._dialogRef = null;
-    }
-  }
-
-  /**
-   * Opens modal using MatDialog service
-   */
-  private _openModalDialog () {
-    this._closePreviousModalDialog();
-    if (this.visible && this.content) {
-      this._dialogRef = this._dialog.open(this.content);
-    }
-  }
-
-  //#endregion
 
 }

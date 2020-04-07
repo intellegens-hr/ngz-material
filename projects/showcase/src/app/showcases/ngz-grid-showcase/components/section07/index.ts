@@ -3,7 +3,7 @@
 
 // Import dependencies
 import { Component, ViewChild } from '@angular/core';
-import { NgzGridComponent } from '../../../../../../ngz-material/src/lib';
+import { NgzGridComponent } from '../../../../../../../ngz-material/src/lib';
 
 // Import example data
 import { data } from '../../data';

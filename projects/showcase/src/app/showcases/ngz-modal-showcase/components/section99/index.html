@@ -1,0 +1,14 @@
+<h2> NEXT SECTION (Work in progress) </h2>
+
+<button (click)="modal.show()"> Show </button>
+<button (click)="modal.hide()"> Hide </button>
+<button (click)="_visible = !_visible"> Toggle visible (Currently: {{ _visible ? 'VISIBLE' : 'HIDDEN' }}) </button>
+
+<ngz-modal #modal [(visible)]="_visible">
+  <div> Modal content </div>
+
+  <hr />
+  <button (click)="modal.show()"> Show </button>
+  <button (click)="modal.hide()"> Hide </button>
+  <button (click)="_visible = !_visible"> Toggle visible (Currently: {{ _visible ? 'VISIBLE' : 'HIDDEN' }}) </button>
+</ngz-modal>
