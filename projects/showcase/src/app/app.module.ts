@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 // Import showcases
-import { NgzGridShowcaseModule } from '../showcases';
+import { NgzGridShowcaseModule } from './showcases';
 
 @NgModule({
   declarations: [ AppComponent ],

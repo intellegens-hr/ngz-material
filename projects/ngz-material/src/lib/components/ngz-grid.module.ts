@@ -47,9 +47,6 @@ const components = [
   FilterByPipe,
   PaginatePipe
 ];
-const entryComponents = [
-  NgzGridComponent
-];
 
 /**
  * <ngz-grid /> component module
@@ -57,7 +54,6 @@ const entryComponents = [
 @NgModule({
   declarations:     [ ...components ],
   imports:          [ CommonModule, MatTableModule, MatSortModule, MatPaginatorModule ],
-  exports:          [ ...components ],
-  entryComponents:  [ ...entryComponents ]
+  exports:          [ ...components ]
 })
 export class NgzGridModule { }
