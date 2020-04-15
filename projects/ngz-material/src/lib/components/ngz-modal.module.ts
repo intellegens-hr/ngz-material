@@ -10,10 +10,10 @@ const imports = [
 ];
 
 // Import and (re)export components
-import { NgzModalComponent } from './ngz-modal';
-export { NgzModalComponent };
+import { ModalComponent } from './Modal';
+export { ModalComponent };
 const declarations = [
-  NgzModalComponent
+  ModalComponent
 ];
 
 /**

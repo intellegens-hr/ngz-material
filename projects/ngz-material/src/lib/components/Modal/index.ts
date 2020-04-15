@@ -21,7 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: 'index.html',
   styleUrls:   ['style.scss']
 })
-export class NgzModalComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class ModalComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   //#region HTML component interface (@Inputs/@Outputs/@Content)
 

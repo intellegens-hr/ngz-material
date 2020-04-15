@@ -17,29 +17,29 @@ import {
   NgzGridColumnCellTemplateDirective,
   NgzGridColumnHeaderCellTemplateDirective,
   NgzGridColumnFooterCellTemplateDirective
-} from '../components/ngz-grid/directives/ngzGridColumnDef';
+} from '../components/Grid/directives/ngzGridColumnDef';
 export {
   NgzGridColumnDefDirective,
   NgzGridColumnCellTemplateDirective,
   NgzGridColumnHeaderCellTemplateDirective,
   NgzGridColumnFooterCellTemplateDirective
 };
-import { NgzGridPaginationDefDirective } from '../components/ngz-grid/directives/ngzGridPaginationDef';
+import { NgzGridPaginationDefDirective } from '../components/Grid/directives/ngzGridPaginationDef';
 export { NgzGridPaginationDefDirective };
-import { NgzGridFilteringDefDirective } from '../components/ngz-grid/directives/ngzGridFilteringDef';
+import { NgzGridFilteringDefDirective } from '../components/Grid/directives/ngzGridFilteringDef';
 export { NgzGridFilteringDefDirective };
 
 // Import and (re)export components and pipes
-import { NgzGridComponent } from './ngz-grid';
-export { NgzGridComponent };
-import { OrderByPipe } from './ngz-grid/pipes/orderBy';
+import { GridComponent } from './Grid';
+export { GridComponent };
+import { OrderByPipe } from './Grid/pipes/orderBy';
 export { OrderByPipe };
-import { PaginatePipe } from './ngz-grid/pipes/pagination';
+import { PaginatePipe } from './Grid/pipes/pagination';
 export { PaginatePipe };
-import { FilterByPipe } from './ngz-grid/pipes/filterBy';
+import { FilterByPipe } from './Grid/pipes/filterBy';
 export { FilterByPipe };
 const declarations = [
-  NgzGridComponent,
+  GridComponent,
   NgzGridColumnDefDirective,
   NgzGridColumnCellTemplateDirective,
   NgzGridPaginationDefDirective,
