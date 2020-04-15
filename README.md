@@ -1,4 +1,4 @@
-# <ngz-material />
+# &lt;ngz-material /&gt;
 
 Angular Material based components, services and other to be (re)used in other projects
 

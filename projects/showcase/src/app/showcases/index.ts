@@ -1,29 +1,29 @@
 // <ngz-grid-showcase /> component module
 // ----------------------------------------------------------------------------
 
-// Import dependencies
+// Import modules
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// Import showcase material components
 import { MatButtonModule } from '@angular/material/button';
-
-// Import library
-import { NgxMaterialCustomModule } from '../../../ngz-material/src/lib';
+import { NgzMaterialModule } from '../../../../ngz-material/src/lib';
+const imports = [
+  CommonModule, NgzMaterialModule, MatButtonModule
+];
 
 // Import components
 // tslint:disable-next-line: max-line-length
 import { NgzGridShowcaseComponent, components as NgzGridShowcaseChildComponents } from './ngz-grid-showcase';
-const components = [
+import { NgzModalShowcaseComponent, components as NgzModalShowcaseChildComponents } from './ngz-modal-showcase';
+const declarations = [
   NgzGridShowcaseComponent,
-  ...NgzGridShowcaseChildComponents
+  ...NgzGridShowcaseChildComponents,
+  NgzModalShowcaseComponent,
+  ...NgzModalShowcaseChildComponents
 ];
-const entryComponents = [];
 
 @NgModule({
-  declarations:     [ ...components ],
-  imports:          [ CommonModule, NgxMaterialCustomModule, MatButtonModule ],
-  exports:          [ ...components ],
-  entryComponents:  [ ...entryComponents ]
+  imports,
+  declarations,
+  exports: [ ...imports, ...declarations ]
 })
 export class NgzGridShowcaseModule { }
