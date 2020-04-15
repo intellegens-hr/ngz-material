@@ -1,12 +1,15 @@
 // <ngz-grid /> component module
 // ----------------------------------------------------------------------------
 
-// Import dependencies
+// Import modules
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+const imports = [
+  CommonModule, MatTableModule, MatSortModule, MatPaginatorModule
+];
 
 // Import and (re)export directives
 import {
@@ -35,7 +38,7 @@ import { PaginatePipe } from './ngz-grid/pipes/pagination';
 export { PaginatePipe };
 import { FilterByPipe } from './ngz-grid/pipes/filterBy';
 export { FilterByPipe };
-const components = [
+const declarations = [
   NgzGridComponent,
   NgzGridColumnDefDirective,
   NgzGridColumnCellTemplateDirective,
@@ -52,8 +55,8 @@ const components = [
  * <ngz-grid /> component module
  */
 @NgModule({
-  declarations:     [ ...components ],
-  imports:          [ CommonModule, MatTableModule, MatSortModule, MatPaginatorModule ],
-  exports:          [ ...components ]
+  imports,
+  declarations,
+  exports: [ ...imports, ...declarations ],
 })
 export class NgzGridModule { }

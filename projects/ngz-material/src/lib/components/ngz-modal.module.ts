@@ -1,15 +1,18 @@
 // <ngz-modal /> component module
 // ----------------------------------------------------------------------------
 
-// Import dependencies
+// Import modules
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
+const imports = [
+  CommonModule, MatDialogModule
+];
 
 // Import and (re)export components
 import { NgzModalComponent } from './ngz-modal';
 export { NgzModalComponent };
-const components = [
+const declarations = [
   NgzModalComponent
 ];
 
@@ -17,8 +20,8 @@ const components = [
  * <ngz-modal /> component module
  */
 @NgModule({
-  declarations:     [ ...components ],
-  imports:          [ CommonModule, MatDialogModule ],
-  exports:          [ ...components ]
+  imports,
+  declarations,
+  exports: [ ...imports, ...declarations ]
 })
 export class NgzModalModule { }

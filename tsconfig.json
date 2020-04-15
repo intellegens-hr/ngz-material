@@ -1,16 +1,16 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es2017",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -20,10 +20,7 @@
     ],
     "paths": {
       "ngz-material": [
-        "dist/ngz-material"
-      ],
-      "ngz-material/*": [
-        "dist/ngz-material/*"
+        "./dist/ngz-material"
       ]
     }
   },
