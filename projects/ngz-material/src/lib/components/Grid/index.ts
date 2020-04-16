@@ -387,20 +387,37 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
   /**
    * Returns header/footer template context object
    * @param key Column key to provide context for
+   * @param headerOrFooter If generating for 'header' or 'footer'
    * @returns Template context for the column header
    */
-  public _getHeaderAndFooterTemplateContext (key) {
+  private _getHeaderAndFooterTemplateContext (key, headerOrFooter = 'header') {
     const lastIndex = (this._pageIndex * this._pageLength) + this._pageLength - 1;
     return {
      config: this._config.columns[key],
      key,
-     caption: (this._config.columns[key].footer || key),
+     caption: (this._config.columns[key][headerOrFooter] || key),
      values: this._data.map(row => row[key]),
      page: {
        first: this._pageIndex * this._pageLength,
        last: lastIndex <= this._totalLength ? lastIndex : this._totalLength - 1
       }
     };
+  }
+  /**
+   * Returns header template context object
+   * @param key Column key to provide context for
+   * @returns Template context for the column header
+   */
+  public _getHeaderTemplateContext (key) {
+    return this._getHeaderAndFooterTemplateContext(key, 'header');
+  }
+  /**
+   * Returns footer template context object
+   * @param key Column key to provide context for
+   * @returns Template context for the column footer
+   */
+  public _getFooterTemplateContext (key) {
+    return this._getHeaderAndFooterTemplateContext(key, 'footer');
   }
 
   /**
@@ -413,7 +430,7 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     return {
       row,
       key,
-      caption: row[key]
+      value: row[key]
     };
   }
 
