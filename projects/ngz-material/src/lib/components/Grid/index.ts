@@ -78,7 +78,7 @@ class GridConfiguration {
   templateUrl: './index.html',
   styleUrls:   ['./style.scss']
 })
-export class NgzGridComponent implements AfterContentInit, OnChanges, OnDestroy {
+export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
 
   //#region HTML component interface (@Inputs/@Outputs/@Content)
 
