@@ -2,9 +2,11 @@
 <pre>
   <code>
     <ngz-grid #grid [dataSource]="dataSource" [dataLength]="dataLength" (changed)="onEventChange($event)">
+
       <ng-container ngzGridFilteringDef [hasFiltering]="true"></ng-container>
       <ng-container ngzGridPaginationDef [defaultPageLength]="5" [pageLengthOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
-      <ng-container ngzGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true" [hasFiltering]="false"></ng-container>      
+
+      <ng-container ngzGridColumnDef="id" [hidden]="true" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true" [hasFiltering]="false"></ng-container>      
       <ng-container ngzGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [hasOrdering]="true" [hasFiltering]="true"></ng-container> 
       <ng-container ngzGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true" [hasFiltering]="true" ></ng-container>
       <ng-container ngzGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true" >
@@ -22,7 +24,38 @@
       <ng-container *ngzGridColumnCellTemplate="let row = row; let key = key;">
         {{ row['salary'] * 12}}
       </ng-container>      
-     </ng-container>      
+     </ng-container>   
+
+    </ngz-grid>
+  </code>
+</pre>
+<pre>
+  <code>
+    <ngz-grid #grid [dataSource]="dataSource" [dataLength]="dataLength" [detectColumns]="false" (changed)="onEventChange($event)">
+
+      <ng-container ngzGridFilteringDef [hasFiltering]="true"></ng-container>
+      <ng-container ngzGridPaginationDef [defaultPageLength]="5" [pageLengthOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
+
+      <!-- <ng-container ngzGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true" [hasFiltering]="false"></ng-container>       -->
+      <ng-container ngzGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [hasOrdering]="true" [hasFiltering]="true"></ng-container> 
+      <ng-container ngzGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true" [hasFiltering]="true" ></ng-container>
+      <ng-container ngzGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true" >
+        <ng-container *ngzGridColumnHeaderCellTemplate="let config = config; let values = values">
+         {{config.header.toUpperCase()}}
+        </ng-container>
+        <ng-container *ngzGridColumnCellTemplate="let row = row; let key = key;">
+          {{ row['firstName'] }} has salary of ${{row[key]}}
+        </ng-container>
+        <ng-container *ngzGridColumnFooterCellTemplate="let config = config; let values = values; let page = page">
+           Average monthly salary for all data is: ${{avgMonthlySalary(values)}} <br> Average monthly salary for displayed data is: ${{avgMonthlySalaryLimited(values, page.first, page.last)}}
+        </ng-container>
+      </ng-container>
+     <ng-container ngzGridColumnDef [virtual]="true" [header]="'Yearly salary'" [footer]="'Yearly salary'" [hasOrdering]="false" [hasFiltering]="false">
+      <ng-container *ngzGridColumnCellTemplate="let row = row; let key = key;">
+        {{ row['salary'] * 12}}
+      </ng-container>      
+     </ng-container>  
+
     </ngz-grid>
   </code>
 </pre>
