@@ -61,7 +61,7 @@ Angular Material based components, services and other to be (re)used in other pr
          - key:     Column key
          - caption: Column caption
          - values:  Values for this column from all rows
-         - page:    Indices of first and last row on the currently displayed page
+         - page:    Indices of current, first and last row on the currently displayed page
     -->
     <ng-container *ngzGridColumnHeaderCellTemplate="let config = config; let values = values">
       {{ config.header.toUpperCase() }}
@@ -79,7 +79,7 @@ Angular Material based components, services and other to be (re)used in other pr
          - key:     Column key
          - caption: Column caption
          - values:  Values for this column from all rows
-         - page:    Indices of first and last row on the currently displayed page
+         - page:    Indices of current, first and last row on the currently displayed page
     -->
     <ng-container *ngzGridColumnFooterCellTemplate="let config = config; let values = values">
       Found {{ values.filter(name => (name.toLowerCase() === 'doe').length || '0' }} "Doe"s Total 

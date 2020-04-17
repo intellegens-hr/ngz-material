@@ -398,8 +398,9 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
      caption: (this._config.columns[key][headerOrFooter] || key),
      values: this._data.map(row => row[key]),
      page: {
-       first: this._pageIndex * this._pageLength,
-       last: lastIndex <= this._totalLength ? lastIndex : this._totalLength - 1
+       current: 5,
+       first:   this._pageIndex * this._pageLength,
+       last:    lastIndex <= this._totalLength ? lastIndex : this._totalLength - 1
       }
     };
   }
