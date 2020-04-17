@@ -19,14 +19,19 @@ class GridConfiguration {
 
   // Holds a method providing a list of property keys in parent data source's data array
   private _getParentGridDataSourceKeys: () => string[];
+  // Holds a method providing providing parent detectColumns status
+  private _getParentGridDetectColumns: () => boolean;
 
   /**
    * Creates an instance of GridConfiguration
-   * @param _getParentGridDataSourceKeys Method providing a list of property keys in parent data source's data array
+   * @param getParentGridDataSourceKeys Method providing a list of property keys in parent data source's data array
+   * @param getParentGridDetectColumns Method providing parent detectColumns status
    */
-  constructor (getParentGridDataSourceKeys: () => string[]) {
+  constructor (getParentGridDataSourceKeys: () => string[], getParentGridDetectColumns: () => boolean) {
     // Set provider method to be used to get all data source keys
     this._getParentGridDataSourceKeys = getParentGridDataSourceKeys;
+    // Set provider method to be used to get detectColumns status
+    this._getParentGridDetectColumns = getParentGridDetectColumns;
   }
 
   // Holds explicitly defined column configurations
@@ -40,9 +45,11 @@ class GridConfiguration {
   }
   public get columns () {
     // Augment explicitly defined columns' configuration with default configuration for all remaining columns
-    const defaultColumnConfiguration = new GridColumnConfiguration();
-    return this._getParentGridDataSourceKeys().reduce((columns, key) => {
+    const defaultColumnConfiguration = new GridColumnConfiguration(),
+          detectedColumns = (this._getParentGridDetectColumns() ? this._getParentGridDataSourceKeys() : []);
+    return detectedColumns.reduce((columns, key) => {
       if (!columns[key]) { columns[key] = defaultColumnConfiguration; }
+      if (columns[key].hidden) { delete columns[key]; }
       return columns;
     }, { ...this._nonDefaultColumnConfigurations });
   }
@@ -94,6 +101,12 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
    */
   @Input()
   public dataLength: number;
+
+  /**
+   * If grid should auto-detect columns from provided data source
+   */
+  @Input()
+  public detectColumns = true;
 
   /**
    * Allows for external setting of errors for the Grid
@@ -150,7 +163,10 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
   //#region Properties
 
   // Configuration: Holds internal configuration instance
-  private _config = new GridConfiguration(() => this._dataKeys);
+  private _config = new GridConfiguration(
+    () => this._dataKeys,
+    () => this.detectColumns
+  );
   /**
    * Configuration: Makes configuration available as public
    */
@@ -371,20 +387,37 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
   /**
    * Returns header/footer template context object
    * @param key Column key to provide context for
+   * @param headerOrFooter If generating for 'header' or 'footer'
    * @returns Template context for the column header
    */
-  public _getHeaderAndFooterTemplateContext (key) {
+  private _getHeaderAndFooterTemplateContext (key, headerOrFooter = 'header') {
     const lastIndex = (this._pageIndex * this._pageLength) + this._pageLength - 1;
     return {
      config: this._config.columns[key],
      key,
-     caption: (this._config.columns[key].footer || key),
+     caption: (this._config.columns[key][headerOrFooter] || key),
      values: this._data.map(row => row[key]),
      page: {
        first: this._pageIndex * this._pageLength,
        last: lastIndex <= this._totalLength ? lastIndex : this._totalLength - 1
       }
     };
+  }
+  /**
+   * Returns header template context object
+   * @param key Column key to provide context for
+   * @returns Template context for the column header
+   */
+  public _getHeaderTemplateContext (key) {
+    return this._getHeaderAndFooterTemplateContext(key, 'header');
+  }
+  /**
+   * Returns footer template context object
+   * @param key Column key to provide context for
+   * @returns Template context for the column footer
+   */
+  public _getFooterTemplateContext (key) {
+    return this._getHeaderAndFooterTemplateContext(key, 'footer');
   }
 
   /**
@@ -397,7 +430,7 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     return {
       row,
       key,
-      caption: row[key]
+      value: row[key]
     };
   }
 

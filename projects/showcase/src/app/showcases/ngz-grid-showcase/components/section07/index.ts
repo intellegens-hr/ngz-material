@@ -3,7 +3,7 @@
 
 // Import dependencies
 import { Component, ViewChild } from '@angular/core';
-import { NgzGridComponent } from '../../../../../../../ngz-material/src/lib';
+import { GridComponent } from '../../../../../../../ngz-material/src/lib';
 
 // Import example data
 import { data } from '../../data';
@@ -15,8 +15,8 @@ import { data } from '../../data';
 })
 export class NgzGridShowcaseSection07Component {
 
-  @ViewChild(NgzGridComponent, { read: NgzGridComponent })
-  private grid: NgzGridComponent;
+  @ViewChild(GridComponent, { read: GridComponent })
+  private grid: GridComponent;
 
   // Holds display data
   public dataSource: any = data;

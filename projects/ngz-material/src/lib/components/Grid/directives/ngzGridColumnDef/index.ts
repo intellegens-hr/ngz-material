@@ -88,6 +88,11 @@ export class NgzGridColumnDefDirective {
   @Input()
   public hasFiltering: boolean;
   /**
+   * If column is hidden (not rendered as part of the grid)
+   */
+  @Input()
+  public hidden: boolean;
+  /**
    * If column is virtual (not corresponding to a data source key)
    */
   @Input()
@@ -140,12 +145,18 @@ export class GridColumnConfiguration {
         // Instantiate default column configuration
         const config = new GridColumnConfiguration();
         if (!element.key) {
-          config.key = 'VirtualKey' + virtualKeyId; // TODO: Make synthetic keys numbers-only: 0, 1, 2, ...
+
+          // If no key, force column virtual status
+          config.key = 'VirtualKey' + virtualKeyId;
           virtualKeyId++;
           config.virtual = true;
+
         } else {
+
+          // If key, copy virtual column status
           config.key = element.key;
           config.virtual = element.virtual;
+
         }
 
         // Pull configuration from instance of [NgzGridColumnDefDirective] directive
@@ -153,6 +164,7 @@ export class GridColumnConfiguration {
         if (element.footer !== undefined) { config.footer = element.footer; }
         if (element.hasOrdering !== undefined) { config.hasOrdering = element.hasOrdering; }
         if (element.hasFiltering !== undefined) { config.hasFiltering = element.hasFiltering; }
+        if (element.hidden !== undefined) { config.hidden = element.hidden; }
 
         // Pull templates from instance of [NgzGridColumnDefDirective] directive
         if (element.cellTemplate !== undefined) { config.cellTemplate = element.cellTemplate; }
@@ -189,6 +201,10 @@ export class GridColumnConfiguration {
    * If column should provide filtering by it's value
    */
   public hasFiltering = true;
+  /**
+   * If column is hidden (not rendered as part of the grid)
+   */
+  public hidden: boolean;
   /**
    * If column is virtual (not corresponding to a data source key)
    */

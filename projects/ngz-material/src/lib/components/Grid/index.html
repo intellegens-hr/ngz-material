@@ -31,7 +31,7 @@
         <ng-container
           *ngTemplateOutlet="
             configuration.columns[key].headerCellTemplate,
-            context: _getHeaderAndFooterTemplateContext(key)
+            context: _getHeaderTemplateContext(key)
           "
         ></ng-container>
       </ng-container>
@@ -65,7 +65,7 @@
         <ng-container
           *ngTemplateOutlet="
             configuration.columns[key].footerCellTemplate,
-            context: _getHeaderAndFooterTemplateContext(key)
+            context: _getFooterTemplateContext(key)
           "
         ></ng-container>
       </ng-container>
