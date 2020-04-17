@@ -69,6 +69,7 @@ Angular Material based components, services and other to be (re)used in other pr
     <!-- Provides template for grid cell. Exposing values to be used inside the template:
          - row:   Current [dataSource] row
          - key:   Column key
+         - index: Row index
          - value: Column value in current [dataSource] row
     -->
     <ng-container *ngzGridColumnCellTemplate="let row = row; let key = key;">

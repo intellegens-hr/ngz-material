@@ -42,13 +42,13 @@
     </th>
 
     <!-- Column body cell -->
-    <td mat-cell *matCellDef="let row">
+    <td mat-cell *matCellDef="let row; let index = index">
       <!-- If template available -->
       <ng-container *ngIf="configuration.columns[key].cellTemplate">
         <ng-container
           *ngTemplateOutlet="
             configuration.columns[key].cellTemplate,
-            context: _getCellTemplateContext(row, key)
+            context: _getCellTemplateContext(row, key, index)
           "
         ></ng-container>
       </ng-container>

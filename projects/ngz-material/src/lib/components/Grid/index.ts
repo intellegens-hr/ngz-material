@@ -398,8 +398,8 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
      caption: (this._config.columns[key][headerOrFooter] || key),
      values: this._data.map(row => row[key]),
      page: {
-       first: this._pageIndex * this._pageLength,
-       last: lastIndex <= this._totalLength ? lastIndex : this._totalLength - 1
+       first:   this._pageIndex * this._pageLength,
+       last:    lastIndex <= this._totalLength ? lastIndex : this._totalLength - 1
       }
     };
   }
@@ -424,12 +424,14 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
    * Returns cell template context object
    * @param row Data row of the cell to provide context for
    * @param key Column key to provide context for
+   * @param index Row index
    * @returns Template context for the column cell
    */
-  public _getCellTemplateContext (row, key) {
+  public _getCellTemplateContext (row, key, index) {
     return {
       row,
       key,
+      index,
       value: row[key]
     };
   }
