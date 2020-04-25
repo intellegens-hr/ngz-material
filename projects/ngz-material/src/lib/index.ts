@@ -15,11 +15,33 @@ const imports = [
   GridModule, ModalModule
 ];
 
+// Import and (re)export services
+import { EnTTValidationMessagesService } from './services';
+export * from './services';
+
+// Import and (re)export pipes
+import { EnTTValidationMessagesPipe } from './pipes';
+export * from './pipes';
+const pipes = [
+  EnTTValidationMessagesPipe
+];
+
+const declarations = [
+  ...pipes
+];
+
 /**
  * Intellegens' NGX Material module
  */
 @NgModule({
   imports,
-  exports: [ ...imports ]
+  declarations,
+  providers: [
+    { provide: EnTTValidationMessagesService }
+  ],
+  exports: [
+    ...imports,
+    ...declarations
+  ]
 })
 export class NgzMaterialModule { }
