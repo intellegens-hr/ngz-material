@@ -9,6 +9,17 @@
       <ng-container ngzGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [hasOrdering]="true" [hasFiltering]="true"></ng-container> 
       <ng-container ngzGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true" [hasFiltering]="true" ></ng-container>
       <ng-container ngzGridColumnDef="salary" [header]="'Salary'" [footer]="'Salary'" [hasOrdering]="true" ></ng-container>  
+      <ng-container ngzGridColumnDef>
+        <ng-container *ngzGridColumnCellTemplate>
+          <ngz-grid-actions
+            (view)="onAction('view!')"
+            (edit)="onAction('edit!')">
+            <ngz-grid-action [icon]="'call_split_outline'" [label]="'Clone #1'" (activated)="onAction('clone 1!')"></ngz-grid-action>
+            <ngz-grid-action [icon]="'call_split_outline'" [label]="'Clone #2'" (activated)="onAction('clone 2!')"></ngz-grid-action>
+            <ngz-grid-action [icon]="'call_split_outline'"                      (activated)="onAction('clone 3!')"></ngz-grid-action>
+          </ngz-grid-actions>
+        </ng-container>
+      </ng-container>  
     </ngz-grid>
   </code>
 </pre>

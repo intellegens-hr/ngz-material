@@ -1,0 +1,11 @@
+<div>
+
+  <!-- Default actions -->
+  <ngz-grid-action *ngIf="view.observers.length"   [icon]="'visibility_outline'" [label]="'View'"   (activated)="_doViewAction()"></ngz-grid-action>
+  <ngz-grid-action *ngIf="edit.observers.length"   [icon]="'create_outline'"     [label]="'Edit'"   (activated)="_doEditAction()"></ngz-grid-action>
+  <ngz-grid-action *ngIf="delete.observers.length" [icon]="'delete_outline'"     [label]="'Delete'" (activated)="_doDeleteAction()"></ngz-grid-action>
+
+  <!-- Injected actions -->
+  <ng-content></ng-content>
+
+</div>

@@ -16,7 +16,7 @@ import { Directive, Input } from '@angular/core';
 @Directive({
   selector: '[ngzGridFilteringDef]'
 })
-export class NgzGridFilteringDefDirective {
+export class GridFilteringDefDirective {
   /**
    * If filtering is enabled
    */
@@ -28,7 +28,7 @@ export class NgzGridFilteringDefDirective {
  * Grid filtering configuration
  */
 export class GridFilteringConfiguration {
-   public static create (def) {
+   public static create (def: GridFilteringDefDirective) {
 
     // Ready a pagination  configurations
     const config = new GridFilteringConfiguration();

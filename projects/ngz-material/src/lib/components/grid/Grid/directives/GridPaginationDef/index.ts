@@ -18,7 +18,7 @@ import { Directive, Input } from '@angular/core';
 @Directive({
   selector: '[ngzGridPaginationDef]'
 })
-export class NgzGridPaginationDefDirective {
+export class GridPaginationDefDirective {
   /**
    * If pagination is enabled
    */
@@ -46,7 +46,7 @@ export class GridPaginationConfiguration {
    * @param def (Optional) Instance of [ngzGridPaginationDef] directive to pull configuration from
    * @returns Pagination configurations instance
    */
-  public static create (def) {
+  public static create (def: GridPaginationDefDirective) {
 
     // Ready a pagination  configurations
     const config = new GridPaginationConfiguration();

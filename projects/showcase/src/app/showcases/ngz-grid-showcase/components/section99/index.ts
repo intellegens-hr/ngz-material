@@ -18,6 +18,6 @@ export class NgzGridShowcaseSectionNextComponent {
   // Holds display data
   public dataSource: any = data;
 
-
+  public onAction (key) { alert(key); }
  
 }

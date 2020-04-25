@@ -1,14 +1,18 @@
 // Main library module
 // ----------------------------------------------------------------------------
 
-// Import and (re)export modules
+// Import dependencies
 import { NgModule } from '@angular/core';
-import { NgzGridModule } from './components/ngz-grid.module';
-export * from './components/ngz-grid.module';
-import { NgzModalModule } from './components/ngz-modal.module';
-export * from './components/ngz-modal.module';
+
+// Import and (re)export modules
+import { GridModule } from './components/grid';
+export * from './components/grid';
+
+import { ModalModule } from './components/modal';
+export * from './components/modal';
+
 const imports = [
-  NgzGridModule, NgzModalModule
+  GridModule, ModalModule
 ];
 
 /**

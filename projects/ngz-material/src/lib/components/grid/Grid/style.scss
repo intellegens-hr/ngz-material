@@ -5,6 +5,14 @@
 
   table {
     width: 100%;
+
+    th, td {
+      width: 0%;
+
+      &.cdk-column-dynamic-actions {
+        width: 1px;
+      }
+    }
   }
 
   .filter-input {
