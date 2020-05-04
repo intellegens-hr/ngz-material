@@ -142,8 +142,6 @@ Angular Material based components, services and other to be (re)used in other pr
   this.grid.updateFiltering(key: string, value: any);
   // Handle change event for API data management (pagination, ordering, filtering)
   this.onGridChange = (e) => {
-    // Prevent grid's internal data management
-    e.preventDefault = true;
     // Use some assumed api service to get managed data
     const res = await api.getData({
       orderingFiled:        e.state.orderingField,
