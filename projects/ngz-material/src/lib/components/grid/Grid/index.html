@@ -21,7 +21,8 @@
       </th>
     </tr>
     <!-- Injected header rows -->
-    <tr *ngFor="let injected of configuration.injectedTop">
+    <tr *ngFor="let injected of configuration.injectedTop"
+      [class]="injected.class">
       <ng-container *ngTemplateOutlet="injected.template"></ng-container>
     </tr>
   </ng-container>
@@ -95,7 +96,8 @@
   <!-- Footer definition (and layout) -->
   <ng-container *matFooterRowDef="_columnKeys">
     <!-- Injected footer rows -->
-    <tr *ngFor="let injected of configuration.injectedBottom">
+    <tr *ngFor="let injected of configuration.injectedBottom"
+      [class]="injected.class">
       <ng-container *ngTemplateOutlet="injected.template"></ng-container>
     </tr>
     <!-- Default footers -->

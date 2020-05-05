@@ -247,7 +247,7 @@ export class GridColumnConfiguration {
   /**
    * CSS class for the column being configured
    */
-  protected _class = 'xxx';
+  protected _class = '';
   /**
    * Gets/Sets CSS class, while emitting the "updated" event when value changed
    */

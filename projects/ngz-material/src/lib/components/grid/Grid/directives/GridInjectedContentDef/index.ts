@@ -9,12 +9,12 @@ import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
  *
  * Usage:
  *
- * <ng-container *ngzGridInjectedTemplate>
+ * <ng-container *ngzGridInjectedContentTemplate>
  *  Injected content
  * </ng-container>
  */
 @Directive({
-  selector: '[ngzGridInjectedTemplate]'
+  selector: '[ngzGridInjectedContentTemplate]'
 })
 export class GridInjectedContentTemplateDirective {}
 
@@ -34,13 +34,19 @@ export class GridInjectedContentTemplateDirective {}
 export class GridInjectedContentDefDirective {
 
   /**
+   * CSS class for the injected content container
+   */
+  @Input()
+  public class = '';
+
+  /**
    * Position to inject into (allowed: 'top' or 'bottom')
    */
   @Input()
   public position: 'top'|'bottom';
 
   /**
-   * Content child element implementing a *ngzGridInjectedTemplate directive
+   * Content child element implementing a *ngzGridInjectedContentTemplate directive
    * providing injected content template
    */
   @ContentChild(GridInjectedContentTemplateDirective, { read: TemplateRef })
@@ -67,6 +73,7 @@ export class GridInjectedContentConfiguration {
       const config = new GridInjectedContentConfiguration();
 
       // Pull configuration from instance of [ngzGridInjectedContentDef] directive
+      if (def.class !== undefined) { config.class = def.class; }
       if (def.position !== undefined) { config.position = def.position; }
       if (def.template !== undefined) { config.template = def.template; }
 
@@ -78,9 +85,15 @@ export class GridInjectedContentConfiguration {
   }
 
   /**
+   * CSS class for the injected content container
+   */
+  public class = '';
+
+  /**
    * Position to inject into (allowed: 'top' or 'bottom')
    */
   public position: 'top'|'bottom';
+
   /**
    * Injected content template
    */

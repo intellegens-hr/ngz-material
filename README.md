@@ -128,6 +128,22 @@ Angular Material based components, services and other to be (re)used in other pr
     </ng-container>
   </ng-container>
 
+  <!-- Inject custom content on top -->
+  <ng-container ngzGridInjectedContentDef [position]="'top'" [class]="'top-injected-tr'">
+    <ng-container *ngzGridInjectedContentTemplate> Injected TOP #1 </ng-container>
+  </ng-container>
+  <ng-container ngzGridInjectedContentDef [position]="'top'" [class]="'top-injected-tr'">
+    <ng-container *ngzGridInjectedContentTemplate> Injected TOP #2 </ng-container>
+  </ng-container>
+
+  <!-- Inject custom content on bottom -->
+  <ng-container ngzGridInjectedContentDef [position]="'bottom'" [class]="'bottom-injected-tr'">
+    <ng-container *ngzGridInjectedContentTemplate> Injected BOTTOM #1 </ng-container>
+  </ng-container>
+  <ng-container ngzGridInjectedContentDef [position]="'bottom'" [class]="'bottom-injected-tr'">
+    <ng-container *ngzGridInjectedContentTemplate> Injected BOTTOM #2 </ng-container>
+  </ng-container>
+
 </ngz-grid>
 ```
 
