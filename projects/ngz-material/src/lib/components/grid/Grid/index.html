@@ -1,8 +1,9 @@
 <table mat-table
   class="mat-elevation-z8"
+  [ngClass]="[(header ? 'has-header' : ''), (footer ? 'has-footer' : '')]"
   [dataSource] ="_data | NgzGridFilterBy:_filters
-                      | NgzGridOrderBy:_orderingField:_orderingAscDirection
-                      | NgzGridPaginate:_pageLength:_pageIndex" 
+                       | NgzGridOrderBy:_orderingField:_orderingAscDirection
+                       | NgzGridPaginate:_pageLength:_pageIndex" 
   matSort matSortDisableClear="true" (matSortChange)="_onMatTableSort($event)">
 
   <!-- Header definition (and layout) -->

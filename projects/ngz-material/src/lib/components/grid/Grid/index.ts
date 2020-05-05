@@ -146,6 +146,18 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
   public loading = false;
 
   /**
+   * If Grid should display a header
+   */
+  @Input()
+  public header = true;
+
+  /**
+   * If Grid should display a footer
+   */
+  @Input()
+  public footer = false;
+
+  /**
    * Event triggering when Grid state changes (update to ordering, pagination or filtering)
    */
   // tslint:disable-next-line: no-output-native

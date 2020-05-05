@@ -13,6 +13,13 @@
         width: 1px;
       }
     }
+
+    &:not(.has-header) {
+      .mat-header-row { display: none; }
+    }
+    &:not(.has-footer) {
+      .mat-footer-row { display: none; }
+    }
   }
 
   .filter-input {

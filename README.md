@@ -18,7 +18,9 @@ Angular Material based components, services and other to be (re)used in other pr
   [dataSource]="dataSource"
   [dataLength]="dataSourceLength"
   (changed)="onGridChange($event)"
-  [detectColumns]="true">
+  [detectColumns]="true"
+  [header]="true"
+  [footer]="true">
 
   <!-- Configure filtering:
        - [hasFiltering] If filters should be displayed in grid header
