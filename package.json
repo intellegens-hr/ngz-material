@@ -1,6 +1,6 @@
 {
   "name": "@intellegens/ngz-material",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,6 +9,13 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intellegens-hr/ngz-material.git"
+  },
+  "keywords": [],
+  "author": "intellegens-hr",
+  "license": "MIT",
   "private": false,
   "dependencies": {
     "@angular/animations": "~9.1.1",
