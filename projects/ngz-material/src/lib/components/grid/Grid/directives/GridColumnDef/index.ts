@@ -81,7 +81,8 @@ export class GridColumnDefCustomizationProvider {
  * <ng-container [ngzGridColumnDef]="'columnKey'"
  *               [header]="'Header Caption" [footer]="Footer caption"
  *               [hasOrdering]="true"
- *               [hasFiltering]="true"></ng-container>
+ *               [hasFiltering]="true">
+ * </ng-container>
  *
  */
 @Directive({

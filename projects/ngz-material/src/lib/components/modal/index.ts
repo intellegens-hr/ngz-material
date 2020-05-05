@@ -5,8 +5,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
-const imports = [
-  CommonModule, MatDialogModule
+const modules = [
+  CommonModule,
+  MatDialogModule
 ];
 
 // Import and (re)export components
@@ -20,8 +21,8 @@ const declarations = [
  * <ngz-modal /> component module
  */
 @NgModule({
-  imports,
-  declarations,
-  exports: [ ...imports, ...declarations ]
+  imports:      [ ...modules ],
+  declarations: [ ...declarations ],
+  exports:      [ ...modules, ...declarations ]
 })
 export class ModalModule { }

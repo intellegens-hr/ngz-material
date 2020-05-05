@@ -9,6 +9,7 @@ import { SubscriptionLike, Observable } from 'rxjs';
 import { GridColumnDefDirective, GridColumnConfiguration  } from './directives/GridColumnDef';
 import { GridPaginationDefDirective, GridPaginationConfiguration  } from './directives/GridPaginationDef';
 import { GridFilteringDefDirective, GridFilteringConfiguration  } from './directives/GridFilteringDef';
+import { GridInjectedContentDefDirective, GridInjectedContentConfiguration  } from './directives/GridInjectedContentDef';
 import { FilterByPipe } from './pipes/FilterBy';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable, MatSortHeader } from '@angular/material/sort';
@@ -64,6 +65,29 @@ class GridConfiguration {
    * Holds filtering configuration
    */
   public filtering: any = {};
+
+  /**
+   * Holds top injected content configuration
+   */
+  private _injectedTop: GridInjectedContentConfiguration[] = [];
+  /**
+   * Holds bottom injected content configuration
+   */
+  private _injectedBottom: GridInjectedContentConfiguration[] = [];
+  // Gets/Sets injected content configurations
+  public set injected (defs: GridInjectedContentConfiguration[]) {
+    this._injectedTop = defs.filter(def => def.position === 'top');
+    this._injectedBottom = defs.filter(def => def.position === 'bottom');
+  }
+  public get injected () {
+    return [ ...this._injectedTop, ...this._injectedBottom ];
+  }
+  public get injectedTop () {
+    return [ ...this._injectedTop ];
+  }
+  public get injectedBottom () {
+    return [ ...this._injectedBottom ];
+  }
 
 
 }
@@ -135,17 +159,23 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
   @ContentChildren(GridColumnDefDirective)
   public columnDefs: QueryList<GridColumnDefDirective>;
   /**
-   * Content child elements implementing a [ngzGridPaginationDef] directive
+   * Content child element implementing a [ngzGridPaginationDef] directive
    * handling pagination configuration
    */
   @ContentChild(GridPaginationDefDirective)
   public paginationDef: GridPaginationDefDirective;
   /**
-   * Content child elements implementing a [ngzGridFilteringDef] directive
+   * Content child element implementing a [ngzGridFilteringDef] directive
    * handling filtering configuration
    */
   @ContentChild(GridFilteringDefDirective)
   public filteringDef: GridFilteringDefDirective;
+  /**
+   * Content child elements implementing a [ngzGridInjectedContentDef] directive
+   * providing injected content
+   */
+  @ContentChildren(GridInjectedContentDefDirective)
+  public injectedContentDef: QueryList<GridInjectedContentDefDirective>;
 
   /**
    * Reference to internal <mat-table /> paginator component
@@ -259,6 +289,9 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     this._config.filtering.hasFilteringColumns = (!Object.values(this._config.columns).length)
                                               || !!Object.values(this._config.columns)
                                                     .find((columnConf: GridColumnConfiguration) => columnConf.hasFiltering);
+
+    // Initialize injected content configuration
+    this._config.injected = GridInjectedContentConfiguration.create(this.injectedContentDef.toArray());
 
   }
 

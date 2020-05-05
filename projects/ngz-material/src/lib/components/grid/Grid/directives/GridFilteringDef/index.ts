@@ -10,7 +10,8 @@ import { Directive, Input } from '@angular/core';
  * Usage:
  *
  * <ng-container ngzGridFilteringDef
- *               [hasFiltering]="true"></ng-container>
+ *               [hasFiltering]="true">
+ * </ng-container>
  *
  */
 @Directive({

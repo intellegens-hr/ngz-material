@@ -12,7 +12,8 @@ import { Directive, Input } from '@angular/core';
  * <ng-container ngzGridPaginationDef
  *               [hasPagination]="true"
  *               [defaultPageLength]="10"
- *               [pageLengthOptions]="[10, 20, 50, 100]"></ng-container>
+ *               [pageLengthOptions]="[10, 20, 50, 100]">
+ * </ng-container>
  *
  */
 @Directive({

@@ -10,7 +10,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-const imports = [
+const modules = [
   CommonModule,
   MatTableModule,
   MatSortModule,
@@ -37,6 +37,8 @@ import { GridPaginationDefDirective } from './Grid/directives/GridPaginationDef'
 export { GridPaginationDefDirective };
 import { GridFilteringDefDirective } from './Grid/directives/GridFilteringDef';
 export { GridFilteringDefDirective };
+import { GridInjectedContentDefDirective, GridInjectedContentTemplateDirective } from './Grid/directives/GridInjectedContentDef';
+export { GridInjectedContentDefDirective, GridInjectedContentTemplateDirective };
 
 // Import and (re)export components and pipes
 import { GridComponent } from './Grid';
@@ -57,6 +59,8 @@ const declarations = [
   GridColumnHeaderCellTemplateDirective,
   GridColumnFooterCellTemplateDirective,
   GridFilteringDefDirective,
+  GridInjectedContentDefDirective,
+  GridInjectedContentTemplateDirective,
   OrderByPipe,
   FilterByPipe,
   PaginatePipe,
@@ -68,8 +72,8 @@ const declarations = [
  * <ngz-grid /> component module
  */
 @NgModule({
-  imports,
-  declarations,
-  exports: [ ...imports, ...declarations ],
+  imports:      [ ...modules ],
+  declarations: [ ...declarations ],
+  exports:      [ ...modules, ...declarations ],
 })
 export class GridModule { }

@@ -11,7 +11,7 @@ export * from './components/grid';
 import { ModalModule } from './components/modal';
 export * from './components/modal';
 
-const imports = [
+const modules = [
   GridModule, ModalModule
 ];
 
@@ -34,13 +34,17 @@ const declarations = [
  * Intellegens' NGX Material module
  */
 @NgModule({
-  imports,
-  declarations,
+  imports:      [
+    ...modules
+  ],
+  declarations: [
+    ...declarations
+  ],
   providers: [
     { provide: EnTTValidationMessagesService }
   ],
   exports: [
-    ...imports,
+    ...modules,
     ...declarations
   ]
 })

@@ -3,8 +3,11 @@
 <pre>
   <code>
     <ngz-grid [dataSource]="dataSource" >
+
       <ng-container ngzGridFilteringDef [hasFiltering]="true"></ng-container>
+
       <ng-container ngzGridPaginationDef [defaultPageLength]="5" [pageLengthOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
+
       <ng-container ngzGridColumnDef="id" [header]="'ID'" [footer]="'ID'" [hasOrdering]="true" [hasFiltering]="false"></ng-container>      
       <ng-container ngzGridColumnDef="firstName" [header]="'First Name'" [footer]="'First Name'" [hasOrdering]="true" [hasFiltering]="true"></ng-container> 
       <ng-container ngzGridColumnDef="lastName" [header]="'Last Name'" [footer]="'Last Name'" [hasOrdering]="true" [hasFiltering]="true" ></ng-container>
@@ -19,7 +22,21 @@
             <ngz-grid-action [icon]="'call_split_outline'"                      (activated)="onAction('clone 3!')"></ngz-grid-action>
           </ngz-grid-actions>
         </ng-container>
-      </ng-container>  
+      </ng-container>
+
+      <ng-container ngzGridInjectedContentDef [position]="'top'">
+        <ng-container *ngzGridInjectedTemplate> Injected TOP #1 </ng-container>
+      </ng-container>
+      <ng-container ngzGridInjectedContentDef [position]="'top'">
+        <ng-container *ngzGridInjectedTemplate> Injected TOP #2 </ng-container>
+      </ng-container>
+      <ng-container ngzGridInjectedContentDef [position]="'bottom'">
+        <ng-container *ngzGridInjectedTemplate> Injected BOTTOM #1 </ng-container>
+      </ng-container>
+      <ng-container ngzGridInjectedContentDef [position]="'bottom'">
+        <ng-container *ngzGridInjectedTemplate> Injected BOTTOM #2 </ng-container>
+      </ng-container>
+
     </ngz-grid>
   </code>
 </pre>

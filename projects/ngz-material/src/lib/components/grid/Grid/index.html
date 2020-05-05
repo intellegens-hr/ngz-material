@@ -19,6 +19,10 @@
                 (input)="_onFilterUpdated(key, $event)">
       </th>
     </tr>
+    <!-- Injected header rows -->
+    <tr *ngFor="let injected of configuration.injectedTop">
+      <ng-container *ngTemplateOutlet="injected.template"></ng-container>
+    </tr>
   </ng-container>
 
   <!-- Table columns layout -->
@@ -89,6 +93,10 @@
 
   <!-- Footer definition (and layout) -->
   <ng-container *matFooterRowDef="_columnKeys">
+    <!-- Injected footer rows -->
+    <tr *ngFor="let injected of configuration.injectedBottom">
+      <ng-container *ngTemplateOutlet="injected.template"></ng-container>
+    </tr>
     <!-- Default footers -->
     <tr mat-footer-row></tr>
   </ng-container>
