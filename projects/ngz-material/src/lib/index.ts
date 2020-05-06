@@ -6,13 +6,13 @@ import { NgModule } from '@angular/core';
 
 // Import and (re)export modules
 import { GridModule } from './components/grid';
-export * from './components/grid';
+export { GridModule } from './components/grid';
 
 import { ModalModule } from './components/modal';
-export * from './components/modal';
+export { ModalModule } from './components/modal';
 
 import { A11nModule } from './directives/a11n';
-export * from './directives/a11n';
+export { A11nModule } from './directives/a11n';
 
 const modules = [
   GridModule, ModalModule, A11nModule
@@ -20,11 +20,11 @@ const modules = [
 
 // Import and (re)export services
 import { EnTTValidationMessagesService } from './services';
-export * from './services';
+export { EnTTValidationMessagesService } from './services';
 
 // Import and (re)export pipes
 import { EnTTValidationMessagePipe, EnTTValidationMessagesPipe } from './pipes';
-export * from './pipes';
+export { EnTTValidationMessagePipe, EnTTValidationMessagesPipe } from './pipes';
 const pipes = [
   EnTTValidationMessagePipe,
   EnTTValidationMessagesPipe

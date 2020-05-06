@@ -5,6 +5,9 @@
 import { Injectable } from '@angular/core';
 import { EnttValidationError } from '@ofzza/entt-rxjs';
 
+// Define types
+type MapperFunction = (err: EnttValidationError) => string;
+
 /**
  * EnTT validation messages service
  */
@@ -29,9 +32,9 @@ export class EnTTValidationMessagesService {
   /**
    * Error mapping functions, attempt to match a validation error to a user-friendly message
    */
-  private static _errorMappers: ((EnttValidationError) => string)[] = [
+  private static _errorMappers: MapperFunction[] = [
     // Default error mapper
-    (err: EnttValidationError) => null
+    // (err: EnttValidationError) => null
   ];
 
   /**
@@ -58,7 +61,7 @@ export class EnTTValidationMessagesService {
    * Defines mapping functions, mapping from a validation error to a user-friendly message
    * @param mapperFns Mapping functions, mapping from a validation error to a user-friendly message
    */
-  public defineErrorMappers (mapperFns: ((EnttValidationError) => string)[]) {
+  public defineErrorMappers (mapperFns: MapperFunction[]) {
     EnTTValidationMessagesService._errorMappers.push(...mapperFns);
   }
 
