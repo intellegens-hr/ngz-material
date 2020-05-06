@@ -160,6 +160,8 @@ Angular Material based components, services and other to be (re)used in other pr
   this.grid.updateFiltering(key: string, value: any);
   // Handle change event for API data management (pagination, ordering, filtering)
   this.onGridChange = (e) => {
+    // Stop local management of data
+    e.preventDefault();
     // Use some assumed api service to get managed data
     const res = await api.getData({
       orderingFiled:        e.state.orderingField,
@@ -208,6 +210,66 @@ Angular Material based components, services and other to be (re)used in other pr
 ```ts
 // Set two-way bound visibility status
 public visible = true
+```
+
+### <ngz-grid-actions />
+
+```html
+<!-- Grid actions component:
+    - (view) If present, "view" button will be displayed and this will be it's onClick callback
+    - (edit) If present, "edit" button will be displayed and this will be it's onClick callback
+    - (delete) If present, "delete" button will be displayed and this will be it's onClick callback
+
+    If placed inside a <ngz-grid /> component it will automatically set up parent column's label and styling if not already specified.
+-->
+<ngz-grid-actions
+  (view)="doOptionalOnViewAction()"
+  (edit)="doOptionalOnEditAction()"
+  (delete)="doOptionalOnDeleteAction()">
+
+  <!-- Grid action component:
+       - [icon] Action button icon
+       - [label] Action button label
+       - (activated) On click callback for the action button
+  -->
+  <ngz-grid-action
+    [icon]="'material_icon'"
+    [label]="'Label describing the action'"
+    (activated)="doCustomAction()">
+  </ngz-grid-action>
+
+</ngz-grid-actions>
+```
+
+### [ngzFocus]
+
+```html
+<!-- Focus directive, will focus parent element when initialized -->
+<anything [ngzFocus]></anything>
+```
+
+### EnTTValidationMessagesService && enttValidationMessage(s) pipe
+
+```ts
+// Define default error message
+EnTTValidationMessagesService.defineErrorMessageDefault('Invalid!');
+// Define error messages by type
+EnTTValidationMessagesService.defineErrorMessagesByType({
+  required: 'This field is mandatory!',
+  email:    'Expecting email address!',
+  min:      'Shorter than minimum length allowed!',
+  max:      'Longer than maximum length allowed!'
+});
+// Define custom error message mapper functions
+EnTTValidationMessagesService.defineErrorMappers((err: EnttValidationError) => `Error was thrown with message "${ err.message }"!`);
+```
+
+```html
+<!-- Output single error -->
+{{ enttModelInstance.errors.propertyA[0] | enttValidationMessage }}
+
+<!-- Output multiple errors -->
+<div *ngFor="let err of enttModelInstance.errors.propertyA | enttValidationMessages"> {{ err }} </div>
 ```
 
 ## Development server
