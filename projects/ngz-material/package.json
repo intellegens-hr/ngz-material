@@ -1,6 +1,13 @@
 {
   "name": "@intellegens/ngz-material",
   "version": "1.0.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intellegens-hr/ngz-material.git"
+  },
+  "keywords": [],
+  "author": "intellegens-hr",
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^8.2.14",
     "@angular/core": "^8.2.14"

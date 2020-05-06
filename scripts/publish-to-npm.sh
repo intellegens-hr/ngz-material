@@ -32,6 +32,8 @@ if [ "${repDescription}" != "${libDescription}" ]; then
   exit 1;
 fi
 
+# TODO: Add checks for: repository, keywords, author, license
+
 # Publish via NPM
 cd ../dist/ngz-material
 npm publish --access public
