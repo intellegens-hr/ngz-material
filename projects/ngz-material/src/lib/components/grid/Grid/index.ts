@@ -260,6 +260,9 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
   // Holds internal loading state
   public _internalLoading = false;
 
+  // If ordering, pagination and filtering should be handled locally
+  public _doLocalDataManagement = true;
+
   // Ordering: Field key to order rows by
   public _orderingField: string;
   // Ordering: If ordering in ascending direction
@@ -276,7 +279,7 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
       return this.dataLength;
     } else {
       // Calculate data length based on current filtering od current data
-      return (new FilterByPipe()).transform(this._data, this._filters).length;
+      return (new FilterByPipe()).transform(this._data, this._doLocalDataManagement, this._filters).length;
     }
   }
 
@@ -636,6 +639,11 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     // Ready the change event descriptor object
     const e = {
 
+      // Toggles off local pagination, ordering and filtering
+      preventDefault: () => {
+        this._doLocalDataManagement = false;
+      },
+
       // Incoming state (separate copy, to protect from manipulation)
       state: JSON.parse(JSON.stringify(state)),
 
@@ -689,6 +697,9 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
       }
 
     };
+
+    // Reset local ordering, pagination and filtering
+    this._doLocalDataManagement = true;
 
     // Emit (changed) event
     this.changed.emit(e);

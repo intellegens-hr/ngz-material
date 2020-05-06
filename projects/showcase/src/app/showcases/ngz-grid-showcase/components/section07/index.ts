@@ -32,9 +32,11 @@ export class NgzGridShowcaseSection07Component {
   public isError = false;
 
   public onEventChange (e) {
-    e.preventDefault = false;
+    const preventDefault = false;
 
-    if (e.preventDefault) {
+    if (preventDefault) {
+      // Prevent default
+      e.preventDefault();
       // Set data (async)
       this.dataSource = new Promise((resolve) => {
         setTimeout(() => {
