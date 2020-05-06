@@ -11,8 +11,11 @@ export * from './components/grid';
 import { ModalModule } from './components/modal';
 export * from './components/modal';
 
+import { A11nModule } from './directives/a11n';
+export * from './directives/a11n';
+
 const modules = [
-  GridModule, ModalModule
+  GridModule, ModalModule, A11nModule
 ];
 
 // Import and (re)export services
@@ -20,9 +23,10 @@ import { EnTTValidationMessagesService } from './services';
 export * from './services';
 
 // Import and (re)export pipes
-import { EnTTValidationMessagesPipe } from './pipes';
+import { EnTTValidationMessagePipe, EnTTValidationMessagesPipe } from './pipes';
 export * from './pipes';
 const pipes = [
+  EnTTValidationMessagePipe,
   EnTTValidationMessagesPipe
 ];
 

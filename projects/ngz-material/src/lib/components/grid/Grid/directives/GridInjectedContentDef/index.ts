@@ -40,10 +40,10 @@ export class GridInjectedContentDefDirective {
   public class = '';
 
   /**
-   * Position to inject into (allowed: 'top' or 'bottom')
+   * Position to inject into (allowed: 'above' or 'top' or 'bottom' or 'below')
    */
   @Input()
-  public position: 'top'|'bottom';
+  public position: 'above'|'top'|'bottom'|'below';
 
   /**
    * Content child element implementing a *ngzGridInjectedContentTemplate directive
@@ -90,9 +90,9 @@ export class GridInjectedContentConfiguration {
   public class = '';
 
   /**
-   * Position to inject into (allowed: 'top' or 'bottom')
+   * Position to inject into (allowed: 'above' or 'top' or 'bottom' or 'below')
    */
-  public position: 'top'|'bottom';
+  public position: 'above'|'top'|'bottom'|'below';
 
   /**
    * Injected content template

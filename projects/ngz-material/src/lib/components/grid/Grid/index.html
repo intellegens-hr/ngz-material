@@ -8,23 +8,40 @@
 
   <!-- Header definition (and layout) -->
   <ng-container *matHeaderRowDef="_columnKeys">
+
+    <!-- Injected header rows -->
+    <tr *ngFor="let injected of configuration.injectedAbove"
+      [class]="injected.class">
+      <ng-container *ngTemplateOutlet="injected.template"></ng-container>
+    </tr>
+
     <!-- Default headers -->
     <tr mat-header-row></tr>
-    <!-- Filtering row -->
-    <tr *ngIf="configuration.filtering.hasFiltering && configuration.filtering.hasFilteringColumns">
-      <th *ngFor="let key of _columnKeys"
-        [ngClass]="[ ('mat-column-' + key), (configuration.columns[key].class) ]">
-        <input type="text" [disabled]="configuration.columns[key].virtual || !configuration.columns[key].hasFiltering"
-                class="filter-input"
-                [value]="_filters[key] || ''"
-                (input)="_onFilterUpdated(key, $event)">
-      </th>
-    </tr>
+
     <!-- Injected header rows -->
     <tr *ngFor="let injected of configuration.injectedTop"
       [class]="injected.class">
       <ng-container *ngTemplateOutlet="injected.template"></ng-container>
     </tr>
+
+    <!-- Filtering row -->
+    <tr *ngIf="configuration.filtering.hasFiltering && configuration.filtering.hasFilteringColumns" class="filters-row">
+      <th *ngFor="let key of _columnKeys"
+        [ngClass]="[('mat-column-' + key), (configuration.columns[key].class)]">
+
+        <mat-form-field appearance="fill">
+          <mat-label *ngIf="!configuration.columns[key].virtual && configuration.columns[key].hasFiltering">
+            <mat-icon>search</mat-icon>
+          </mat-label>
+          <input matInput type="text"
+            [disabled]="configuration.columns[key].virtual || !configuration.columns[key].hasFiltering"
+            [value]="_filters[key] || ''"
+            (input)="_onFilterUpdated(key, $event)">
+        </mat-form-field>
+
+      </th>
+    </tr>
+
   </ng-container>
 
   <!-- Table columns layout -->
@@ -34,6 +51,7 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header
       [disabled]="!configuration.columns[key].hasOrdering || configuration.columns[key].virtual"
       [ngClass]="[ (configuration.columns[key].class) ]">
+
       <!-- If template available -->
       <ng-container *ngIf="configuration.columns[key].headerCellTemplate">
         <ng-container
@@ -43,15 +61,18 @@
           "
         ></ng-container>
       </ng-container>
+
       <!-- If no template, default to column label -->
       <ng-container *ngIf="!configuration.columns[key].headerCellTemplate">
         {{ configuration.columns[key].header !== undefined ? configuration.columns[key].header : key }}
       </ng-container>
+
     </th>
 
     <!-- Column body cell -->
     <td mat-cell *matCellDef="let row; let index = index"
       [ngClass]="[ (configuration.columns[key].class) ]">
+
       <!-- If template available -->
       <ng-container *ngIf="configuration.columns[key].cellTemplate">
         <ng-container
@@ -61,15 +82,18 @@
           "
         ></ng-container>
       </ng-container>
+
       <!-- If no template, default to raw row value -->
       <ng-container *ngIf="!configuration.columns[key].cellTemplate && !configuration.columns[key].virtual">
         {{ row[key] }}
-      </ng-container>      
+      </ng-container>    
+
     </td>
 
     <!-- Column footer -->
     <td mat-footer-cell *matFooterCellDef
       [ngClass]="[ (configuration.columns[key].class) ]">
+
       <!-- If template available -->
       <ng-container *ngIf="configuration.columns[key].footerCellTemplate">
         <ng-container
@@ -79,10 +103,12 @@
           "
         ></ng-container>
       </ng-container>
+
       <!-- If no template, default to column label -->
       <ng-container *ngIf="!configuration.columns[key].footerCellTemplate">
         {{ configuration.columns[key].footer !== undefined ? configuration.columns[key].footer : key  }}
       </ng-container>
+
     </td>
 
   </ng-container>
@@ -95,13 +121,22 @@
 
   <!-- Footer definition (and layout) -->
   <ng-container *matFooterRowDef="_columnKeys">
+
     <!-- Injected footer rows -->
     <tr *ngFor="let injected of configuration.injectedBottom"
       [class]="injected.class">
       <ng-container *ngTemplateOutlet="injected.template"></ng-container>
     </tr>
+
     <!-- Default footers -->
     <tr mat-footer-row></tr>
+
+    <!-- Injected footer rows -->
+    <tr *ngFor="let injected of configuration.injectedBelow"
+      [class]="injected.class">
+      <ng-container *ngTemplateOutlet="injected.template"></ng-container>
+    </tr>
+
   </ng-container>
 
 </table>

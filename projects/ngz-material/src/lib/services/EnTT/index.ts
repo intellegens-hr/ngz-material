@@ -63,31 +63,27 @@ export class EnTTValidationMessagesService {
   }
 
   /**
-   * Returns user-friendly message corresponding to provided validation errors
-   * @param errs Array of validation errors
-   * @returns Array of user-friendly message corresponding to provided validation errors
+   * Returns user-friendly message corresponding to provided validation error
+   * @param errs Validation errors
+   * @returns User-friendly message corresponding to provided validation error
    */
-  public getMessages (errs: EnttValidationError[]) {
-    // Initialize error messages
-    const messages = {};
-    // Process errors
-    for (const err of errs) {
-      // Find errors mapped by type
-      const messageByType = EnTTValidationMessagesService._errorMessagesByType[err.type];
-      if (messageByType) {
-        messages[messageByType] = messageByType;
-      }
-      // Find errors mapped by error mapper
-      for (const errorMapper of EnTTValidationMessagesService._errorMappers) {
-        const msgByErrorMapper = errorMapper(err);
-        if (msgByErrorMapper) {
-          messages[msgByErrorMapper] = msgByErrorMapper;
-        }
+  public getMessage (err: EnttValidationError) {
+    // Initialize message
+    let message;
+    // Find errors mapped by type
+    const messageByType = EnTTValidationMessagesService._errorMessagesByType[err.type];
+    if (messageByType) {
+      message = messageByType;
+    }
+    // Find errors mapped by error mapper
+    for (const errorMapper of EnTTValidationMessagesService._errorMappers) {
+      const msgByErrorMapper = errorMapper(err);
+      if (msgByErrorMapper) {
+        message = msgByErrorMapper;
       }
     }
-    // Return matched messages
-    const messageArray = Object.keys(messages);
-    return (messageArray.length ? messageArray : [EnTTValidationMessagesService._errorMessageDefault]);
+    // Return message
+    return message;
   }
 
 }

@@ -67,6 +67,10 @@ class GridConfiguration {
   public filtering: any = {};
 
   /**
+   * Holds above injected content configuration
+   */
+  private _injectedAbove: GridInjectedContentConfiguration[] = [];
+  /**
    * Holds top injected content configuration
    */
   private _injectedTop: GridInjectedContentConfiguration[] = [];
@@ -74,13 +78,22 @@ class GridConfiguration {
    * Holds bottom injected content configuration
    */
   private _injectedBottom: GridInjectedContentConfiguration[] = [];
+  /**
+   * Holds below injected content configuration
+   */
+  private _injectedBelow: GridInjectedContentConfiguration[] = [];
   // Gets/Sets injected content configurations
   public set injected (defs: GridInjectedContentConfiguration[]) {
+    this._injectedAbove = defs.filter(def => def.position === 'above');
     this._injectedTop = defs.filter(def => def.position === 'top');
     this._injectedBottom = defs.filter(def => def.position === 'bottom');
+    this._injectedBelow = defs.filter(def => def.position === 'below');
   }
   public get injected () {
     return [ ...this._injectedTop, ...this._injectedBottom ];
+  }
+  public get injectedAbove () {
+    return [ ...this._injectedAbove ];
   }
   public get injectedTop () {
     return [ ...this._injectedTop ];
@@ -88,7 +101,9 @@ class GridConfiguration {
   public get injectedBottom () {
     return [ ...this._injectedBottom ];
   }
-
+  public get injectedBelow () {
+    return [ ...this._injectedBelow ];
+  }
 
 }
 
