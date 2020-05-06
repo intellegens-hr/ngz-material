@@ -61,27 +61,32 @@ export class GridInjectedContentConfiguration {
 
   /**
    * Creates a injected content configurations instances
-   * @param def (Optional) Instance of [ngzGridInjectedContentDef] directive to pull configuration from
+   * @param defs (Optional) Instances of [ngzGridInjectedContentDef] directives to pull configuration from
    * @returns Injected content configurations instances
    */
   public static create (defs: GridInjectedContentDefDirective[]) {
 
     // Create a injected content configurations instances from directives
-    return (defs || []).map((def) => {
+    return (defs || []).map(GridInjectedContentConfiguration.createSingle);
 
-      // Ready a injected content  configurations
-      const config = new GridInjectedContentConfiguration();
+  }
 
-      // Pull configuration from instance of [ngzGridInjectedContentDef] directive
-      if (def.class !== undefined) { config.class = def.class; }
-      if (def.position !== undefined) { config.position = def.position; }
-      if (def.template !== undefined) { config.template = def.template; }
+  /**
+   * Creates a injected content configurations instance
+   * @param def (Optional) Instance of [ngzGridInjectedContentDef] directive to pull configuration from
+   * @returns Injected content configurations instance
+   */
+  private static createSingle (def: GridInjectedContentDefDirective) {
+    // Ready a injected content  configurations
+    const config = new GridInjectedContentConfiguration();
 
-      // Set column configuration
-      return config;
+    // Pull configuration from instance of [ngzGridInjectedContentDef] directive
+    if (def.class !== undefined) { config.class = def.class; }
+    if (def.position !== undefined) { config.position = def.position; }
+    if (def.template !== undefined) { config.template = def.template; }
 
-    });
-
+    // Set column configuration
+    return config;
   }
 
   /**

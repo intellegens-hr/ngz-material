@@ -32,6 +32,6 @@ if [ "${repDescription}" != "${libDescription}" ]; then
   exit 1;
 fi
 
-# Publish via NPM to GitHub
+# Publish via NPM
 cd ../dist/ngz-material
-npm publish
+npm publish --access public
