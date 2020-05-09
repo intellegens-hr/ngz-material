@@ -2,6 +2,7 @@
 
 - Added CHANGELOG.md
 - Updated package description, repository, keywords, license and author for publishing
+- Updated to Angular 9.1.6, Angular Material 9.2.3
 
 ## v1.0.2, Stable version
 

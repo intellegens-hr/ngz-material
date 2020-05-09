@@ -108,6 +108,109 @@ class GridConfiguration {
 }
 
 /**
+ * Holds Grid changed event state description
+ */
+export class GridChangeEventState {
+
+  /**
+   * Updated value of the field key to order rows by
+   */
+  public orderingField: string;
+  /**
+   * Updated value of if ordering in ascending direction
+   */
+  public orderingAscDirection: boolean;
+  /**
+   * Updated value of current page's index
+   */
+  public pageIndex: number;
+  /**
+   * Updated value of previous page's index
+   */
+  public previousPageIndex: number;
+  /**
+   * Total number of rows in updated data
+   */
+  public pageLength: number;
+  /**
+   * Total number of rows in updated data
+   */
+  public totalLength: number;
+  /**
+   * Updated value of the hash-table of filtering key-value pairs
+   */
+  public filters: object;
+
+  /**
+   * Constructor
+   * @param orderingField Updated value of the field key to order rows by
+   * @param orderingAscDirection Updated value of if ordering in ascending direction
+   * @param pageIndex Updated value of current page's index
+   * @param previousPageIndex Updated value of previous page's index
+   * @param totalLength Total number of rows in updated data
+   * @param filters Updated value of the hash-table of filtering key-value pairs
+   */
+  constructor ({
+    orderingField        = undefined as string,
+    orderingAscDirection = undefined as boolean,
+    pageIndex            = undefined as number,
+    previousPageIndex    = undefined as number,
+    pageLength           = undefined as number,
+    totalLength          = undefined as number,
+    filters              = undefined as object
+  }) {
+    // Set properties
+    this.orderingField        = orderingField;
+    this.orderingAscDirection = orderingAscDirection;
+    this.pageIndex            = pageIndex;
+    this.previousPageIndex    = previousPageIndex;
+    this.pageLength           = pageLength;
+    this.totalLength          = totalLength;
+    this.filters              = filters;
+  }
+}
+
+/**
+ * Holds Grid changed event descriptor
+ */
+export class GridChangeEvent {
+
+  /**
+   * Grid state description
+   */
+  public state: GridChangeEventState;
+  /**
+   * Provides control over the grid component
+   */
+  public controller: IGridChangeEventController;
+  /**
+   * Toggles off local pagination, ordering and filtering
+   */
+  public preventDefault: () => void;
+
+  /**
+   * Constructor
+   * @param state Grid state description
+   * @param controller Provides control over the grid component
+   * @param preventDefault Toggles off local pagination, ordering and filtering
+   */
+  constructor (state: GridChangeEventState, controller?: IGridChangeEventController, preventDefault?: () => void) {
+    this.state = state;
+    this.controller = controller;
+    this.preventDefault = preventDefault;
+  }
+}
+
+/**
+ * Grid controller interface
+ */
+export interface IGridChangeEventController {
+  updateOrdering: ({ orderingField, orderingAscDirection }) => void;
+  updatePagination: ({ pageIndex }) => void;
+  updateFiltering: (key: string, value: any) => void;
+}
+
+/**
  * Grid component, based on Angular material's <mat-table />
  * Supports:
  * - Pagination
@@ -637,18 +740,13 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     });
 
     // Ready the change event descriptor object
-    const e = {
-
-      // Toggles off local pagination, ordering and filtering
-      preventDefault: () => {
-        this._doLocalDataManagement = false;
-      },
+    const e = new GridChangeEvent(
 
       // Incoming state (separate copy, to protect from manipulation)
-      state: JSON.parse(JSON.stringify(state)),
+      JSON.parse(JSON.stringify(state)),
 
       // Methods to control the grid
-      controller: {
+      {
 
         /**
          * Updates ordering state
@@ -694,9 +792,14 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
           });
         },
 
+      } as IGridChangeEventController,
+
+      // Toggles off local pagination, ordering and filtering
+      () => {
+        this._doLocalDataManagement = false;
       }
 
-    };
+    );
 
     // Reset local ordering, pagination and filtering
     this._doLocalDataManagement = true;
@@ -726,7 +829,7 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     filters               = undefined as object
   }) {
     // Compose and return state object
-    return {
+    return new GridChangeEventState({
       // Grid state (Ordering)
       orderingField:        orderingField !== undefined ? orderingField : this._orderingField,
       orderingAscDirection: orderingAscDirection !== undefined ? orderingAscDirection : this._orderingAscDirection,
@@ -737,7 +840,7 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
       totalLength:          totalLength !== undefined ? totalLength : this._totalLength,
       // Grid state (Filtration)
       filters:              filters !== undefined ? {...filters} : {...this._filters}
-    };
+    });
   }
 
   /**
