@@ -1,3 +1,7 @@
+#### v1.0.4
+
+- Making sure publishing to NPM captures correct README.md
+
 #### v1.0.3
 
 - Added CHANGELOG.md

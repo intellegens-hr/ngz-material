@@ -8,6 +8,7 @@ set -e
 echo '';
 echo '> Building latest library version ...';
 ng build --prod;
+cp -f ../README.md ../dist/ngz-material/README.md;
 
 # Check if main project package.json and library package.json are have same proeprty values
 echo '';
