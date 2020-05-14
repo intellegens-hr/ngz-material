@@ -1,6 +1,6 @@
 {
   "name": "@intellegens/ngz-material",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Reusable, Angular Material based, components, services and other",
   "scripts": {
     "ng": "ng",
