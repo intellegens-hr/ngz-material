@@ -6,6 +6,7 @@ import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges,
          Input, Output, EventEmitter, ContentChildren, QueryList, ContentChild, ViewChild,
         ChangeDetectorRef } from '@angular/core';
 import { SubscriptionLike, Observable } from 'rxjs';
+import { EnTTManagerService } from '../../../services';
 import { GridColumnDefDirective, GridColumnConfiguration  } from './directives/GridColumnDef';
 import { GridPaginationDefDirective, GridPaginationConfiguration  } from './directives/GridPaginationDef';
 import { GridFilteringDefDirective, GridFilteringConfiguration  } from './directives/GridFilteringDef';
@@ -382,7 +383,7 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
       return this.dataLength;
     } else {
       // Calculate data length based on current filtering od current data
-      return (new FilterByPipe()).transform(this._data, this._doLocalDataManagement, this._filters).length;
+      return (new FilterByPipe(this._enttManager)).transform(this._data, this._doLocalDataManagement, this._filters).length;
     }
   }
 
@@ -394,7 +395,10 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
 
   //#region Component life-cycle
 
-  constructor (private _cd: ChangeDetectorRef) {}
+  constructor (
+    public _enttManager: EnTTManagerService,
+    private _cd: ChangeDetectorRef
+  ) {}
 
   public ngAfterContentInit () {
 

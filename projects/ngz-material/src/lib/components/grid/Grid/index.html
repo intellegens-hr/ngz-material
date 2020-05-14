@@ -85,7 +85,7 @@
 
       <!-- If no template, default to raw row value -->
       <ng-container *ngIf="!configuration.columns[key].cellTemplate && !configuration.columns[key].virtual">
-        {{ row[key] }}
+        {{ _enttManager.getByPath(row, key) }}
       </ng-container>    
 
     </td>

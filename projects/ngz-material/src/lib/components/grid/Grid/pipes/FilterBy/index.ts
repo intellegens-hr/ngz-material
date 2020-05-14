@@ -3,6 +3,7 @@
 
 // Import dependencies
 import { Pipe, PipeTransform } from '@angular/core';
+import { EnTTManagerService } from '../../../../../services';
 
 /**
  * Filtering pipe implementation
@@ -13,6 +14,8 @@ import { Pipe, PipeTransform } from '@angular/core';
  */
 @Pipe({ name: 'NgzGridFilterBy', pure: false })
 export class FilterByPipe  implements PipeTransform {
+
+  constructor (private _enttManager: EnTTManagerService) {}
 
   /**
    * Filters array members based on a hash-table of filtering key-value pairs where key is the property key of the property
@@ -38,7 +41,9 @@ export class FilterByPipe  implements PipeTransform {
     const filterKeys = Object.keys(filter);
     return array.filter(
       member => !filterKeys.find(
-        (key) => !(new RegExp(filter[key]).test(member[key]))
+        (key) => !(new RegExp(filter[key]).test(
+          this._enttManager.getByPath(member, key)
+        ))
       )
     );
   }
