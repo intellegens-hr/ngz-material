@@ -9,6 +9,51 @@ import { EnttValidationError } from '@ofzza/entt-rxjs';
 type MapperFunction = (err: EnttValidationError) => string;
 
 /**
+ * EnTT instance management helper
+ */
+@Injectable()
+export class EnTTManagerService {
+
+  /**
+   * Gets a deeply nested object property value by it's path
+   * @param obj Object to extract nested value from
+   * @param path Path to value
+   */
+  public getByPath (obj: any, path: string) {
+    if (obj === undefined || path === undefined) {
+      return undefined;
+    }
+    let keys = path.replace(/\[/g, '.').replace(/\]/g, '').split('.'),
+        target = obj;
+    while (keys.length) {
+      target = target[keys[0]];
+      keys = keys.slice(1);
+    }
+    return target;
+  }
+
+  /**
+   * Sets a deeply nested object property value by it's path
+   * @param obj Object to set nested value to
+   * @param path Path to value
+   * @param value Value to set
+   */
+  public setByPath (obj: any, path: string, value: any) {
+    if (obj === undefined || path === undefined) {
+      return undefined;
+    }
+    let keys = path.replace(/\[/g, '.').replace(/\]/g, '').split('.'),
+        target = obj;
+    while (keys.length > 1) {
+      target = target[keys[0]];
+      keys = keys.slice(1);
+    }
+    return target[keys[0]] = value;
+  }
+
+}
+
+/**
  * EnTT validation messages service
  */
 @Injectable()

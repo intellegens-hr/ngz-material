@@ -23,6 +23,8 @@ const modules = [
 
 // Import and (re)export services
 export * from './services';
+export { EnTTManagerService } from './services'; // Required IVY hinting
+import { EnTTManagerService } from './services';
 export { EnTTValidationMessagesService } from './services'; // Required IVY hinting
 import { EnTTValidationMessagesService } from './services';
 
@@ -50,6 +52,7 @@ const declarations = [
     ...declarations
   ],
   providers: [
+    { provide: EnTTManagerService },
     { provide: EnTTValidationMessagesService }
   ],
   exports: [

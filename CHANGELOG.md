@@ -1,6 +1,6 @@
 #### v1.0.5
 
-- ...
+- Support for column keys to be paths, not just property names, pointing to nested properties, like "nested.child.name"
 
 #### v1.0.4
 

@@ -1,7 +1,7 @@
 <h3>Filter, sort, pagination change event</h3>
 <pre>
   <code>
-    <ngz-grid #grid [dataSource]="dataSource" [dataLength]="dataLength" (changed)="onEventChange($event)">
+    <ngz-grid #grid [dataSource]="dataSource" [dataLength]="dataLength" (changed)="onEventChange($event)" [detectColumns]="false">
 
       <ng-container ngzGridFilteringDef [hasFiltering]="true"></ng-container>
       <ng-container ngzGridPaginationDef [defaultPageLength]="5" [pageLengthOptions]="[5,10,15,25]" [hasPagination]="true"></ng-container>
@@ -30,6 +30,7 @@
         {{ row['salary'] * 12}}
       </ng-container>      
      </ng-container>   
+     <ng-container ngzGridColumnDef="nested.test" [header]="'Nested value'" [footer]="'Nested value'" [hasOrdering]="true" [hasFiltering]="true"></ng-container>   
 
     </ngz-grid>
   </code>
