@@ -212,6 +212,56 @@ export interface IGridChangeEventController {
 }
 
 /**
+ * Grid row customization description
+ */
+class GridRowCustomization {
+
+  /**
+   * Creates an instance of GridRowCustomization
+   * @param comparator Comparator function comparing data-source items for which the customization is to be applied
+   * @param customClassName Custom class name to be applied to the row
+   * @param duration Optional duration (in [ms]) for the custom styling. If present, will trigger a timeout after the set interval
+   */
+  constructor (comparator: (item: any) => boolean, customClassName: string|string[], duration = 0) {
+    // Store properties
+    this.comparator = comparator;
+    this.customClassName = customClassName;
+    this.duration = duration;
+    // If duration set, trigger an expiration timeout
+    if (this.duration) {
+      setTimeout(() => { this._expired = true; }, this.duration);
+    }
+  }
+
+  /**
+   * Internal expiration status
+   */
+  private _expired = false;
+  /**
+   * Gets expiration status
+   */
+  public get expired () {
+    return this._expired;
+  }
+
+  /**
+   * Comparator function comparing data-source items for which the customization is to be applied
+   */
+  public comparator: (item: any) => boolean;
+
+  /**
+   * Custom class name to be applied to the row
+   */
+  public customClassName: string|string[];
+
+  /**
+   * Optional duration (in [ms]) for the custom styling. If present, will trigger a timeout after the set interval
+   */
+  public duration: number;
+
+}
+
+/**
  * Grid component, based on Angular material's <mat-table />
  * Supports:
  * - Pagination
@@ -245,6 +295,12 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
    */
   @Input()
   public dataLength: number;
+
+  /**
+   * If false, table won't event attempt to do client-side ordering, pagination or filtering
+   */
+  @Input()
+  public dataManageLocally = true;
 
   /**
    * If grid should auto-detect columns from provided data source
@@ -366,6 +422,15 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
 
   // If ordering, pagination and filtering should be handled locally
   public _doLocalDataManagement = true;
+  public get _doLocalOrdering () {
+    return this.dataManageLocally && this._doLocalDataManagement;
+  }
+  public get _doLocalPagination () {
+    return this.dataManageLocally && this._doLocalDataManagement;
+  }
+  public get _doLocalFiltering () {
+    return this.dataManageLocally && this._doLocalDataManagement;
+  }
 
   // Ordering: Field key to order rows by
   public _orderingField: string;
@@ -390,6 +455,11 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
   // Filtering: Hash-table of filtering key-value pairs
   // where key is the property key of the property being filtered by and value is the filtering value
   public _filters = {};
+
+  /**
+   * Holds row customizations
+   */
+  public _customizations = [] as GridRowCustomization[];
 
   //#endregion
 
@@ -512,6 +582,26 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     this._triggerChangedEvent({});
   }
 
+  /**
+   * Sets row customization
+   * @param comparator Comparator function comparing data-source items for which the customization is to be applied
+   * @param customClassName Custom class name to be applied to the row
+   * @param duration Optional duration (in [ms]) for the custom styling. If present, will trigger a timeout after the set interval
+   * @returns Undo function
+   */
+  public customizeRow (comparator: (item: any) => boolean, customClassName: string|string[], duration = 0) {
+    // Clear expired customizations
+    this._customizations = this._customizations.filter(customization => !customization.expired);
+    // Add new customization
+    const newCustomization = new GridRowCustomization(comparator, customClassName, duration);
+    this._customizations.push(newCustomization);
+    // Return "undo" function
+    return () => {
+      this._customizations = this._customizations.filter(customization => (customization !== newCustomization));
+      this._cd.detectChanges();
+    };
+  }
+
   //#endregion
 
   //#region <mat-table /> and other UI events' handlers and other UI helper methods
@@ -528,7 +618,7 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     this._triggerChangedEvent({});
     // Resetting pagination because of sorting
     this._pageIndex = 0;
-    this._paginator.firstPage();
+    if (this._paginator) { this._paginator.firstPage(); }
   }
 
   /**
@@ -562,7 +652,7 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     this._triggerChangedEvent({ });
     // Resetting pagination because of filtering
     this._pageIndex = 0;
-    this._paginator.firstPage();
+    if (this._paginator) { this._paginator.firstPage(); }
   }
 
   /**
@@ -885,7 +975,7 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     this._pageIndex = pageIndex !== undefined ? pageIndex : this._pageIndex;
 
     // Reflect pagination changes in <mat-table /> internal state
-    if (pageIndex !== undefined) {
+    if (pageIndex !== undefined && this._paginator) {
       this._paginator.pageIndex = this._pageIndex;
     }
   }
@@ -902,6 +992,14 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     } else {
       this._filters[key] = value;
     }
+  }
+
+  /**
+   * Finds a defined row customization if one exists
+   * @param item Item to find a customization for
+   */
+  public _getRowCustomization (item: any) {
+    return this._customizations.find(customization => customization.comparator(item));
   }
 
   //#endregion

@@ -19,14 +19,16 @@ import { GridModule } from '@intellegens/ngz-material'
 <!-- Grid component:
       - [dataSource] Array of data to show as rows
       - [dataLength] Total number of rows available. Only required when doing API data management (pagination, ordering, filtering) via the (changed) event handler
-      - (changed) Event allows outside component to provide managed data on any grid change (pagination, ordering, filtering)
+      - [dataManageLocally] If false, table won't event attempt to do client-side ordering, pagination or filtering
       - [detectColumns] If columns should be detected directly from data source (if false, all displayed columns need to be manually specified)
+      - (changed) Event allows outside component to provide managed data on any grid change (pagination, ordering, filtering)
 -->
 <ngz-grid #grid
   [dataSource]="dataSource"
   [dataLength]="dataSourceLength"
-  (changed)="onGridChange($event)"
+  [dataManageLocally]="true"
   [detectColumns]="true"
+  (changed)="onGridChange($event)"
   [header]="true"
   [footer]="true">
 
@@ -166,6 +168,7 @@ import { GridModule } from '@intellegens/ngz-material'
   this.grid.updateOrdering({ orderingField: string, orderingAscDirection: boolean });
   this.grid.updatePagination({ pageIndex: number });
   this.grid.updateFiltering(key: string, value: any);
+  this.grid.customizeRow(item => (item.id === this.dataSource[1].id), 'dark-bg', 2000);
   // Handle change event for API data management (pagination, ordering, filtering)
   this.onGridChange = (e) => {
     // Stop local management of data
