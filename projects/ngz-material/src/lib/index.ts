@@ -30,11 +30,21 @@ import { EnTTValidationMessagesService } from './services';
 
 // Import and (re)export pipes
 export * from './pipes';
-export { EnTTValidationMessagePipe, EnTTValidationMessagesPipe } from './pipes'; // Required IVY hinting
-import { EnTTValidationMessagePipe, EnTTValidationMessagesPipe } from './pipes';
+export {
+  EnTTValidationMessagePipe, EnTTValidationMessagesPipe,
+  FilterPipe, SortPipe,
+  AsDatePipe
+} from './pipes'; // Required IVY hinting
+import {
+  EnTTValidationMessagePipe, EnTTValidationMessagesPipe,
+  FilterPipe, SortPipe,
+  AsDatePipe
+} from './pipes';
 const pipes = [
   EnTTValidationMessagePipe,
-  EnTTValidationMessagesPipe
+  EnTTValidationMessagesPipe,
+  FilterPipe, SortPipe,
+  AsDatePipe
 ];
 
 const declarations = [
