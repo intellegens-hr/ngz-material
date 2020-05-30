@@ -97,7 +97,7 @@ export class EnTTValidationMessagesService {
   public defineErrorMessagesByType (errors: object) {
     for (const type in errors) {
       if (errors.hasOwnProperty(type)) {
-        EnTTValidationMessagesService._errorMessagesByType[type] = errors[type];
+        EnTTValidationMessagesService._errorMessagesByType[type.toLowerCase()] = errors[type];
       }
     }
   }
@@ -119,7 +119,7 @@ export class EnTTValidationMessagesService {
     // Initialize message
     let message;
     // Find errors mapped by type
-    const messageByType = EnTTValidationMessagesService._errorMessagesByType[err.type];
+    const messageByType = EnTTValidationMessagesService._errorMessagesByType[err.type.toLowerCase()];
     if (messageByType) {
       message = messageByType;
     }

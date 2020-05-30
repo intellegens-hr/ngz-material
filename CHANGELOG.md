@@ -1,3 +1,9 @@
+#### v1.0.6
+
+- New `ngz-grid[dataManageLocally]` attribute, controlling if grid should even attempt client-side data management
+- New `grid.customizeRow()` method, used to provide a way to customize a row
+- `EnTTValidationMessagesService` will now keep handle types as case insensitive
+
 #### v1.0.5
 
 - Support for column keys to be paths, not just property names, pointing to nested properties, like "nested.child.name"
