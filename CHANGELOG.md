@@ -1,3 +1,7 @@
+#### v1.0.7
+
+...
+
 #### v1.0.6
 
 - New `ngz-grid[dataManageLocally]` attribute, controlling if grid should even attempt client-side data management
