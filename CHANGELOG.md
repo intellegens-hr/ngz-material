@@ -1,6 +1,6 @@
 #### v1.0.7
 
-...
+- `ngz-grid > ng-container[ngzGridColumnDef][hasOrdering]` now supports values of `'asc'` and `'desc'` to provide default sorting by this column
 
 #### v1.0.6
 

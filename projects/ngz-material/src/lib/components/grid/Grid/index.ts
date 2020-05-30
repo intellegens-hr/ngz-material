@@ -2,12 +2,12 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, AfterContentInit , OnChanges, OnDestroy, SimpleChanges,
+import { Component, AfterContentInit, AfterViewInit, OnChanges, OnDestroy, SimpleChanges,
          Input, Output, EventEmitter, ContentChildren, QueryList, ContentChild, ViewChild,
         ChangeDetectorRef } from '@angular/core';
 import { SubscriptionLike, Observable } from 'rxjs';
 import { EnTTManagerService } from '../../../services';
-import { GridColumnDefDirective, GridColumnConfiguration  } from './directives/GridColumnDef';
+import { GridColumnDefDirective, GridColumnConfiguration, GridColumnDefaultOrdering } from './directives/GridColumnDef';
 import { GridPaginationDefDirective, GridPaginationConfiguration  } from './directives/GridPaginationDef';
 import { GridFilteringDefDirective, GridFilteringConfiguration  } from './directives/GridFilteringDef';
 import { GridInjectedContentDefDirective, GridInjectedContentConfiguration  } from './directives/GridInjectedContentDef';
@@ -279,7 +279,7 @@ class GridRowCustomization {
   templateUrl: './index.html',
   styleUrls:   ['./style.scss']
 })
-export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
+export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy {
 
   //#region HTML component interface (@Inputs/@Outputs/@Content)
 
@@ -500,6 +500,24 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     // Initialize injected content configuration
     this._config.injected = GridInjectedContentConfiguration.create(this.injectedContentDef.toArray());
 
+  }
+
+  public ngAfterViewInit () {
+
+    // Pick up on column configuration changes
+    for (const config of Object.values(this._config.columns)) {
+      // Check for default ordering
+      const options = [
+        GridColumnDefaultOrdering.DEFAULT_ASCENDING.toString(),
+        GridColumnDefaultOrdering.DEFAULT_DESCENDING.toString()
+      ];
+      if (options.indexOf((config as GridColumnConfiguration).hasOrdering.toString()) !== -1) {
+        this._doUpdateOrdering({
+          orderingField:        (config as GridColumnConfiguration).key,
+          orderingAscDirection: ((config as GridColumnConfiguration).hasOrdering === GridColumnDefaultOrdering.DEFAULT_ASCENDING.toString())
+        });
+      }
+    }
   }
 
   public ngOnChanges (changes: SimpleChanges) {
@@ -961,6 +979,9 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
         (this._sort.sortables.get(this._orderingField) as MatSortHeader)._setAnimationTransitionState({ toState: 'active' });
       }
     }
+
+    // Detect changes
+    this._cd.detectChanges();
   }
 
   /**
@@ -978,6 +999,9 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     if (pageIndex !== undefined && this._paginator) {
       this._paginator.pageIndex = this._pageIndex;
     }
+
+    // Detect changes
+    this._cd.detectChanges();
   }
 
   /**
@@ -992,6 +1016,9 @@ export class GridComponent implements AfterContentInit, OnChanges, OnDestroy {
     } else {
       this._filters[key] = value;
     }
+
+    // Detect changes
+    this._cd.detectChanges();
   }
 
   /**

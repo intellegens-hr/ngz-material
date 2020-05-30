@@ -54,7 +54,7 @@ import { GridModule } from '@intellegens/ngz-material'
        - ngzGridColumnDef="first" column key being configured
        - [header] Label in grid header
        - [footer] Label in grid footer
-       - [hasOrdering] If column has ordering enabled
+       - [hasOrdering] If column has ordering enabled (alternatively default sort by this column by passing 'asc'|'desc')
        - [hasFiltering] If column has filtering enabled
   -->
   <ng-container ngzGridColumnDef="first"
@@ -118,7 +118,7 @@ import { GridModule } from '@intellegens/ngz-material'
     [virtual]="true"
     [header]="'Full Name'"
     [footer]="'Full Name'"
-    [hasOrdering]="false"
+    [hasOrdering]="'asc'"
     [hasFiltering]="false">
     <!-- Set call template, required for "virtual" columns -->
     <ng-container *ngzGridColumnCellTemplate="let row = row;">

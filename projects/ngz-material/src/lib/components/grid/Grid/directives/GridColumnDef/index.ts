@@ -108,10 +108,10 @@ export class GridColumnDefDirective {
   @Input()
   public footer: string;
   /**
-   * If column should provide reordering by it's value
+   * If column should provide reordering by it's value (if passed 'asc'|'desc' the column will also be ordered by by default)
    */
   @Input()
-  public hasOrdering: boolean;
+  public hasOrdering: boolean|string;
   /**
    * If column should provide filtering by it's value
    */
@@ -165,6 +165,14 @@ export class GridColumnDefDirective {
 }
 
 /**
+ * Holds available options for grid column's [hasOrdering] attribute
+ */
+export enum GridColumnDefaultOrdering {
+  DEFAULT_ASCENDING  = 'asc',
+  DEFAULT_DESCENDING = 'desc'
+}
+
+/**
  * Grid column configuration
  */
 export class GridColumnConfiguration {
@@ -205,7 +213,22 @@ export class GridColumnConfiguration {
         // Pull configuration from instance of [GridColumnDefDirective] directive
         if (def.header !== undefined) { config._header = def.header; }
         if (def.footer !== undefined) { config._footer = def.footer; }
-        if (def.hasOrdering !== undefined) { config._hasOrdering = def.hasOrdering; }
+        if (def.hasOrdering !== undefined) {
+          // tslint:disable-next-line: max-line-length
+          const options = [
+            true,
+            false,
+            GridColumnDefaultOrdering.DEFAULT_ASCENDING.toString(),
+            GridColumnDefaultOrdering.DEFAULT_DESCENDING.toString()
+          ];
+          if (options.indexOf(def.hasOrdering) !== -1) {
+            config._hasOrdering = def.hasOrdering;
+          } else if (def.hasOrdering === 'ascending') {
+            config._hasOrdering = GridColumnDefaultOrdering.DEFAULT_ASCENDING;
+          } else if (def.hasOrdering === 'descending') {
+            config._hasOrdering = GridColumnDefaultOrdering.DEFAULT_DESCENDING;
+          }
+        }
         if (def.hasFiltering !== undefined) { config._hasFiltering = def.hasFiltering; }
         if (def.hidden !== undefined) { config._hidden = def.hidden; }
 
@@ -296,16 +319,16 @@ export class GridColumnConfiguration {
   }
 
   /**
-   * If column should provide reordering by it's value
+   * If column should provide reordering by it's value (if passed 'asc'|'desc' the column will also be ordered by by default)
    */
-  protected _hasOrdering = true;
+  protected _hasOrdering: boolean|string = true;
   /**
    * Gets/Sets hasOrdering property, while emitting the "updated" event when value changed
    */
-  public get hasOrdering () {
+  public get hasOrdering (): boolean|string {
     return this._hasOrdering;
   }
-  public set hasOrdering (value: boolean) {
+  public set hasOrdering (value: boolean|string) {
     if (this._hasOrdering !== value) {
       this._hasOrdering = value;
       this.updated.emit(this);
