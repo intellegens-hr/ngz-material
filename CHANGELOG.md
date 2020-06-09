@@ -1,6 +1,8 @@
 #### v1.0.8
 
-...
+- Implemented `ngzFilter` pipe for generic filtering
+- Implemented `ngzSort` pipe for generic ordering
+- Implemented `ngzAsDate` pipe for converting date partials into a Date instance
 
 #### v1.0.7
 

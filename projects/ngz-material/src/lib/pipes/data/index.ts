@@ -1,7 +1,6 @@
-// Pipes repository
+// Data pipes repository
 // ----------------------------------------------------------------------------
 
 // Import and (re)export all pipes
-export * from './EnTT';
-export * from './data';
-export * from './value';
+export * from './Filter';
+export * from './Sort';
