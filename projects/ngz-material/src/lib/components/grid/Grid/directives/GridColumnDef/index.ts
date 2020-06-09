@@ -71,6 +71,11 @@ export class GridColumnDefCustomizationProvider {
     }
   }
 
+  /**
+   * General namespace for inter-component communication
+   */
+  public tag = {} as any;
+
 }
 
 /**
@@ -88,7 +93,7 @@ export class GridColumnDefCustomizationProvider {
 @Directive({
   selector: '[ngzGridColumnDef]',
   providers: [
-    { provide: GridColumnDefCustomizationProvider }
+    { provide: GridColumnDefCustomizationProvider, useClass: GridColumnDefCustomizationProvider }
   ]
 })
 export class GridColumnDefDirective {
@@ -132,21 +137,21 @@ export class GridColumnDefDirective {
    * Content child elements implementing a *ngzGridColumnCellTemplate directive
    * providing row cell template for the column
    */
-  @ContentChild(GridColumnCellTemplateDirective, { read: TemplateRef })
+  @ContentChild(GridColumnCellTemplateDirective, { read: TemplateRef, static: true })
   public cellTemplate: TemplateRef<any>;
 
   /**
    * Content child elements implementing a *ngzGridColumnHeaderCellTemplate directive
    * providing header cell template for the column
    */
-  @ContentChild(GridColumnHeaderCellTemplateDirective, { read: TemplateRef })
+  @ContentChild(GridColumnHeaderCellTemplateDirective, { read: TemplateRef, static: true })
   public headerCellTemplate: TemplateRef<any>;
 
   /**
    * Content child elements implementing a *ngzGridColumnFooterCellTemplate directive
    * providing footer cell template for the column
    */
-  @ContentChild(GridColumnFooterCellTemplateDirective, { read: TemplateRef })
+  @ContentChild(GridColumnFooterCellTemplateDirective, { read: TemplateRef, static: true })
   public footerCellTemplate: TemplateRef<any>;
 
   /**
@@ -159,7 +164,9 @@ export class GridColumnDefDirective {
    * Sets configuration instance being managed by the GridColumnDefCustomizationProvider provided instance
    */
   public set configuration (configuration: GridColumnConfiguration) {
-    this._customize.configuration = configuration;
+    if (this._customize) {
+      this._customize.configuration = configuration;
+    }
   }
 
 }
@@ -175,6 +182,7 @@ export enum GridColumnDefaultOrdering {
 /**
  * Grid column configuration
  */
+@Directive()
 export class GridColumnConfiguration {
 
   /**

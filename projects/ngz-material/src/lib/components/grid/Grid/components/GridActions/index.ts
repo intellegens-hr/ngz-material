@@ -2,7 +2,7 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList, TemplateRef } from '@angular/core';
+import { Component, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList } from '@angular/core';
 
 // Import and (re)export child components
 import { GridActionComponent } from './components/GridAction';
@@ -42,23 +42,22 @@ export class GridActionsComponent implements AfterViewInit {
   @Output()
   public delete = new EventEmitter<any>();
 
-  /**
-   * Additional, injected actions
-   */
-  @ContentChildren(GridActionComponent)
-  public _childActions = new QueryList<GridActionComponent>();
-
   constructor (private _customize: GridColumnDefCustomizationProvider) {}
 
   public ngAfterViewInit () {
     // Configure parent column if found
-    const config = this._customize.configuration;
-    if (config) {
-      config.class        = `${config.class !== undefined ? config.class : ''} cdk-column-dynamic-actions`;
-      config.header       = (config.header !== undefined ? config.header : 'Actions');
-      config.footer       = (config.footer !== undefined ? config.footer : 'Actions');
-      config.hasFiltering = (config.hasFiltering !== undefined ? config.hasFiltering : false);
-      config.hasOrdering  = (config.hasOrdering !== undefined ? config.hasOrdering : false);
+    if (this._customize && !this._customize.tag.GridActionsComponent) {
+      // Configure parent column
+      const config = this._customize.configuration;
+      if (config) {
+        config.class        = `${config.class !== undefined ? config.class : ''} cdk-column-dynamic-actions`;
+        config.header       = (config.header !== undefined ? config.header : 'Actions');
+        config.footer       = (config.footer !== undefined ? config.footer : 'Actions');
+        config.hasFiltering = (config.hasFiltering !== undefined ? config.hasFiltering : false);
+        config.hasOrdering  = (config.hasOrdering !== undefined ? config.hasOrdering : false);
+      }
+      // Mark as already customized
+      this._customize.tag.GridActionsComponent = true;
     }
   }
 

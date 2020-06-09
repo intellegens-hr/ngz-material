@@ -3,15 +3,18 @@
 
 // Import dependencies
 import { Component, AfterContentInit, AfterViewInit, OnChanges, OnDestroy, SimpleChanges,
-         Input, Output, EventEmitter, ContentChildren, QueryList, ContentChild, ViewChild,
-        ChangeDetectorRef } from '@angular/core';
+         Input, Output, EventEmitter, ContentChildren, QueryList, ContentChild, ViewChild, TemplateRef,
+         ChangeDetectorRef } from '@angular/core';
 import { SubscriptionLike, Observable } from 'rxjs';
 import { EnTTManagerService } from '../../../services';
-import { GridColumnDefDirective, GridColumnConfiguration, GridColumnDefaultOrdering } from './directives/GridColumnDef';
+import { GridColumnDefDirective,
+         GridColumnCellTemplateDirective, GridColumnHeaderCellTemplateDirective, GridColumnFooterCellTemplateDirective,
+         GridColumnConfiguration, GridColumnDefaultOrdering } from './directives/GridColumnDef';
 import { GridPaginationDefDirective, GridPaginationConfiguration  } from './directives/GridPaginationDef';
 import { GridFilteringDefDirective, GridFilteringConfiguration  } from './directives/GridFilteringDef';
 import { GridInjectedContentDefDirective, GridInjectedContentConfiguration  } from './directives/GridInjectedContentDef';
 import { FilterByPipe } from './pipes/FilterBy';
+import { MatTable, MatColumnDef, MatCellDef } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable, MatSortHeader } from '@angular/material/sort';
 
@@ -349,13 +352,13 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
    * Content child element implementing a [ngzGridPaginationDef] directive
    * handling pagination configuration
    */
-  @ContentChild(GridPaginationDefDirective)
+  @ContentChild(GridPaginationDefDirective, { static: true })
   public paginationDef: GridPaginationDefDirective;
   /**
    * Content child element implementing a [ngzGridFilteringDef] directive
    * handling filtering configuration
    */
-  @ContentChild(GridFilteringDefDirective)
+  @ContentChild(GridFilteringDefDirective, { static: true })
   public filteringDef: GridFilteringDefDirective;
   /**
    * Content child elements implementing a [ngzGridInjectedContentDef] directive
@@ -367,14 +370,40 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
   /**
    * Reference to internal <mat-table /> paginator component
    */
-  @ViewChild(MatPaginator)
+  @ViewChild(MatPaginator, { static: true })
   private _paginator: MatPaginator;
 
   /**
    * Reference to internal <mat-table /> sort component
    */
-  @ViewChild(MatSort)
+  @ViewChild(MatSort, { static: true })
   private _sort: MatSort;
+
+  /**
+   * Reference to default table cell template
+   */
+  @ViewChild(MatTable, { read: MatTable, static: true })
+  private _table: MatTable<any>;
+  /**
+   * Reference to default table cell template
+   */
+  @ViewChild(GridColumnCellTemplateDirective, { read: TemplateRef, static: true })
+  private _defaultTableCellTemplate: TemplateRef<any>;
+  /**
+   * Reference to default table cell template
+   */
+  @ViewChild(GridColumnHeaderCellTemplateDirective, { read: TemplateRef, static: true })
+  private _defaultTableHeaderCellTemplate: TemplateRef<any>;
+  /**
+   * Reference to default table cell template
+   */
+  @ViewChild(GridColumnFooterCellTemplateDirective, { read: TemplateRef, static: true })
+  private _defaultTableFooterCellTemplate: TemplateRef<any>;
+  /**
+   * Reference to default table cell template
+   */
+  @ViewChild('defaultColumnNullCellTemplate', { read: TemplateRef, static: true })
+  private _defaultTableNullCellTemplate: TemplateRef<any>;
 
   //#endregion
 
@@ -481,6 +510,27 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
       (config as GridColumnConfiguration).updated.subscribe(() => {
         this._cd.detectChanges();
       });
+    }
+
+    // Inject column templates
+    for (const key of this._columnKeys) {
+
+      // Get column configuration
+      const config = this.configuration.columns[key] as GridColumnConfiguration;
+
+      // If no template, use default template
+      config.cellTemplate = config.cellTemplate || this._defaultTableCellTemplate;
+      config.headerCellTemplate = config.headerCellTemplate || this._defaultTableHeaderCellTemplate;
+      config.footerCellTemplate = config.footerCellTemplate || this._defaultTableFooterCellTemplate;
+
+      // Inject table column template
+      // const columnDef = new MatColumnDef();
+      // columnDef.name = key;
+      // columnDef.cell = new MatCellDef(this._defaultTableNullCellTemplate);
+      // columnDef.headerCell = new MatCellDef(this._defaultTableNullCellTemplate);
+      // columnDef.footerCell = new MatCellDef(this._defaultTableNullCellTemplate);
+      // this._table.addColumnDef(columnDef);
+
     }
 
     // Initialize pagination configuration

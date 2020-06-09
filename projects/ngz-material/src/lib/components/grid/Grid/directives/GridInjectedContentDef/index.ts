@@ -49,7 +49,7 @@ export class GridInjectedContentDefDirective {
    * Content child element implementing a *ngzGridInjectedContentTemplate directive
    * providing injected content template
    */
-  @ContentChild(GridInjectedContentTemplateDirective, { read: TemplateRef })
+  @ContentChild(GridInjectedContentTemplateDirective, { read: TemplateRef, static: true })
   public template: TemplateRef<any>;
 
 }

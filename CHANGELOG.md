@@ -1,3 +1,8 @@
+#### v1.0.9
+
+- `ngz-grid` performance improvements due to changing how templates are handled
+- Updated to Angular v10 and Angular Material v10
+
 #### v1.0.8
 
 - Implemented `ngzFilter` pipe for generic filtering

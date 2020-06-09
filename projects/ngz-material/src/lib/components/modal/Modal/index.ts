@@ -52,7 +52,7 @@ export class ModalComponent implements AfterViewInit, OnChanges, OnDestroy {
   /**
    * Content to be displayed inside the modal
    */
-  @ViewChild('content', { read: TemplateRef })
+  @ViewChild('content', { read: TemplateRef, static: true })
   public _content: TemplateRef<any> = null;
 
   ////#endregion
