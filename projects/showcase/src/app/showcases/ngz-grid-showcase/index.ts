@@ -12,6 +12,7 @@ import { NgzGridShowcaseSection04Component } from './components/section04';
 import { NgzGridShowcaseSection05Component } from './components/section05';
 import { NgzGridShowcaseSection06Component } from './components/section06';
 import { NgzGridShowcaseSection07Component } from './components/section07';
+import { NgzGridShowcaseSection08Component } from './components/section08';
 import { NgzGridShowcaseSectionNextComponent } from './components/section99';
 export const components = [
   NgzGridShowcaseSection01Component,
@@ -21,6 +22,7 @@ export const components = [
   NgzGridShowcaseSection05Component,
   NgzGridShowcaseSection06Component,
   NgzGridShowcaseSection07Component,
+  NgzGridShowcaseSection08Component,
   NgzGridShowcaseSectionNextComponent
 ];
 

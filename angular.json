@@ -165,5 +165,8 @@
       }
     }
   },
-  "defaultProject": "ngz-material"
+  "defaultProject": "ngz-material",
+  "cli": {
+    "analytics": "0f4b2708-5f49-40ac-b176-56d8f07753d4"
+  }
 }

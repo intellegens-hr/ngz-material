@@ -1,0 +1,13 @@
+<mat-form-field appearance="fill" class="weird-margin-problem">
+  <input matInput type="text" (input)="_inputChanged()" [(ngModel)]="searchValue" />
+</mat-form-field>
+<br>
+<!-- Dropdown with possible search modes -->
+<mat-form-field>
+  <mat-label>Mode</mat-label>
+  <mat-select [ngModel]="mode" (ngModelChange)="_handleUiModeChange($event)">
+    <mat-option [value]="'exact'">Exact</mat-option>
+    <mat-option [value]="'wildcard'">Wildcard</mat-option>
+    <mat-option [value]="'contains'">Contains</mat-option>
+  </mat-select>
+</mat-form-field>

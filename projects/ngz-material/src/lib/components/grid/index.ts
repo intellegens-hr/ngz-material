@@ -3,6 +3,7 @@
 
 // Import modules
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
@@ -12,8 +13,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core'
 const modules = [
   CommonModule,
+  FormsModule,
   MatTableModule,
   MatSortModule,
   MatPaginatorModule,
@@ -21,19 +26,24 @@ const modules = [
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatSelectModule,
+  MatDatepickerModule,
+  MatNativeDateModule
 ];
 
 // Import and (re)export directives
 import {
   GridColumnDefDirective,
   GridColumnCellTemplateDirective,
+  GridColumnFilterTemplateDirective,
   GridColumnHeaderCellTemplateDirective,
   GridColumnFooterCellTemplateDirective
 } from './Grid/directives/GridColumnDef';
 export {
   GridColumnDefDirective,
   GridColumnCellTemplateDirective,
+  GridColumnFilterTemplateDirective,
   GridColumnHeaderCellTemplateDirective,
   GridColumnFooterCellTemplateDirective
 };
@@ -53,12 +63,13 @@ import { PaginatePipe } from './Grid/pipes/Paginate';
 export { PaginatePipe };
 import { FilterByPipe } from './Grid/pipes/FilterBy';
 export { FilterByPipe };
-import { GridActionsComponent, GridActionComponent } from './Grid/components/GridActions';
-export { GridActionsComponent, GridActionComponent };
+import { GridActionsComponent, GridActionComponent, GridFilterDateComponent, GridFilterSelectComponent, GridFilterTextComponent, GridFilterNumberComponent } from './Grid/components';
+export { GridActionsComponent, GridActionComponent, GridFilterDateComponent, GridFilterSelectComponent, GridFilterTextComponent, GridFilterNumberComponent };
 const declarations = [
   GridComponent,
   GridColumnDefDirective,
   GridColumnCellTemplateDirective,
+  GridColumnFilterTemplateDirective,
   GridColumnHeaderCellTemplateDirective,
   GridColumnFooterCellTemplateDirective,
   GridPaginationDefDirective,
@@ -69,7 +80,11 @@ const declarations = [
   FilterByPipe,
   PaginatePipe,
   GridActionsComponent,
-  GridActionComponent
+  GridActionComponent,
+  GridFilterSelectComponent,
+  GridFilterDateComponent,
+  GridFilterTextComponent,
+  GridFilterNumberComponent
 ];
 
 /**

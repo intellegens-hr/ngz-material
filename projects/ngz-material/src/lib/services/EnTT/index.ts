@@ -26,6 +26,10 @@ export class EnTTManagerService {
     let keys = path.replace(/\[/g, '.').replace(/\]/g, '').split('.'),
         target = obj;
     while (keys.length) {
+      // if part of the path does not exist - return undefined
+      if (target[keys[0]] === undefined){
+        return undefined;
+      }
       target = target[keys[0]];
       keys = keys.slice(1);
     }

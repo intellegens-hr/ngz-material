@@ -1,0 +1,29 @@
+<!-- Show single datepicker in case range is not needed -->
+<mat-form-field appearance="fill" *ngIf="mode !== 'between'" class="weird-margin-problem">
+  <mat-label>{{datepickerSingleLabel}}</mat-label>
+  <input matInput [matDatepicker]="pickerSingle" (dateChange)="_dateChanged($event)">
+  <mat-datepicker-toggle matSuffix [for]="pickerSingle"></mat-datepicker-toggle>
+  <mat-datepicker #pickerSingle></mat-datepicker>
+</mat-form-field>
+
+<!-- Show range datepicker -->
+<mat-form-field appearance="fill" *ngIf="mode === 'between'" class="weird-margin-problem">
+  <mat-label>{{datepickerRangeLabel}}</mat-label>
+  <mat-date-range-input [rangePicker]="picker">
+    <input matStartDate [placeholder]="datepickerRangeFromLabel" (dateChange)="_dateFromChanged($event)">
+    <input matEndDate [placeholder]="datepickerRangeToLabel" (dateChange)="_dateToChanged($event)">
+  </mat-date-range-input>
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-date-range-picker #picker></mat-date-range-picker>
+</mat-form-field>
+<br>
+<!-- Dropdown with possible search modes -->
+<mat-form-field>
+  <mat-label>Mode</mat-label>
+  <mat-select [ngModel]="mode" (ngModelChange)="_handleUiModeChange($event)">
+    <mat-option [value]="'eq'">Equal to</mat-option>
+    <mat-option [value]="'gteq'">Greater than or equal to</mat-option>
+    <mat-option [value]="'lteq'">Less than or equal to</mat-option>
+    <mat-option [value]="'between'">Between</mat-option>
+  </mat-select>
+</mat-form-field>
