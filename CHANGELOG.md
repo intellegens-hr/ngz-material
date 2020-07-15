@@ -1,3 +1,7 @@
+#### v1.0.11
+
+- TODO: ...
+
 #### v1.0.10
 
 - Hotfix making `ngzAsDate` accepting falsy (zero) values as legitimate
