@@ -62,8 +62,8 @@ const declarations = [
     ...declarations
   ],
   providers: [
-    { provide: EnTTManagerService, useValue: undefined },
-    { provide: EnTTValidationMessagesService, useValue: undefined }
+    { provide: EnTTManagerService, useClass: EnTTManagerService },
+    { provide: EnTTValidationMessagesService, useClass: EnTTValidationMessagesService }
   ],
   exports: [
     ...modules,

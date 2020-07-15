@@ -519,15 +519,9 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
       const config = this.configuration.columns[key] as GridColumnConfiguration;
 
       // If no template, use default template
-      if (!config.headerCellTemplate) {
-        config.headerCellTemplate = (!config.virtual ? this._defaultTableHeaderCellTemplate : this._defaultTableNullCellTemplate);
-      }
-      if (!config.cellTemplate) {
-        config.cellTemplate = (!config.virtual ? this._defaultTableCellTemplate : this._defaultTableNullCellTemplate);
-      }
-      if (!config.footerCellTemplate) {
-        config.footerCellTemplate = (!config.virtual ? this._defaultTableFooterCellTemplate : this._defaultTableNullCellTemplate);
-      }
+      config.cellTemplate = config.cellTemplate || this._defaultTableCellTemplate;
+      config.headerCellTemplate = config.headerCellTemplate || this._defaultTableHeaderCellTemplate;
+      config.footerCellTemplate = config.footerCellTemplate || this._defaultTableFooterCellTemplate;
 
       // Inject table column template
       // const columnDef = new MatColumnDef();

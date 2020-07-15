@@ -84,7 +84,7 @@
       ></ng-container>
     </td>
 
-    <!-- Column header -->
+    <!-- Column header cell -->
     <th mat-header-cell *matHeaderCellDef mat-sort-header
       [disabled]="!configuration.columns[key].hasOrdering || configuration.columns[key].virtual"
       [ngClass]="[ (configuration.columns[key].class) ]">
@@ -96,7 +96,7 @@
       ></ng-container>
     </th>
 
-    <!-- Column footer -->
+    <!-- Column footer cell -->
     <td mat-footer-cell *matFooterCellDef
       [ngClass]="[ (configuration.columns[key].class) ]">
       <ng-container
@@ -123,10 +123,6 @@
 <ng-container *ngzGridColumnFooterCellTemplate="let key = key">
   {{ configuration.columns[key].footer !== undefined ? configuration.columns[key].footer : key  }}
 </ng-container>
-<!-- Default table NULL template -->
-<ng-template #defaultColumnNullCellTemplate>
-  -
-</ng-template>
 
 <!-- Pagination -->
 <mat-paginator *ngIf="configuration.pagination.hasPagination !== false"

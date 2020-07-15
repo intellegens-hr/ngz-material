@@ -93,7 +93,7 @@ export class GridColumnDefCustomizationProvider {
 @Directive({
   selector: '[ngzGridColumnDef]',
   providers: [
-    { provide: GridColumnDefCustomizationProvider, useValue: undefined }
+    { provide: GridColumnDefCustomizationProvider, useClass: GridColumnDefCustomizationProvider }
   ]
 })
 export class GridColumnDefDirective {
@@ -137,7 +137,7 @@ export class GridColumnDefDirective {
    * Content child elements implementing a *ngzGridColumnCellTemplate directive
    * providing row cell template for the column
    */
-  @ContentChild(GridColumnCellTemplateDirective, { read: TemplateRef, static: true})
+  @ContentChild(GridColumnCellTemplateDirective, { read: TemplateRef, static: true })
   public cellTemplate: TemplateRef<any>;
 
   /**
