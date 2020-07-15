@@ -71,6 +71,11 @@ export class GridColumnDefCustomizationProvider {
     }
   }
 
+  /**
+   * General namespace for inter-component communication
+   */
+  public tag = {} as any;
+
 }
 
 /**
@@ -132,21 +137,21 @@ export class GridColumnDefDirective {
    * Content child elements implementing a *ngzGridColumnCellTemplate directive
    * providing row cell template for the column
    */
-  @ContentChild(GridColumnCellTemplateDirective, { read: TemplateRef })
+  @ContentChild(GridColumnCellTemplateDirective, { read: TemplateRef, static: true})
   public cellTemplate: TemplateRef<any>;
 
   /**
    * Content child elements implementing a *ngzGridColumnHeaderCellTemplate directive
    * providing header cell template for the column
    */
-  @ContentChild(GridColumnHeaderCellTemplateDirective, { read: TemplateRef })
+  @ContentChild(GridColumnHeaderCellTemplateDirective, { read: TemplateRef, static: true })
   public headerCellTemplate: TemplateRef<any>;
 
   /**
    * Content child elements implementing a *ngzGridColumnFooterCellTemplate directive
    * providing footer cell template for the column
    */
-  @ContentChild(GridColumnFooterCellTemplateDirective, { read: TemplateRef })
+  @ContentChild(GridColumnFooterCellTemplateDirective, { read: TemplateRef, static: true })
   public footerCellTemplate: TemplateRef<any>;
 
   /**
