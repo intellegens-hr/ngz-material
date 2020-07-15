@@ -1,3 +1,7 @@
+#### v1.0.10
+
+- Hotfix making `ngzAsDate` accepting falsy (zero) values as legitimate
+
 #### v1.0.9
 
 - `ngz-grid` performance improvements due to changing how templates are handled
