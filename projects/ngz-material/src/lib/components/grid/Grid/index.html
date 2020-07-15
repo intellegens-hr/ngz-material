@@ -127,7 +127,7 @@
 <!-- Pagination -->
 <mat-paginator *ngIf="configuration.pagination.hasPagination !== false"
   class="mat-elevation-z8"
-  [length]="_totalLength" [pageSize]="configuration.pagination.defaultPageLength"  [pageSizeOptions]="configuration.pagination.pageLengthOptions"
+  [length]="_totalLength" [pageSize]="configuration.pagination.defaultPageLength" [pageSizeOptions]="configuration.pagination.pageLengthOptions"
   (page)="_onMatTablePage($event)"></mat-paginator>
 
 <!-- Error overlay -->
