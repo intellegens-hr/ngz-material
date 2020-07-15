@@ -46,7 +46,7 @@ export class GridActionsComponent implements AfterViewInit {
 
   public ngAfterViewInit () {
     // Configure parent column if found
-    if (!this._customize.tag.GridActionsComponent) {
+    if (this._customize && !this._customize.tag.GridActionsComponent) {
       // Configure parent column
       const config = this._customize.configuration;
       if (config) {

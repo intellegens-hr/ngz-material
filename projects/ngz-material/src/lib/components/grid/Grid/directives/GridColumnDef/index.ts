@@ -93,7 +93,7 @@ export class GridColumnDefCustomizationProvider {
 @Directive({
   selector: '[ngzGridColumnDef]',
   providers: [
-    { provide: GridColumnDefCustomizationProvider }
+    { provide: GridColumnDefCustomizationProvider, useValue: undefined }
   ]
 })
 export class GridColumnDefDirective {
@@ -164,7 +164,9 @@ export class GridColumnDefDirective {
    * Sets configuration instance being managed by the GridColumnDefCustomizationProvider provided instance
    */
   public set configuration (configuration: GridColumnConfiguration) {
-    this._customize.configuration = configuration;
+    if (this._customize) {
+      this._customize.configuration = configuration;
+    }
   }
 
 }
@@ -180,6 +182,7 @@ export enum GridColumnDefaultOrdering {
 /**
  * Grid column configuration
  */
+@Directive()
 export class GridColumnConfiguration {
 
   /**

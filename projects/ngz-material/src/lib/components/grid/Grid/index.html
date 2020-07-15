@@ -113,7 +113,7 @@
 
 <!-- Default table body cell templates -->
 <ng-container *ngzGridColumnCellTemplate="let row = row; let key = key">
-  {{ _enttManager.getByPath(row, key) }}
+  {{ _enttManager?.getByPath(row, key) }}
 </ng-container>
 <!-- Default table header cell templates -->
 <ng-container *ngzGridColumnHeaderCellTemplate="let key = key">
