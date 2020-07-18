@@ -1,6 +1,6 @@
 #### v1.0.11
 
-- TODO: ...
+- Hotfix making `ngz-grid` reset pagination of filter change
 
 #### v1.0.10
 

@@ -370,13 +370,13 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
   /**
    * Reference to internal <mat-table /> paginator component
    */
-  @ViewChild(MatPaginator, { static: true })
+  @ViewChild(MatPaginator, { static: false })
   private _paginator: MatPaginator;
 
   /**
    * Reference to internal <mat-table /> sort component
    */
-  @ViewChild(MatSort, { static: true })
+  @ViewChild(MatSort, { static: false })
   private _sort: MatSort;
 
   /**
@@ -399,11 +399,6 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
    */
   @ViewChild(GridColumnFooterCellTemplateDirective, { read: TemplateRef, static: true })
   private _defaultTableFooterCellTemplate: TemplateRef<any>;
-  /**
-   * Reference to default table cell template
-   */
-  @ViewChild('defaultColumnNullCellTemplate', { read: TemplateRef, static: true })
-  private _defaultTableNullCellTemplate: TemplateRef<any>;
 
   //#endregion
 
