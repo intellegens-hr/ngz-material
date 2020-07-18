@@ -48,8 +48,8 @@
         <ng-container *ngzGridColumnCellTemplate="let row = row; let key = key;">
           <ngz-grid-actions
             (view)="onAction('a')"
-            (edit)="onAction('a')"
-            (delete)="onAction('a')">
+            [editHref]="'https://example.com'" [editTarget]="'_blank'" (edit)="onAction('b')"
+            [deleteHref]="['https://example.com', 'some', 'deep', 'nested', 'path']" [deleteTarget]="'_blank'" (delete)="onAction('c')">
           </ngz-grid-actions>
         </ng-container>
       </ng-container>

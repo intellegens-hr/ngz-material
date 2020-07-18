@@ -1,9 +1,21 @@
 <div>
 
   <!-- Default actions -->
-  <ngz-grid-action *ngIf="view.observers.length"   [icon]="'visibility_outline'" [label]="'View'"   (activated)="_doViewAction()"></ngz-grid-action>
-  <ngz-grid-action *ngIf="edit.observers.length"   [icon]="'create_outline'"     [label]="'Edit'"   (activated)="_doEditAction()"></ngz-grid-action>
-  <ngz-grid-action *ngIf="delete.observers.length" [icon]="'delete_outline'"     [label]="'Delete'" (activated)="_doDeleteAction()"></ngz-grid-action>
+  <ngz-grid-action *ngIf="viewHref || view.observers.length"
+    [icon]="'visibility_outline'"
+    [label]="'View'"
+    [href]="viewHref" [target]="viewTarget"
+    (activated)="_doViewAction()"></ngz-grid-action>
+  <ngz-grid-action *ngIf="editHref || edit.observers.length"
+    [icon]="'create_outline'"
+    [label]="'Edit'"
+    [href]="editHref" [target]="editTarget"
+    (activated)="_doEditAction()"></ngz-grid-action>
+  <ngz-grid-action *ngIf="deleteHref || delete.observers.length"
+    [icon]="'delete_outline'"
+    [label]="'Delete'"
+    [href]="deleteHref" [target]="deleteTarget"
+    (activated)="_doDeleteAction()"></ngz-grid-action>
 
   <!-- Injected actions -->
   <ng-content></ng-content>

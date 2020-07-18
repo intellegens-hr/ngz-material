@@ -1,3 +1,8 @@
+#### v1.0.12
+
+- `ngz-grid-action` now supports `href` and `target` properties, which allow it to be rendered as an anchor instead of a button
+- `ngz-grid-actions` now supports `viewHref`, `viewTarget`, `editHref`, `editTarget`, `deleteHref` and `deleteTarget` properties allowing it to set default actions as anchors instead of buttons
+
 #### v1.0.11
 
 - Hotfix making `ngz-grid` reset pagination of filter change

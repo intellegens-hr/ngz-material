@@ -33,12 +33,31 @@ export class GridActionComponent {
   public label: string;
 
   /**
+   * Link to URL. If set, the button will be rendered as an anchor element.
+   */
+  @Input()
+  public href: string|string[];
+
+  /**
+   * Target to open the URL link into. Only used if "href" property is set.
+   */
+  @Input()
+  public target: '_self'|'_blank' = '_self';
+
+  /**
    * Event triggered when action is triggered
    */
   @Output()
   public activated = new EventEmitter<any>();
 
   constructor () {}
+
+  /**
+   * Composes a HREF url from potentially array of partial paths
+   */
+  public _stringifyHref () {
+    return (this.href instanceof Array ? this.href.join('/') : this.href);
+  }
 
   /**
    * Triggers event when action is triggered

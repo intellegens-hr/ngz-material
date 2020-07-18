@@ -2,7 +2,7 @@
 // ----------------------------------------------------------------------------
 
 // Import dependencies
-import { Component, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList } from '@angular/core';
+import { Component, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 
 // Import and (re)export child components
 import { GridActionComponent } from './components/GridAction';
@@ -27,15 +27,47 @@ import { GridColumnDefCustomizationProvider } from '../../directives/GridColumnD
 export class GridActionsComponent implements AfterViewInit {
 
   /**
+   * Link to URL. If set, clicking view will link to this URL
+   */
+  @Input()
+  public viewHref: string|string[];
+  /**
+   * Target to open the view URL link into. Only used if "viewHref" property is set.
+   */
+  @Input()
+  public viewTarget: '_self'|'_blank' = '_self';
+  /**
    * Event triggered when "view" action is triggered
    */
   @Output()
   public view = new EventEmitter<any>();
+
+  /**
+   * Link to URL. If set, clicking edit will link to this URL
+   */
+  @Input()
+  public editHref: string|string[];
+  /**
+   * Target to open the view URL link into. Only used if "editHref" property is set.
+   */
+  @Input()
+  public editTarget: '_self'|'_blank' = '_self';
   /**
    * Event triggered when "edit" action is triggered
    */
   @Output()
   public edit = new EventEmitter<any>();
+
+  /**
+   * Link to URL. If set, clicking delete will link to this URL
+   */
+  @Input()
+  public deleteHref: string|string[];
+  /**
+   * Target to open the view URL link into. Only used if "deleteHref" property is set.
+   */
+  @Input()
+  public deleteTarget: '_self'|'_blank' = '_self';
   /**
    * Event triggered when "delete" action is triggered
    */
