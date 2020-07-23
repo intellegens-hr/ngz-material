@@ -6,6 +6,20 @@ import { Directive, Injectable, Input, Output, EventEmitter, ContentChild, Templ
 
 
 /**
+ * When child of [ngzGridColumnDef] provides template for column's filter cell
+ *
+ * Usage:
+ *
+ * <ng-container *ngzGridColumnFilterTemplate="let config = config; let key = key; let value = value">
+ *  {{ value.toUpperCase() }}
+ * </ng-container>
+ */
+@Directive({
+  selector: '[ngzGridColumnFilterTemplate]'
+})
+export class GridColumnFilterTemplateDirective { }
+
+/**
  * When child of [ngzGridColumnDef] provides template for column's row cell
  *
  * Usage:
@@ -101,7 +115,7 @@ export class GridColumnDefDirective {
    * Property key for the column being configured
    */
   @Input('ngzGridColumnDef')
-  public key: string;
+  public key: string | string[];
   /**
    * Caption to display in column header
    */
@@ -119,9 +133,10 @@ export class GridColumnDefDirective {
   public hasOrdering: boolean|string;
   /**
    * If column should provide filtering by it's value
+   * If set as string array - specifies by which properties should column be filtered
    */
   @Input()
-  public hasFiltering: boolean;
+  public hasFiltering: boolean | string[];
   /**
    * If column is hidden (not rendered as part of the grid)
    */
@@ -132,14 +147,17 @@ export class GridColumnDefDirective {
    */
   @Input()
   public virtual: boolean;
-
   /**
    * Content child elements implementing a *ngzGridColumnCellTemplate directive
    * providing row cell template for the column
    */
   @ContentChild(GridColumnCellTemplateDirective, { read: TemplateRef, static: true })
   public cellTemplate: TemplateRef<any>;
-
+  /**
+   * TODO: DM_NG
+   */
+  @ContentChild(GridColumnFilterTemplateDirective, {read: TemplateRef, static: true})
+  public cellFilterTemplate: TemplateRef<any>
   /**
    * Content child elements implementing a *ngzGridColumnHeaderCellTemplate directive
    * providing header cell template for the column
@@ -200,57 +218,71 @@ export class GridColumnConfiguration {
     // Pull configuration from instances of [GridColumnDefDirective] directive
     if (defs && defs.length) {
       defs.forEach((def: GridColumnDefDirective) => {
-
-        // Instantiate default column configuration
-        const config = new GridColumnConfiguration();
-        if (!def.key) {
-
-          // If no key, force column virtual status
-          config._key = 'vkey' + virtualKeyId;
-          virtualKeyId++;
-          config._virtual = true;
-
-        } else {
-
-          // If key, copy virtual column status
-          config._key = def.key;
-          config._virtual = def.virtual;
-
+        // holds all key definitions - virtual or set as string or array
+        const columnDefinitionKeys: {virtual: boolean, name: string}[] = [];
+        
+        // if key is not defined - flag it sa virtual and generate name
+        if (!def.key){
+          columnDefinitionKeys.push({virtual: true, name: 'vkey' + virtualKeyId})
         }
-
-        // Pull configuration from instance of [GridColumnDefDirective] directive
-        if (def.header !== undefined) { config._header = def.header; }
-        if (def.footer !== undefined) { config._footer = def.footer; }
-        if (def.hasOrdering !== undefined) {
-          // tslint:disable-next-line: max-line-length
-          const options = [
-            true,
-            false,
-            GridColumnDefaultOrdering.DEFAULT_ASCENDING.toString(),
-            GridColumnDefaultOrdering.DEFAULT_DESCENDING.toString()
-          ];
-          if (options.indexOf(def.hasOrdering) !== -1) {
-            config._hasOrdering = def.hasOrdering;
-          } else if (def.hasOrdering === 'ascending') {
-            config._hasOrdering = GridColumnDefaultOrdering.DEFAULT_ASCENDING;
-          } else if (def.hasOrdering === 'descending') {
-            config._hasOrdering = GridColumnDefaultOrdering.DEFAULT_DESCENDING;
+        // if key is defined - it can be either string or string array
+        // if it's not array, make it as single element array
+        else {
+          let keysDefined = def.key;
+          if (!Array.isArray(keysDefined)) {
+            keysDefined = [keysDefined];
           }
+
+          // append all elements to column definition keys
+          keysDefined.forEach(key => {
+            columnDefinitionKeys.push({virtual: def.virtual, name: key});
+          })
         }
-        if (def.hasFiltering !== undefined) { config._hasFiltering = def.hasFiltering; }
-        if (def.hidden !== undefined) { config._hidden = def.hidden; }
 
-        // Pull templates from instance of [GridColumnDefDirective] directive
-        if (def.cellTemplate !== undefined) { config.cellTemplate = def.cellTemplate; }
-        if (def.headerCellTemplate !== undefined) { config.headerCellTemplate = def.headerCellTemplate; }
-        if (def.footerCellTemplate !== undefined) { config.footerCellTemplate = def.footerCellTemplate; }
+        // loop through all keys and return configurations
+        // and set configuration instances being managed by the GridColumnDefCustomizationProvider provided instance
+        const configurations = columnDefinitionKeys.map(key => {
+          // Instantiate default column configuration
+          const config = new GridColumnConfiguration();
+          config._key = key.name;
+          config._virtual = key.virtual;
 
-        // Set column configuration
-        configHash[config._key] = config;
+          // Pull configuration from instance of [GridColumnDefDirective] directive
+          if (def.header !== undefined) { config._header = def.header; }
+          if (def.footer !== undefined) { config._footer = def.footer; }
+          if (def.hasOrdering !== undefined) {
+            // tslint:disable-next-line: max-line-length
+            const options = [
+              true,
+              false,
+              GridColumnDefaultOrdering.DEFAULT_ASCENDING.toString(),
+              GridColumnDefaultOrdering.DEFAULT_DESCENDING.toString()
+            ];
+            if (options.indexOf(def.hasOrdering) !== -1) {
+              config._hasOrdering = def.hasOrdering;
+            } else if (def.hasOrdering === 'ascending') {
+              config._hasOrdering = GridColumnDefaultOrdering.DEFAULT_ASCENDING;
+            } else if (def.hasOrdering === 'descending') {
+              config._hasOrdering = GridColumnDefaultOrdering.DEFAULT_DESCENDING;
+            }
+          }
+          if (def.hasFiltering !== undefined) { config._hasFiltering = def.hasFiltering; }
+          if (def.hidden !== undefined) { config._hidden = def.hidden; }
 
-        // Set configuration instance being managed by the GridColumnDefCustomizationProvider provided instance
-        def.configuration = config;
+          // Pull templates from instance of [GridColumnDefDirective] directive
+          if (def.cellTemplate !== undefined) { config.cellTemplate = def.cellTemplate; }
+          if (def.headerCellTemplate !== undefined) { config.headerCellTemplate = def.headerCellTemplate; }
+          if (def.footerCellTemplate !== undefined) { config.footerCellTemplate = def.footerCellTemplate; }
+          if (def.cellFilterTemplate !== undefined) { config.cellFilterTemplate = def.cellFilterTemplate; }
 
+          // Set column configuration
+          configHash[config._key] = config;
+
+          return config;
+        })
+
+        // set first configuration to def config
+        def.configuration = configurations[0];
       });
     }
 
@@ -346,14 +378,14 @@ export class GridColumnConfiguration {
   /**
    * If column should provide filtering by it's value
    */
-  protected _hasFiltering = true;
+  protected _hasFiltering: boolean | string[] = true;
   /**
    * Gets/Sets hasFiltering property, while emitting the "updated" event when value changed
    */
   public get hasFiltering () {
     return this._hasFiltering;
   }
-  public set hasFiltering (value: boolean) {
+  public set hasFiltering (value: boolean | string[]) {
     if (this._hasFiltering !== value) {
       this._hasFiltering = value;
       this.updated.emit(this);
@@ -393,7 +425,6 @@ export class GridColumnConfiguration {
       this.updated.emit(this);
     }
   }
-
   /**
    * Row cell template for the column
    */
@@ -406,6 +437,10 @@ export class GridColumnConfiguration {
    * Footer cell template for the column
    */
   public footerCellTemplate: TemplateRef<any> = null;
+    /**
+   * TODO: DM XXXXXX
+   */
+  public cellFilterTemplate: TemplateRef<any> = null;
 
   /**
    * Configuration updated event

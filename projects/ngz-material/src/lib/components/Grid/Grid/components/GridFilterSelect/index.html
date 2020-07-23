@@ -1,0 +1,6 @@
+<mat-form-field appearance="fill" class="weird-margin-problem">
+  <mat-select [value]="selectedValue" (selectionChange)="_selectChanged($event)" [multiple]="multiple ? '' : null">
+    <mat-option [value]="''"></mat-option>
+    <mat-option *ngFor="let item of dataSource" [value]="dataSourceValueKey ? item[dataSourceValueKey] : item[dataSourceTextKey]">{{item[dataSourceTextKey]}}</mat-option>
+  </mat-select>
+</mat-form-field>

@@ -1,0 +1,20 @@
+<mat-form-field appearance="fill" class="weird-margin-problem">
+  <input matInput type="number" [min]="min" [max]="max" (input)="_inputChanged()" [(ngModel)]="valueFrom" />
+</mat-form-field>
+<br *ngIf="mode === 'between'" />
+<mat-form-field appearance="fill" class="weird-margin-problem" *ngIf="mode === 'between'">
+  <input matInput type="number" [min]="min" [max]="max" (input)="_inputChanged()" [(ngModel)]="valueTo" />
+</mat-form-field>
+
+<br>
+<!-- Dropdown with possible search modes -->
+<mat-form-field>
+  <mat-label>Mode</mat-label>
+  <mat-select [ngModel]="mode" (ngModelChange)="_handleUiModeChange($event)">
+    <mat-option [value]="'contains'">Contains</mat-option>
+    <mat-option [value]="'eq'">Equal to</mat-option>
+    <mat-option [value]="'gteq'">Greater than or equal to</mat-option>
+    <mat-option [value]="'lteq'">Less than or equal to</mat-option>
+    <mat-option [value]="'between'">Between</mat-option>
+  </mat-select>
+</mat-form-field>

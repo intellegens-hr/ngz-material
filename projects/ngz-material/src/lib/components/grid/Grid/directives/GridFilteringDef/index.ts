@@ -41,7 +41,6 @@ export class GridFilteringConfiguration {
 
     // Set column configuration
     return config;
-
   }
 
   /**

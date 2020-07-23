@@ -29,16 +29,7 @@
       <th *ngFor="let key of _columnKeys"
         [ngClass]="[('mat-column-' + key), (configuration.columns[key].class)]">
 
-        <mat-form-field appearance="fill">
-          <mat-label *ngIf="!configuration.columns[key].virtual && configuration.columns[key].hasFiltering">
-            <mat-icon>search</mat-icon>
-          </mat-label>
-          <input matInput type="text"
-            [disabled]="configuration.columns[key].virtual || !configuration.columns[key].hasFiltering"
-            [value]="_filters[key] || ''"
-            (input)="_onFilterUpdated(key, $event)">
-        </mat-form-field>
-
+        <ng-container *ngTemplateOutlet="configuration.columns[key].cellFilterTemplate, context: _getFilterCellTemplateContext(key)"></ng-container>
       </th>
     </tr>
 
@@ -110,7 +101,18 @@
   </ng-container>
 
 </table>
-
+<!-- Default table cell filter -->
+<ng-container *ngzGridColumnFilterTemplate="let key = key; let changeCallback=change" filterValue="key">
+  <mat-form-field appearance="fill">
+    <mat-label *ngIf="!configuration.columns[key].virtual && configuration.columns[key].hasFiltering">
+      <mat-icon>search</mat-icon>
+    </mat-label>
+    <input matInput type="text"
+      [disabled]="configuration.columns[key].virtual || !configuration.columns[key].hasFiltering"
+      [value]="_filters[key]?.filter.value || ''"
+      (input)="changeCallback(key, _getDefaultFilter($event.target.value));" />
+  </mat-form-field>
+</ng-container>
 <!-- Default table body cell templates -->
 <ng-container *ngzGridColumnCellTemplate="let row = row; let key = key">
   {{ _enttManager?.getByPath(row, key) }}

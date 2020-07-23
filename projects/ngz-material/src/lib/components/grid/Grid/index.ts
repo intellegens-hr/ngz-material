@@ -9,14 +9,15 @@ import { SubscriptionLike, Observable } from 'rxjs';
 import { EnTTManagerService } from '../../../services';
 import { GridColumnDefDirective,
          GridColumnCellTemplateDirective, GridColumnHeaderCellTemplateDirective, GridColumnFooterCellTemplateDirective,
-         GridColumnConfiguration, GridColumnDefaultOrdering } from './directives/GridColumnDef';
+         GridColumnConfiguration, GridColumnDefaultOrdering, GridColumnFilterTemplateDirective } from './directives/GridColumnDef';
 import { GridPaginationDefDirective, GridPaginationConfiguration  } from './directives/GridPaginationDef';
 import { GridFilteringDefDirective, GridFilteringConfiguration  } from './directives/GridFilteringDef';
 import { GridInjectedContentDefDirective, GridInjectedContentConfiguration  } from './directives/GridInjectedContentDef';
 import { FilterByPipe } from './pipes/FilterBy';
-import { MatTable, MatColumnDef, MatCellDef } from '@angular/material/table';
+import { MatTable } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable, MatSortHeader } from '@angular/material/sort';
+import { GridFilterBase, GridFilterSimple } from './models';
 
 /**
  * Grid configuration
@@ -45,7 +46,7 @@ class GridConfiguration {
   /**
    * Gets/Sets columns' configurations
    */
-  public set columns (defs) {
+  public set columns (defs: {[key: string]: GridColumnConfiguration}) {
     // Set explicitly defined columns' configuration
     this._nonDefaultColumnConfigurations = defs;
   }
@@ -111,6 +112,13 @@ class GridConfiguration {
 
 }
 
+export class GridChangeEventFilterItem {
+  public filter: GridFilterBase;
+  public filteringKeys: string[] = [];
+}
+
+export type GridChangeEventFilters = {[key: string]: GridChangeEventFilterItem}
+
 /**
  * Holds Grid changed event state description
  */
@@ -143,7 +151,7 @@ export class GridChangeEventState {
   /**
    * Updated value of the hash-table of filtering key-value pairs
    */
-  public filters: object;
+  public filters: GridChangeEventFilters;
 
   /**
    * Constructor
@@ -161,7 +169,7 @@ export class GridChangeEventState {
     previousPageIndex    = undefined as number,
     pageLength           = undefined as number,
     totalLength          = undefined as number,
-    filters              = undefined as object
+    filters              = undefined as GridChangeEventFilters
   }) {
     // Set properties
     this.orderingField        = orderingField;
@@ -389,6 +397,11 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
    */
   @ViewChild(GridColumnCellTemplateDirective, { read: TemplateRef, static: true })
   private _defaultTableCellTemplate: TemplateRef<any>;
+    /**
+   * Reference to default table filter cell template
+   */
+  @ViewChild(GridColumnFilterTemplateDirective, { read: TemplateRef, static: true })
+  private _defaultTableFilterCellTemplate: TemplateRef<any>;
   /**
    * Reference to default table cell template
    */
@@ -472,13 +485,13 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
       return this.dataLength;
     } else {
       // Calculate data length based on current filtering od current data
-      return (new FilterByPipe(this._enttManager)).transform(this._data, this._doLocalDataManagement, this._filters).length;
+      return (new FilterByPipe()).transform(this._data, this._doLocalDataManagement, this._filters).length;
     }
   }
 
   // Filtering: Hash-table of filtering key-value pairs
   // where key is the property key of the property being filtered by and value is the filtering value
-  public _filters = {};
+  public _filters: GridChangeEventFilters = {};
 
   /**
    * Holds row customizations
@@ -515,6 +528,7 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
 
       // If no template, use default template
       config.cellTemplate = config.cellTemplate || this._defaultTableCellTemplate;
+      config.cellFilterTemplate = config.cellFilterTemplate || this._defaultTableFilterCellTemplate;
       config.headerCellTemplate = config.headerCellTemplate || this._defaultTableHeaderCellTemplate;
       config.footerCellTemplate = config.footerCellTemplate || this._defaultTableFooterCellTemplate;
 
@@ -548,7 +562,6 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
   }
 
   public ngAfterViewInit () {
-
     // Pick up on column configuration changes
     for (const config of Object.values(this._config.columns)) {
       // Check for default ordering
@@ -703,14 +716,24 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
    * @param key Property key of the data property being filtered
    * @param e Event descriptor object
    */
-  public _onFilterUpdated (key, e: any) {
-    // Apply updated state
-    const value = e.target.value;
-    if (value === undefined || value === null || value === '') {
+  public _onFilterUpdated (key, filter: GridFilterBase) {
+    // if value doesn't exist, remove filter item
+    if (filter.isEmpty) {
       delete this._filters[key];
     } else {
-      this._filters[key] = value;
+      // for given key, get column configuration
+      const columnConfig = this._config.columns[key];
+      // check if custom filtering keys are specified for column, if not - take key as single element in array
+      const filterKeys = Array.isArray(columnConfig.hasFiltering) ? columnConfig.hasFiltering : [ key ];
+
+      // construct new filter item and set it
+      const filterItem = new GridChangeEventFilterItem();
+      filterItem.filter = filter;
+      filterItem.filteringKeys = filterKeys;
+
+      this._filters[key] = filterItem;
     }
+
     // Trigger (changed) event with updated values
     this._triggerChangedEvent({ });
     // Resetting pagination because of filtering
@@ -768,6 +791,28 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
       index,
       value: row[key]
     };
+  }
+
+  /**
+   * Returns cell template context object
+   * @param row Data row of the cell to provide context for
+   * @param key Column key to provide context for
+   * @param index Row index
+   * @returns Template context for the column cell
+   */
+  public _getFilterCellTemplateContext (key: string){
+    return { 
+      key,
+      change: (key: string, filter: GridFilterBase) => {
+        this._onFilterUpdated(key, filter);
+      }
+    };
+  }
+
+  public _getDefaultFilter(value: string): GridFilterSimple{
+    const filter = new GridFilterSimple();
+    filter.values = [ value ];
+    return filter;
   }
 
   //#endregion
@@ -882,7 +927,7 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
     previousPageIndex     = undefined as number,
     pageLength            = undefined as number,
     totalLength           = undefined as number,
-    filters               = undefined as object
+    filters               = undefined as GridChangeEventFilters
   }) {
 
     // Compose incoming state
@@ -983,7 +1028,7 @@ export class GridComponent implements AfterContentInit, AfterViewInit, OnChanges
     previousPageIndex     = undefined as number,
     pageLength            = undefined as number,
     totalLength           = undefined as number,
-    filters               = undefined as object
+    filters               = undefined as GridChangeEventFilters
   }) {
     // Compose and return state object
     return new GridChangeEventState({
