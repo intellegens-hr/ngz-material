@@ -186,6 +186,124 @@ import { GridModule } from '@intellegens/ngz-material'
   };
 ```
 
+### &lt;ngz-grid  /&gt; Custom filters
+
+Custom filters are defined using `ngzGridColumnFilterTemplate` directive. Row key and `change` method are exposed and can be used in template. `change` method is defined as:
+```ts
+public change: (key: string, filter: GridFilterBase) => void;
+```
+In order to define custom filter, filter object needs to be constructed and after that `change` callback needs to be triggered.
+
+ngzMaterial module contains several predefined filters which can be used in any ngzGrid - with both client-side and server-side data.
+
+#### Dropdown
+
+Renders select which can optionally be multiple.
+
+```ts
+ public _statuses = [
+    {text: 'Active', value: 1},
+    {text: 'In progress', value: 2},
+    {text: 'Done', value: 3},
+  ];
+```
+
+```html
+<!-- Column: Status -->
+<ng-container ngzGridColumnDef="status" [header]="'Status'" [hasFiltering]="true">
+  <ng-container *ngzGridColumnCellTemplate="let row = row">
+    {{ row.status }}
+  </ng-container>
+  <ng-container *ngzGridColumnFilterTemplate="let key=key; let change=change" >
+    <ngz-grid-filter-select
+      [dataSource]="_statuses"
+      [dataSourceTextKey]="'text'"
+      [dataSourceValueKey]="'value'"
+      [filterChangeCallback]="change"
+      [filterKey]="key"
+      [multiple]="true"
+      [dataSourceValueKey]="'value'"
+    >
+    </ngz-grid-filter-select>
+  </ng-container>
+</ng-container>
+```
+
+#### Date
+
+Renders input with datepicker and dropdown list with available search option:
+- equal to (`eq`)
+- greater than or equal to (`gteq`)
+- less than or equal to (`lteq`)
+- range (`between`)
+
+```html
+  <!-- Column: Start date -->
+  <ng-container ngzGridColumnDef="startDate" [header]="'Start Date'">
+    <ng-container *ngzGridColumnCellTemplate="let row = row">
+      <span [matTooltip]="row.startDate">{{ row.startDate }}</span>
+    </ng-container>
+    <ng-container *ngzGridColumnFilterTemplate="let key=key; let change=change" >
+      <ngz-grid-filter-date
+        [filterChangeCallback]="change"
+        [filterKey]="key"
+        [mode]="'between'"
+      >
+      </ngz-grid-filter-date>
+    </ng-container>
+  </ng-container>
+```
+
+#### Text
+
+Renders text input and dropdown with available search modes:
+- exact (`exact`)
+- wildcard (`wildcard`)
+- contains (`contains`)
+
+```html
+  <ng-container ngzGridColumnDef="description" [header]="'Description'">
+    <ng-container *ngzGridColumnCellTemplate="let row = row">
+      <div [matTooltip]="row.description">{{ row.description }}</div>
+    </ng-container>
+    <ng-container *ngzGridColumnFilterTemplate="let key=key; let change=change" >
+      <ngz-grid-filter-text
+        [filterChangeCallback]="change"
+        [filterKey]="key"
+        [mode]="'contains'"
+      >
+      </ngz-grid-filter-text>
+    </ng-container>
+  </ng-container>
+```
+
+#### Number
+
+Renders number input and dropdown with available search modes:
+- Greater than or equal to (`gteq`)
+- Lower than or equal to (`lteq`)
+- Range (`between`)
+- Equal to (`eq`)
+- Contains (`contains`)
+
+
+```html
+  <ng-container ngzGridColumnDef="price" [header]="'Price'">
+    <ng-container *ngzGridColumnCellTemplate="let row = row">
+      <span [matTooltip]="row.price">{{ row.price }}</span>
+    </ng-container>
+    <ng-container *ngzGridColumnFilterTemplate="let key=key; let change=change" >
+      <ngz-grid-filter-number
+        [filterChangeCallback]="change"
+        [filterKey]="key"
+        [mode]="Range"
+      >
+      </ngz-grid-filter-number>
+    </ng-container>
+  </ng-container>
+```
+
+
 ### &lt;ngz-grid-actions /&gt;
 
 ```ts
