@@ -194,25 +194,41 @@ import { GridModule } from '@intellegens/ngz-material'
 
 ```html
 <!-- Grid actions component:
+    - [viewHref] If present will cause "view" action to render as anchor linking to provided URL (can be string, or array of partial path strings)
+    - [viewTarget] Only used in conjunction with "viewHref", if present opens anchor links in set target window
     - (view) If present, "view" button will be displayed and this will be it's onClick callback
+    - [editHref] If present will cause "edit" action to render as anchor linking to provided URL (can be string, or array of partial path strings)
+    - [editTarget] Only used in conjunction with "editHref", if present opens anchor links in set target window
     - (edit) If present, "edit" button will be displayed and this will be it's onClick callback
+    - [deleteHref] If present will cause "delete" action to render as anchor linking to provided URL (can be string, or array of partial path strings)
+    - [deleteTarget] Only used in conjunction with "deleteHref", if present opens anchor links in set target window
     - (delete) If present, "delete" button will be displayed and this will be it's onClick callback
 
     If placed inside a <ngz-grid /> component it will automatically set up parent column's label and styling if not already specified.
 -->
 <ngz-grid-actions
+  [viewHref]="'https://example.com'"
+  [viewTarget]="'_blank'"
   (view)="doOptionalOnViewAction()"
+  [editHref]="'https://example.com'"
+  [editTarget]="'_blank'"
   (edit)="doOptionalOnEditAction()"
+  [deleteHref]="['https://example.com', 'some', 'nested', 'path']"
+  [deleteTarget]="'_blank'"
   (delete)="doOptionalOnDeleteAction()">
 
   <!-- Grid action component:
        - [icon] Action button icon
        - [label] Action button label
+       - [href] If present will cause action to render as anchor linking to provided URL (can be string, or array of partial path strings)
+       - [target] Only used in conjunction with "href", if present opens anchor links in set target window
        - (activated) On click callback for the action button
   -->
   <ngz-grid-action
     [icon]="'material_icon'"
     [label]="'Label describing the action'"
+    [href]="https://example.com"
+    [target]="'_blank"
     (activated)="doCustomAction()">
   </ngz-grid-action>
 

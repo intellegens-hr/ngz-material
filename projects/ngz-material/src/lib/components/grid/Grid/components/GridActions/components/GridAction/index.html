@@ -1,5 +1,16 @@
-<button mat-icon-button
+<!-- Link button -->
+<a *ngIf="href"
+  mat-icon-button
+  [matTooltip]="label"
+  [routerLink]="_stringifyHref()" [target]="target"
+  (click)="_doAction()">
+  <mat-icon> {{ icon }} </mat-icon>
+</a>
+
+<!-- JS action button -->
+<a *ngIf="!href"
+  mat-icon-button
   [matTooltip]="label"
   (click)="_doAction()">
   <mat-icon> {{ icon }} </mat-icon>
-</button>
+</a>
