@@ -1,3 +1,7 @@
+#### v1.0.13
+
+...
+
 #### v1.0.12
 
 - `ngz-grid-action` now supports `href` and `target` properties, which allow it to be rendered as an anchor instead of a button
